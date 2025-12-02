@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <link rel="stylesheet" href="css/Addproduct.css">
+</head>
+
+<body>
+    <div class="form-container">
+        <h2>Add New Product</h2>
+
+
+        <form id="addProductForm">
+            <label>Product Name</label>
+            <input type="text" id="productName" required>
+
+
+            <label>Category</label>
+            <select id="productCategory" required>
+                <option value="Shirts">Shirts</option>
+                <option value="Pants">Pants</option>
+                <option value="Accessories">Accessories</option>
+            </select>
+
+
+            <label>Description</label>
+            <textarea id="productDescription" required></textarea>
+
+            <label>Upload Image</label>
+            <input type="file" id="productImage" accept="image/*" required>
+
+            <div class="form-actions">
+                <button type="button" class="back-btn" onclick="confirmBack()">Back</button>
+                <button type="submit" class="submit-btn">Submit</button>
+            </div>
+
+
+        </form>
+    </div>
+
+
+    <script>
+        document.getElementById("addProductForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+
+            const product = {
+                name: document.getElementById("productName").value,
+                category: document.getElementById("productCategory").value,
+                description: document.getElementById("productDescription").value,
+                image: document.getElementById("productImage").files[0] ? URL.createObjectURL(document.getElementById("productImage").files[0]) : null
+            };
+
+
+            let products = JSON.parse(localStorage.getItem("products")) || [];
+            products.push(product);
+            localStorage.setItem("products", JSON.stringify(products));
+
+
+            window.location.href = "products.html";
+        });
+
+        function confirmBack() {
+            const confirmLeave = confirm("Are you sure you want to go back?\nYour changes will not be saved.");
+
+            if (confirmLeave) {
+                window.location.href = "products.html";
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>

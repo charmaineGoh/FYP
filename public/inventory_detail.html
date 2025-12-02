@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Stock</title>
+    <link rel="stylesheet" href="css/InventoryDetail.css">
+</head>
+
+<body>
+<div class="app-container">
+
+    <div class="form-container">
+        <h2>Edit Stock</h2>
+
+        <div id="detailContainer"></div>
+
+        <div class="form-actions">
+            <button type="button" class="back-btn" onclick="confirmBack()">Back</button>
+            <button type="button" class="submit-btn" onclick="saveStock()">Submit</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+// Load selected product
+const product = JSON.parse(localStorage.getItem("selectedProduct"));
+const container = document.getElementById("detailContainer");
+
+if (!product) {
+    container.innerHTML = "<p>Error loading product.</p>";
+} else {
+    container.innerHTML = `
+        <img src="${product.image}" class="detail-img">
+        <h2>${product.name}</h2>
+        <p>${product.description}</p>
+        <p><strong>Category:</strong> ${product.category}</p>
+
+        <label>Stock Quantity</label>
+        <input type="number" id="stockInput" value="${product.stock || 0}">
+    `;
+}
+
+function saveStock() {
+    const newStock = parseInt(document.getElementById("stockInput").value);
+
+    let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+
+    const index = inventory.findIndex(i => i.name === product.name);
+
+    if (index >= 0) {
+        inventory[index].stock = newStock;
+    } else {
+        inventory.push({
+            name: product.name,
+            stock: newStock
+        });
+    }
+
+    localStorage.setItem("inventory", JSON.stringify(inventory));
+
+    alert("Stock updated!");
+
+    // Redirect back to inventory page
+    window.location.href = "inventory.html";
+}
+</script>
+
+</body>
+</html>

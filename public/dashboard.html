@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESCKWEAR IMS - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1>ESCKWEAR</h1>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="active"><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="inventory.html">Inventory</a></li>
+                <li><a href="suppliers.html">Suppliers</a></li>
+                <li><a href="usermanagement.html">User Management</a></li>
+               
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content" id="main-content">
+            <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+            <header class="main-header">
+                <h2>Dashboard Overview</h2>
+                <button id="download-btn">Download Report (PDF)</button>
+            </header>
+
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="card">
+                    <h3>Total Stock Level</h3>
+                    <p class="card-value">12,450</p>
+                    <span class="card-info">Units across 5 locations</span>
+                </div>
+                <div class="card">
+                    <h3>Inbound (Last 30 Days)</h3>
+                    <p class="card-value">1,520</p>
+                    <span class="card-info">Units from 8 suppliers</span>
+                </div>
+                <div class="card">
+                    <h3>Outbound (Last 30 Days)</h3>
+                    <p class="card-value">980</p>
+                    <span class="card-info">Units sold or transferred</span>
+                </div>
+                <div class="card">
+                    <h3>Stock Movements</h3>
+                    <p class="card-value">75</p>
+                    <span class="card-info">Internal transfers this month</span>
+                </div>
+            </div>
+
+            <!-- More content like charts or tables would go here -->
+            <div class="content-placeholder">
+                <h3>Recent Activity</h3>
+                <p>A table or chart of recent inventory transactions would be displayed here.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Libraries for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/dashboard.js"></script>
+
+    <script>
+    function toggleSidebar() {
+        document.querySelector(".sidebar").classList.toggle("collapsed");
+        document.querySelector(".main-content").classList.toggle("expanded");
+    }
+    </script>
+
+</body>
+</html>
