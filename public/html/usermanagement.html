@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESCKWEAR IMS - Dashboard</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,8 +21,8 @@
                 <li><a href="dashboard.html">Dashboard</a></li>
                 <li><a href="products.html">Products</a></li>
                 <li><a href="inventory.html">Inventory</a></li>
-                <li class="active"><a href="suppliers.html">Suppliers</a></li>
-                <li><a href="usermanagement.html">User Management</a></li>
+                <li><a href="suppliers.html">Suppliers</a></li>
+                <li class="active"><a href="usermanagement.html">User Management</a></li>
                
             </ul>
         </nav>
@@ -31,30 +31,24 @@
         <main class="main-content">
                     <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
             <div class="main-header">
-                <h2>Suppliers</h2>
-                <div class="filter-container">
-                    <label for="filter-category">Filter by:</label>
-                    <select id="filter-category" name="filter-category">
-                        <option value="all">All</option>
-                        <option value="shirts">Shirts</option>
-                        <option value="pants">Pants</option>
-                        <option value="accessories">Accessories</option>
-                    </select>
-                </div>
+                <h2>User Management</h2>
             </div>
-            <div class="content-placeholder">
-                <h3>Product A</h3>
-                <p>A detailed view of a specific product would be displayed here.</p>
-            </div>
-            <div class="content-placeholder">
-                <h3>Product B</h3>
-                <p>A detailed view of a specific product would be displayed here.</p>
-            </div>
-            <div class="content-placeholder">
-                <h3>Product C</h3>
-                <p>A detailed view of a specific product would be displayed here.</p>
-            </div>
-        </main>
+
+        <div class="user-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Permission</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </main>
     </div>
         <script>
         function toggleSidebar() {
@@ -62,5 +56,5 @@
             document.querySelector(".main-content").classList.toggle("expanded");
         }
         </script>
-</body>
-</html>
+    </body>
+    </html>

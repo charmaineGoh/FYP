@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESCKWEAR IMS - Dashboard</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,22 +39,22 @@
             <div class="summary-cards">
                 <div class="card">
                     <h3>Total Stock Level</h3>
-                    <p class="card-value">12,450</p>
+                    <p id ="total-stock"class="card-value">0</p>
                     <span class="card-info">Units across 5 locations</span>
                 </div>
                 <div class="card">
                     <h3>Inbound (Last 30 Days)</h3>
-                    <p class="card-value">1,520</p>
+                    <p id = "inbound-stocks"class="card-value">0</p>
                     <span class="card-info">Units from 8 suppliers</span>
                 </div>
                 <div class="card">
                     <h3>Outbound (Last 30 Days)</h3>
-                    <p class="card-value">980</p>
+                    <p id = "outbound-stocks"class="card-value">980</p>
                     <span class="card-info">Units sold or transferred</span>
                 </div>
                 <div class="card">
                     <h3>Stock Movements</h3>
-                    <p class="card-value">75</p>
+                    <p id= "movements-stocks" class="card-value">75</p>
                     <span class="card-info">Internal transfers this month</span>
                 </div>
             </div>
@@ -70,7 +70,7 @@
     <!-- Libraries for PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="js/dashboard.js"></script>
+    <script src="../js/dashboard.js"></script>
 
     <script>
     function toggleSidebar() {

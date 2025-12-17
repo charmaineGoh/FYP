@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESCKWEAR IMS - Dashboard</title>
+    <link rel="stylesheet" href="../css/products.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-container">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <h1>ESCKWEAR</h1>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li class="active"><a href="products.html">Products</a></li>
+      <li><a href="inventory.html">Inventory</a></li>
+      <li><a href="suppliers.html">Suppliers</a></li>
+      <li><a href="usermanagement.html">User Management</a></li>
+    </ul>
+  </nav>
+  
+  <!-- Main Content -->
+  <main class="main-content">
+    <button class="hamburger-btn" id="toggleSidebar">☰</button>
+
+    <header class="main-header">
+      <h2>Products</h2>
+      <div class="filter-container">
+        <label for="filter-category">Filter by:</label>
+        <select id="filter-category">
+          <option value="all">All</option>
+          <option value="shirts">Shirts</option>
+          <option value="pants">Pants</option>
+          <option value="accessories">Accessories</option>
+        </select>
+        <button id="addProductBtn" class="icon-btn" title="Add Product">+</button>
+      </div>
+    </header>
+
+    <div id="productList" class="product-list"></div>
+</main>
+</div>
+
+<div id="addProductModal" class="modal hidden">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3>Add Product</h3>
+    <form id="addProductForm">
+      <label for="productName">Product Name:</label>
+      <input type="text" id="productName" required>
+
+      <label for="productCategory">Category:</label>
+      <select id="productCategory" required>
+        <option value="Shirts">Shirts</option>
+        <option value="Pants">Pants</option>
+        <option value="Accessories">Accessories</option>
+      </select>
+
+      <label for="productDescription">Description:</label>
+      <textarea id="productDescription" required></textarea>
+
+      <label for="productImage">Image:</label>
+      <input type="file" id="productImage" accept="image/*" required>
+
+      <label for="productPrice">Price:</label>
+      <input type="number" id="productPrice" required>
+
+      <button type="submit" class="primary-btn">Save</button>
+    </form>
+  </div>
+</div>
+
+<div id="editProductModal" class="modal hidden">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3>Edit Product</h3>
+    <form id="editProductForm">
+      <label for="editProductName">Product Name:</label>
+      <input type="text" id="editProductName" required>
+
+      <label for="editProductCategory">Category:</label>
+      <select id="editProductCategory" required>
+        <option value="Shirts">Shirts</option>
+        <option value="Pants">Pants</option>
+        <option value="Accessories">Accessories</option>
+      </select>
+
+      <label for="editProductDescription">Description:</label>
+      <textarea id="editProductDescription" required></textarea>
+
+      <label for="editProductImage">Image:</label>
+      <input type="file" id="editProductImage" accept="image/*" required>
+
+      <label for="editProductPrice">Price:</label>
+      <input type="number" id="editProductPrice" required>
+
+      <button type="submit" class="primary-btn">Save</button>
+    </form>
+  </div>
+</div>
+    
+<script src="../js/products.js"></script>
+
+</body>
+</html>

@@ -5,6 +5,32 @@ const { jsPDF } = window.jspdf;
 const downloadBtn = document.getElementById('download-btn');
 const mainContent = document.getElementById('main-content');
 
+async function populateDashboard() {
+  try {
+    const res = await fetch("http://localhost:3000/stocks");
+    const stocks = await res.json();
+
+    // Calculate totals
+    const totalStock = stocks.reduce((sum, s) => sum + s.quantity, 0);
+
+    // Placeholder values until you have inbound/outbound/movements logic
+    const inbound = 0;
+    const outbound = 0;
+    const movements = 0;
+
+    // Update the DOM
+    document.getElementById("total-stock").textContent = totalStock;
+    document.getElementById("inbound-stock").textContent = inbound;
+    document.getElementById("outbound-stock").textContent = outbound;
+    document.getElementById("movements-stock").textContent = movements;
+  } catch (err) {
+    console.error("Error populating dashboard:", err);
+  }
+}
+
+// Run it once when the page loads
+populateDashboard();
+
 // Add a click event listener to the download button
 downloadBtn.addEventListener('click', () => {
     console.log('Download button clicked!');

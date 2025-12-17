@@ -1,43 +1,30 @@
 const express = require('express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const mongoose = require('mongoose');
+require('dotenv').config(); // load .env
+
+const stockRoutes = require('./routes/stockRoutes');
+const productRoutes = require('./routes/productRoutes');
 
 const app = express();
+app.use(express.json()); // required for POST body parsing
 
-// Include your database name in the URI
-const uri = "mongodb+srv://user1:ESCKWear1@fyp.5hfskpe.mongodb.net/inventory_db?appName=FYP";
+// Connect using .env variable
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log(' Connected to MongoDB');
+  })
+  .catch((err) => {
+    console.error(' Error connecting to MongoDB:', err);
+  });
 
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
+// Mount routes
+app.use('/stocks', stockRoutes);
+app.use('/products', productRoutes);
 
-async function run() {
-  try {
-    await client.connect();
-    await client.db("admin").command({ ping: 1 });
-    console.log("✅ Connected to MongoDB!");
-  } catch (err) {
-    console.error("❌ Connection failed:", err);
-  }
-}
-
-run();
-
-// Example route using the connection
-app.get('/items', async (req, res) => {
-  try {
-    const items = await client.db("inventory_db").collection("items").find().toArray();
-    res.json(items);
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-});
-
+// Optional static serving
 app.use(express.static('public'));
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
 });
