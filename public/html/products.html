@@ -65,13 +65,16 @@
       </select>
 
       <label for="productDescription">Description:</label>
-      <textarea id="productDescription" required></textarea>
+      <input type="text" id="productDescription" required>
 
       <label for="productImage">Image:</label>
-      <input type="file" id="productImage" accept="image/*" required>
+      <input type="text" id="productImage" required>
 
       <label for="productPrice">Price:</label>
       <input type="number" id="productPrice" required>
+
+      <label for="productQuantity">Quantity:</label>
+      <input type="number" id="productQuantity" required>
 
       <button type="submit" class="primary-btn">Save</button>
     </form>
@@ -83,6 +86,9 @@
     <span class="close">&times;</span>
     <h3>Edit Product</h3>
     <form id="editProductForm">
+
+      <input type="hidden" id="editProductId">
+
       <label for="editProductName">Product Name:</label>
       <input type="text" id="editProductName" required>
 
@@ -94,13 +100,16 @@
       </select>
 
       <label for="editProductDescription">Description:</label>
-      <textarea id="editProductDescription" required></textarea>
+      <input id="editProductDescription" required>
 
       <label for="editProductImage">Image:</label>
-      <input type="file" id="editProductImage" accept="image/*" required>
+      <input type="text" id="editProductImage" required>
 
       <label for="editProductPrice">Price:</label>
       <input type="number" id="editProductPrice" required>
+
+      <label for="editProductQuantity">Quantity:</label>
+      <input type="number" id="editProductQuantity" required>
 
       <button type="submit" class="primary-btn">Save</button>
     </form>
