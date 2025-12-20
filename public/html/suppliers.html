@@ -1,66 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESCKWEAR IMS - Dashboard</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESCKWEAR IMS - Suppliers</title>
+  <link rel="stylesheet" href="../css/suppliers.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <h1>ESCKWEAR</h1>
-            </div>
-            <ul class="sidebar-nav">
-                <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="products.html">Products</a></li>
-                <li><a href="inventory.html">Inventory</a></li>
-                <li class="active"><a href="suppliers.html">Suppliers</a></li>
-                <li><a href="usermanagement.html">User Management</a></li>
-               
-            </ul>
-        </nav>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <h1>ESCKWEAR</h1>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="inventory.html">Inventory</a></li>
+        <li class="active"><a href="suppliers.html">Suppliers</a></li>
+        <li><a href="usermanagement.html">User Management</a></li>
+      </ul>
+    </nav>
 
-        <!-- Main Content -->
-        <main class="main-content">
-                    <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
-            <div class="main-header">
-                <h2>Suppliers</h2>
-                <div class="filter-container">
-                    <label for="filter-category">Filter by:</label>
-                    <select id="filter-category" name="filter-category">
-                        <option value="all">All</option>
-                        <option value="shirts">Shirts</option>
-                        <option value="pants">Pants</option>
-                        <option value="accessories">Accessories</option>
-                    </select>
-                </div>
-            </div>
-            <div class="content-placeholder">
-                <h3>Product A</h3>
-                <p>A detailed view of a specific product would be displayed here.</p>
-            </div>
-            <div class="content-placeholder">
-                <h3>Product B</h3>
-                <p>A detailed view of a specific product would be displayed here.</p>
-            </div>
-            <div class="content-placeholder">
-                <h3>Product C</h3>
-                <p>A detailed view of a specific product would be displayed here.</p>
-            </div>
-        </main>
+    <!-- Main Content -->
+    <main class="main-content">
+      <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+      <div class="main-header">
+        <h2>Suppliers</h2>
+        <div class="filter-container">
+          <label for="filter-category">Filter by:</label>
+          <select id="filter-category" name="filter-category">
+            <option value="all">All</option>
+            <option value="shirts">Shirts</option>
+            <option value="pants">Pants</option>
+            <option value="accessories">Accessories</option>
+          </select>
+          <button id="addSupplierBtn" class="icon-btn" title="Add Supplier">+</button>
+        </div>
+      </div>
+
+      <!-- Suppliers Table -->
+      <div class="suppliers-table">
+        <table id="supplierTable">
+          <thead>
+            <tr>
+              <th>Supplier Name</th>
+              <th>Contact Person</th>
+              <th>Address</th>
+              <th>Phone Number</th>
+              <th>Email</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Rows will be populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Supplier Modal -->
+    <div id="addSupplierModal" class="modal hidden">
+        <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Add Supplier</h3>
+        <form id="addSupplierForm">
+            <label for="supplierName">Supplier Name:</label>
+            <input type="text" id="supplierName" required>
+
+            <label for="supplierContactName">Contact Person:</label>
+            <input type="text" id="supplierContactName" required>
+
+            <label for="supplierPhone">Phone:</label>
+            <input type="text" id="supplierPhone" required>
+
+            <label for="supplierEmail">Email:</label>
+            <input type="email" id="supplierEmail" required>
+
+            <label for="supplierAddress">Address:</label>
+            <input type="text" id="supplierAddress" required>
+
+            <label for="supplierCity">City:</label>
+            <input type="text" id="supplierCity" required>
+
+            <label for="supplierCountry">Country:</label>
+            <input type="text" id="supplierCountry" required>
+
+            <button type="submit" class="primary-btn">Save</button>
+        </form>
+        </div>
     </div>
-        <script>
-        function toggleSidebar() {
-            document.querySelector(".sidebar").classList.toggle("collapsed");
-            document.querySelector(".main-content").classList.toggle("expanded");
-        }
-        </script>
+
+    <!-- Edit Supplier Modal -->
+    <div id="editSupplierModal" class="modal hidden">
+        <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Edit Supplier</h3>
+        <form id="editSupplierForm">
+            
+            <input type="hidden" id="editSupplierId">
+
+            <label for="editSupplierName">Supplier Name:</label>
+            <input type="text" id="editSupplierName" required>
+
+            <label for="editSupplierContactName">Contact Person:</label>
+            <input type="text" id="editSupplierContactName" required>
+
+            <label for="editSupplierPhone">Phone:</label>
+            <input type="text" id="editSupplierPhone" required>
+
+            <label for="editSupplierEmail">Email:</label>
+            <input type="email" id="editSupplierEmail" required>
+
+            <label for="editSupplierAddress">Address:</label>
+            <input type="text" id="editSupplierAddress" required>
+
+            <label for="editSupplierCity">City:</label>
+            <input type="text" id="editSupplierCity" required>
+
+            <label for="editSupplierCountry">Country:</label>
+            <input type="text" id="editSupplierCountry" required>
+
+            <button type="submit" class="primary-btn">Save</button>
+        </form>
+        </div>
+    </div>
+
+  <script src="../js/suppliers.js"></script>
 </body>
 </html>

@@ -1,3 +1,8 @@
+function toggleSidebar() {
+  document.querySelector(".sidebar").classList.toggle("collapsed");
+  document.querySelector(".main-content").classList.toggle("expanded");
+}
+
 const inventoryList = document.getElementById("inventoryList");
 
 // -------------------- Load Inventory --------------------

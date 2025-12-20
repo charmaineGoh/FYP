@@ -212,7 +212,7 @@ body {
   border-radius: 50%;
   font-size: 20px;
   font-weight: bold;
-  background-color: #4CAF50;
+  background-color: #9e8bf7;
   color: white;
   border: none;
   cursor: pointer;
@@ -223,7 +223,7 @@ body {
 }
 
 .icon-btn:hover {
-  background-color: #45a049;
+  background-color: #4b4275;
 }
 
 .modal {

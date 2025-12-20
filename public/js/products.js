@@ -1,3 +1,8 @@
+function toggleSidebar() {
+  document.querySelector(".sidebar").classList.toggle("collapsed");
+  document.querySelector(".main-content").classList.toggle("expanded");
+}
+
 // Get product list container
 const productList = document.getElementById('productList');
 
@@ -189,3 +194,4 @@ filterSelect.addEventListener("change", () => {
   const selectedCategory = filterSelect.value;
   loadProduct(selectedCategory);
 });
+

@@ -4,6 +4,7 @@ require('dotenv').config(); // load .env
 
 const stockRoutes = require('./routes/stockRoutes');
 const productRoutes = require('./routes/productRoutes');
+const supplierRoutes = require('./routes/supplierRoutes');
 
 const app = express();
 app.use(express.json()); // required for POST body parsing
@@ -20,6 +21,7 @@ mongoose.connect(process.env.MONGO_URI)
 // Mount routes
 app.use('/stocks', stockRoutes);
 app.use('/products', productRoutes);
+app.use('/suppliers', supplierRoutes);
 
 // Optional static serving
 app.use(express.static('public'));
