@@ -1,62 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESCKWEAR IMS - Dashboard</title>
-    <link rel="stylesheet" href="../css/usermanagement.css">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESCKWEAR IMS - User Management</title>
+  <link rel="stylesheet" href="../css/usermanagement.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <h1>ESCKWEAR</h1>
-            </div>
-            <ul class="sidebar-nav">
-                <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="products.html">Products</a></li>
-                <li><a href="inventory.html">Inventory</a></li>
-                <li><a href="suppliers.html">Suppliers</a></li>
-                <li class="active"><a href="usermanagement.html">User Management</a></li>
-            </ul>
-            <div class="sidebar-footer">
-                <a href ="settings.html">Settings</a>
-            </div>
-        </nav>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <h1>ESCKWEAR</h1>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="inventory.html">Inventory</a></li>
+        <li><a href="suppliers.html">Suppliers</a></li>
+        <li class="active"><a href="usermanagement.html">User Management</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <a href="settings.html">Settings</a>
+      </div>
+    </nav>
 
-        <!-- Main Content -->
-        <main class="main-content">
-                    <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
-            <div class="main-header">
-                <h2>User Management</h2>
-            </div>
+    <!-- Main Content -->
+    <main class="main-content">
+      <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+      <div class="main-header">
+        <h2>User Management</h2>
+        <button id="addUserBtn" title="Add User">Add User</button>
+      </div>
 
-        <div class="user-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Date</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th>Permission</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+      <div class="search-container">
+        <input type="text" id="searchUserInput" placeholder="Search by User Name">
+        <button id="searchUserBtn" title="Search Users">Search</button>
+      </div>
+
+      <!-- Users Table -->
+      <div class="users-table">
+        <table id="userTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Company</th>
+              <th>Position</th>
+              <th>Role</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Rows will be populated dynamically -->
+          </tbody>
+        </table>
+      </div>
     </main>
+  </div>
+
+  <!-- Add User Modal -->
+  <div id="addUserModal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>Add User</h3>
+      <form id="addUserForm">
+        <label for="userName">Name:</label>
+        <input type="text" id="userName" required>
+
+        <label for="userCompany">Company:</label>
+        <input type="text" id="userCompany" required>
+
+        <label for="userPosition">Position:</label>
+        <input type="text" id="userPosition" required>
+
+        <label for="userRole">Role:</label>
+        <select id="userRole" required>
+          <option value="superadmin">Super Admin</option>
+          <option value="admin">Admin</option>
+          <option value="staff">Staff</option>
+        </select>
+
+        <label for="userEmail">Email:</label>
+        <input type="email" id="userEmail" required>
+
+        <label for="userStatus">Status:</label>
+        <select id="userStatus">
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+
+        <button type="submit" class="primary-btn">Save</button>
+      </form>
     </div>
-        <script>
-        function toggleSidebar() {
-            document.querySelector(".sidebar").classList.toggle("collapsed");
-            document.querySelector(".main-content").classList.toggle("expanded");
-        }
-        </script>
-    </body>
-    </html>
+  </div>
+
+  <!-- Edit User Modal -->
+  <div id="editUserModal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>Edit User</h3>
+      <form id="editUserForm">
+        <input type="hidden" id="editUserId">
+
+        <label for="editUserName">Name:</label>
+        <input type="text" id="editUserName" required>
+
+        <label for="editUserCompany">Company:</label>
+        <input type="text" id="editUserCompany">
+
+        <label for="editUserPosition">Position:</label>
+        <input type="text" id="editUserPosition">
+
+        <label for="editUserRole">Role:</label>
+        <select id="editUserRole" required>
+          <option value="superadmin">Super Admin</option>
+          <option value="admin">Admin</option>
+          <option value="staff">Staff</option>
+        </select>
+
+        <label for="editUserEmail">Email:</label>
+        <input type="email" id="editUserEmail">
+
+        <label for="editUserStatus">Status:</label>
+        <select id="editUserStatus">
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+
+        <button type="submit" class="primary-btn">Save</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/usermanagement.js"></script>
+  <script>
+    function toggleSidebar() {
+      document.querySelector(".sidebar").classList.toggle("collapsed");
+      document.querySelector(".main-content").classList.toggle("expanded");
+    }
+  </script>
+</body>
+</html>

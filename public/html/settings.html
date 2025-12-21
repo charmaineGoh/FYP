@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESCKWEAR IMS - Dashboard</title>
+    <link rel="stylesheet" href="../css/settings.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1>ESCKWEAR</h1>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="inventory.html">Inventory</a></li>
+                <li><a href="suppliers.html">Suppliers</a></li>
+                <li><a href="usermanagement.html">User Management</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <a class="active", href ="settings.html">Settings</a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+            <div class="main-header">
+                <h2>Settings</h2>
+            </div>
+                <h3>Manage your account settings here.</h3>
+            <div class="settings-container">
+                <div class= "settings-card" id = "general-settings">
+                    <h2>General Settings</h2>
+                    <p>Company Name & Logo</p>
+                    <form id="company-form" class="company-form">
+                    <div class="company-row">
+                        <div class="company-label">
+                        <strong>Company Name</strong>
+                        <span class="description">Enter your company name.</span>
+                        </div>
+                        <input type="text" id="company-name" placeholder="ESCKWEAR" required>
+                    </div>
+
+                    <div class="company-row">
+                        <div class="company-label">
+                        <strong>Logo</strong>
+                        <span class="description">Upload a logo for your company.</span>
+                        </div>
+                        <input type="file" id="company-logo" accept="image/*" required>
+                    </div>
+                    <button type="submit">Save Changes</button>
+                    </form>
+                </div>
+                <div class= "settings-card" id = "notification-settings">
+                    <h2>Notification Settings</h2>
+                    <p>Notification Preferences</p>
+                    <form id="notification-form" class="notification-form">
+                    <div class="notification-row">
+                        <div class="notification-label">
+                        <strong>Low Stock Alerts</strong>
+                        <span class="description">Get notified when inventory levels are low.</span>
+                        </div>
+                        <label class="switch">
+                        <input type="checkbox" id="low-stock-alerts">
+                        <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="notification-row">
+                        <div class="notification-label">
+                        <strong>New Order Notifications</strong>
+                        <span class="description">Receive an alert for every new order.</span>
+                        </div>
+                        <label class="switch">
+                        <input type="checkbox" id="new-order-alerts">
+                        <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="notification-row">
+                        <div class="notification-label">
+                        <strong>Weekly Summary Report</strong>
+                        <span class="description">Get a digest of sales and inventory.</span>
+                        </div>
+                        <label class="switch">
+                        <input type="checkbox" id="weekly-summary">
+                        <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="notification-row email-row">
+                        <label for="admin-email"><strong>Administrative Email</strong></label>
+                        <input type="email" id="admin-email" placeholder="env@esckwear.com" required>
+                    </div>
+
+                    <button type="submit">Save</button>
+                    </form>
+                </div>
+                <div class = "settings-card" id = "team-settings">
+                    <h2>Team Settings</h2>
+                    <p>Manage team members and permissions.</p>
+                    <button id="add-team-member">Add Team Member</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="../js/settings.js"></script>
+</body>
+</html>
