@@ -6,7 +6,6 @@ function toggleSidebar() {
 
 // DOM references
 const supplierTableBody = document.querySelector("#supplierTable tbody");
-const filterSelect = document.getElementById("filter-category");
 
 const addModal = document.getElementById("addSupplierModal");
 const editModal = document.getElementById("editSupplierModal");
@@ -14,6 +13,10 @@ const editModal = document.getElementById("editSupplierModal");
 const addBtn = document.getElementById("addSupplierBtn");
 const addCloseBtn = addModal.querySelector(".close");
 const editCloseBtn = editModal.querySelector(".close");
+
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
+
 
 // -------------------- Load Suppliers --------------------
 async function loadSuppliers(category = "all") {
@@ -40,9 +43,10 @@ async function loadSuppliers(category = "all") {
         <td>${supplier.supplierAddress}, ${supplier.supplierCity}, ${supplier.supplierCountry}</td>
         <td>${supplier.supplierPhone}</td>
         <td>${supplier.supplierEmail}</td>
-        <td>
+        <td class="actions">
           <button class="edit-btn" data-id="${supplier._id}">Edit</button>
           <button class="delete-btn" data-id="${supplier._id}">Delete</button>
+          <button class="view-btn" data-id="${supplier._id}">View</button>
         </td>
       `;
       supplierTableBody.appendChild(row);
@@ -75,6 +79,14 @@ async function loadSuppliers(category = "all") {
         }
       });
     });
+
+    // View button handler
+    document.querySelectorAll(".view-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const supplierId = btn.getAttribute("data-id");
+        window.location.href = `supplierDetails.html?id=${supplierId}`;
+      });
+    })
   } catch (err) {
     console.error("Error fetching suppliers:", err);
     supplierTableBody.innerHTML = `<tr><td colspan="6">Failed to load suppliers.</td></tr>`;
@@ -83,11 +95,6 @@ async function loadSuppliers(category = "all") {
 
 // Initial load
 loadSuppliers();
-
-// -------------------- Filter --------------------
-filterSelect.addEventListener("change", e => {
-  loadSuppliers(e.target.value);
-});
 
 // -------------------- Add Supplier Modal --------------------
 addBtn.addEventListener("click", () => addModal.classList.remove("hidden"));
@@ -155,4 +162,29 @@ document.getElementById("editSupplierForm").addEventListener("submit", async e =
     const err = await res.json();
     alert("❌ Failed to update supplier: " + err.error);
   }
+});
+
+//-----------------Search-----------//
+
+searchBtn.addEventListener("click", () => {
+  const term = searchInput.value.trim().toLowerCase();
+
+  document.querySelectorAll("#supplierTable tbody tr").forEach(row => {
+    const supplierNameCell = row.querySelector("td:first-child"); // first column = Supplier Name
+    if (supplierNameCell) {
+      const name = supplierNameCell.innerText.toLowerCase();
+      row.style.display = name.includes(term) ? "" : "none";
+    }
+  });
+});
+
+searchInput.addEventListener("input", () => {
+  const term = searchInput.value.trim().toLowerCase();
+  document.querySelectorAll("#supplierTable tbody tr").forEach(row => {
+    const supplierNameCell = row.querySelector("td:first-child"); // first column = Supplier Name
+    if (supplierNameCell) {
+      const name = supplierNameCell.innerText.toLowerCase();
+      row.style.display = name.includes(term) ? "" : "none";
+    }
+  });
 });

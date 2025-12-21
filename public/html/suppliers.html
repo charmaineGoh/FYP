@@ -31,16 +31,12 @@
       <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
       <div class="main-header">
         <h2>Suppliers</h2>
-        <div class="filter-container">
-          <label for="filter-category">Filter by:</label>
-          <select id="filter-category" name="filter-category">
-            <option value="all">All</option>
-            <option value="shirts">Shirts</option>
-            <option value="pants">Pants</option>
-            <option value="accessories">Accessories</option>
-          </select>
-          <button id="addSupplierBtn" class="icon-btn" title="Add Supplier">+</button>
-        </div>
+          <button id="addSupplierBtn" title="Add Supplier">Add Supplier</button>
+      </div>
+
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search by Supplier Name">
+        <button id="searchBtn" title="Search Suppliers">Search</button>
       </div>
 
       <!-- Suppliers Table -->

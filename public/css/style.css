@@ -1,13 +1,14 @@
-/* --- Global Styles & Variables --- */
+/* ================================
+   Global Styles & Variables
+================================ */
 :root {
     --font-header: 'Raleway', sans-serif;
     --font-body: 'Work Sans', sans-serif;
 
-    /* Color Palette from PRD */
-    --color-bg: #F4F7FC; /* Light grey-blue */
-    --color-primary: hsl(220, 18%, 51%); /* Blue grey */
-    --color-secondary: #A39BBE; /* Muted Lavender */
-    --color-accent: #E8C8D4; /* Blush Pink */
+    --color-bg: #F4F7FC;
+    --color-primary: hsl(220, 18%, 51%);
+    --color-secondary: #A39BBE;
+    --color-accent: #E8C8D4;
     --color-white: #FFFFFF;
     --color-text: #333333;
     --color-error: #D9534F;
@@ -24,13 +25,15 @@ body {
     height: 100vh;
 }
 
-/* --- Login Page Styles (New) --- */
+/* ================================
+   Login Page Layout
+================================ */
 .page-container {
     display: grid;
-    grid-template-columns: 1fr 2fr; /* Left panel is 1/3, right is 2/3 */
+    grid-template-columns: 1fr 2fr;
     width: 100%;
     height: 100vh;
-    overflow: hidden; /* Prevents scrollbars */
+    overflow: hidden;
 }
 
 .welcome-panel {
@@ -39,14 +42,10 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 40px;
     text-align: center;
-    border-top: 5px solid var(--color-secondary); /* Blue/Purple top border */
-    border-right: 5px solid var(--color-secondary);
 }
 
 .welcome-panel h2 {
-    font-family: var(--font-body);
     font-weight: 400;
     font-size: 1.5rem;
     color: var(--color-primary);
@@ -60,10 +59,16 @@ body {
     margin: 0;
 }
 
+.welcome-panel h3 {
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin: 0;
+}
+
 .form-panel {
     background-color: var(--color-white);
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 40px;
@@ -76,13 +81,15 @@ body {
     right: 40px;
     width: 60px;
     height: 60px;
-    border: 2px solid var(--color-text);
+    border: 2px solid var(--color-primary);
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: var(--font-header);
     font-size: 1.5rem;
+    color: var(--color-primary);
+    background-color: var(--color-bg);
 }
 
 .form-wrapper {
@@ -90,341 +97,124 @@ body {
     max-width: 400px;
 }
 
-.tabs-container {
-    display: flex;
-    margin-bottom: -1px; /* Pulls the form content up slightly */
-}
-
-.tab {
-    padding: 15px 30px;
-    border: 1px solid #DDE2E8;
-    background-color: #F4F7FC; /* Inactive tab color */
-    border-bottom: 1px solid #DDE2E8;
-    border-radius: 15px 15px 0 0;
-    cursor: pointer;
-    font-family: var(--font-body);
-    font-size: 1rem;
-    font-weight: 600;
+.form-wrapper h2 {
+    font-family: var(--font-header);
     color: var(--color-primary);
-    margin-right: 5px;
+    margin-bottom: 10px;
 }
 
-.tab.active {
-    background-color: #E8EEF9; /* Active tab color, slightly lighter than form */
-    border-bottom: none;
+/* Invite-only notice */
+.invite-note {
+    font-size: 0.9rem;
+    color: var(--color-primary);
+    background-color: rgba(163, 155, 190, 0.15);
+    border-left: 4px solid var(--color-secondary);
+    padding: 10px 14px;
+    margin-bottom: 25px;
+    border-radius: 4px;
 }
 
+/* ================================
+   Form Styles
+================================ */
 .form-content {
-    background-color: #E8EEF9; /* Matches the wireframe's grey form area */
+    background-color: #E8EEF9;
     padding: 40px;
+    border-radius: 15px;
     border: 1px solid #DDE2E8;
-    border-radius: 0 15px 15px 15px; /* Note the top-left is 0 */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
-.hidden {
-    display: none;
+.input-group {
+    margin-bottom: 20px;
 }
 
-/* --- Mobile Responsiveness for Login Page --- */
+.input-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: var(--color-primary);
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #DDE2E8;
+    font-family: var(--font-body);
+    font-size: 1rem;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 2px rgba(163, 155, 190, 0.25);
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #928AAD;
+}
+
+.forgot-password {
+    display: block;
+    margin-top: 12px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: var(--color-error);
+}
+
+/* ================================
+   Mobile Responsiveness
+================================ */
 @media (max-width: 900px) {
     .page-container {
-        grid-template-columns: 1fr; /* Stack panels on top of each other */
+        grid-template-columns: 1fr;
     }
+
     .welcome-panel {
-        display: none; /* Hide the welcome panel on small screens */
+        display: none;
     }
+
     .form-panel {
-        justify-content: flex-start;
         padding-top: 80px;
     }
 }
 
-/* --- Dashboard Layout --- */
-.app-container {
-    display: flex;
-    width: 100%;
-    height: 100vh;
-    background-color: var(--color-bg);
-}
-
-.sidebar {
-    width: 250px;
-    background: var(--color-white);
-    display: flex;
-    flex-direction: column;
-    border-right: 1px solid #DDE2E8;
-    transition: all 0.3s ease;
-    overflow: hidden;
-}
-
-.sidebar-header {
-    padding: 25px 20px;
-    border-bottom: 1px solid #DDE2E8;
-}
-
-/* Collapsed sidebar */
-.sidebar.collapsed {
-    width: 0;
-    padding: 0;
-}
-
-.sidebar-header h1 {
-    font-family: var(--font-header);
-    color: var(--color-primary);
-    font-size: 1.8rem;
-    text-align: center;
-    margin: 0;
-}
-
-.sidebar-nav {
-    list-style: none;
-    padding: 20px 0;
-    margin: 0;
-    flex-grow: 1;
-}
-
-.sidebar-nav li a {
-    display: block;
-    padding: 15px 25px;
-    text-decoration: none;
-    color: var(--color-primary);
-    font-weight: 500;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.sidebar-nav li.active a,
-.sidebar-nav li a:hover {
-    background-color: var(--color-bg);
-    color: var(--color-text);
-    border-right: 3px solid var(--color-secondary);
-}
-
-/* Hamburger button */
-.hamburger-btn {
-    font-size: 28px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 10px;
-    margin: 10px 0;
-}
-
-.main-content {
-    flex-grow: 1;
-    padding: 30px;
-    overflow-y: auto; /* Allows scrolling if content is long */
-    transition: all 0.3s ease;
-}
-
-.main-content.expanded {
-    margin-left: 0;
-}
-
-.main-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
-.main-header h2 {
-    font-family: var(--font-header);
-    margin: 0;
-    font-size: 2rem;
-    color: var(--color-text);
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-#download-btn {
-    width: auto; /* Override default button width */
-    padding: 10px 20px;
-    background-color: var(--color-secondary);
-}
-
-#download-btn:hover {
-    background-color: #928AAD; /* Darker lavender */
-}
-
-/* --- Summary Cards --- */
-.summary-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.card {
-    background: var(--color-white);
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-.card h3 {
-    margin: 0 0 10px 0;
-    font-family: var(--font-header);
-    font-size: 1rem;
-    color: var(--color-primary);
-}
-
-.card .card-value {
-    margin: 0 0 10px 0;
-    font-size: 2.5rem;
-    font-weight: 600;
-    color: var(--color-text);
-}
-
-.card .card-info {
-    font-size: 0.9rem;
-    color: #888;
-}
-
-.content-placeholder {
-    background: var(--color-white);
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-/* --- Mobile Responsiveness --- */
-@media (max-width: 768px) {
-    .app-container {
-        flex-direction: column;
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
     }
-    .sidebar {
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 10px;
-        box-sizing: border-box;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
-    .sidebar-header h1 {
-        font-size: 1.5rem;
-    }
-    .sidebar-nav {
-        display: flex;
-        padding: 0;
-    }
-    .sidebar-nav li a {
-        padding: 15px 10px;
-        font-size: 0.8rem;
-    }
-    .sidebar-nav li.active a, .sidebar-nav li a:hover {
-        border-right: none;
-        border-bottom: 3px solid var(--color-secondary);
-    }
-    .main-header {
-    display: flex;              /* places children side by side */
-    justify-content: space-between; /* pushes heading left, filter right */
-    align-items: center;        /* vertically align */
-    padding: 10px 20px;
-    border-bottom: 1px solid #ddd;
 }
 
-    .filter-container {
-        display: flex;
-        align-items: center;
-        gap: 8px;                   /* space between label and dropdown */
-    }
-
-    .filter-container label {
-        font-family: 'Work Sans', sans-serif;
-        font-size: 14px;
-        color: #333;
-    }
-
-    .filter-container select {
-        padding: 5px 10px;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-        font-family: 'Work Sans', sans-serif;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .filter-container select:hover {
-        border-color: #888;
-        box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-
-    .filter-container select:focus {
-        outline: none;
-        border-color: #005fcc;
-        box-shadow: 0 0 8px rgba(0,95,204,0.6);
-    }
-
-/* --- User Management Table --- */
-    .user-table {
-        background: var(--color-white);
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        overflow: hidden;
-        margin-bottom: 30px;
-    }
-
-    .user-table table {
-        width: 100%;
-        border-collapse: collapse;
-        font-family: var(--font-body);
-        font-size: 0.95rem;
-    }
-
-    .user-table th, .user-table td {
-        padding: 14px 18px;
-        text-align: left;
-        border-bottom: 1px solid #DDE2E8;
-    }
-
-    .user-table th {
-        background-color: var(--color-bg);
-        font-weight: 600;
-        color: var(--color-primary);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-size: 0.85rem;
-    }
-
-    .user-table td {
-        color: var(--color-text);
-    }
-
-    /* Row hover effect */
-    .user-table tbody tr:hover {
-        background-color: #f9f9fb;
-        transition: background-color 0.2s ease;
-    }
-
-    /* Checkbox alignment */
-    .user-table td input[type="checkbox"] {
-        margin-right: 8px;
-        accent-color: var(--color-secondary); /* modern browsers */
-    }
-
-    /* Status badges */
-    .user-table td:nth-child(5) {
-        font-weight: 600;
-    }
-
-    .user-table td:nth-child(5).active {
-        color: #28a745; /* green */
-    }
-
-    .user-table td:nth-child(5).inactive {
-        color: var(--color-error); /* red */
-    }
-
-    /* Permission styling */
-    .user-table td:nth-child(6) {
-        font-style: italic;
-        color: var(--color-secondary);
-    }
-
+.form-content {
+    animation: fadeSlideIn 0.6s ease;
 }
-

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESCKWEAR IMS - Supplier Details</title>
+  <link rel="stylesheet" href="../css/suppliers.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <h1>ESCKWEAR</h1>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="inventory.html">Inventory</a></li>
+        <li class="active"><a href="suppliers.html">Suppliers</a></li>
+        <li><a href="usermanagement.html">User Management</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+      <div class="main-header">
+        <h2>Supplier Details</h2>
+      </div>
+
+      <!-- Supplier Details Container -->
+      <div id="supplierDetails" class="details-container">
+        <!-- Populated dynamically -->
+      </div>
+
+      <a href="suppliers.html" class="back-link">← Back to Suppliers</a>
+    </main>
+  </div>
+
+  <script src="../js/supplierDetails.js"></script>
+</body>
+</html>
