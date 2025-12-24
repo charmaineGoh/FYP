@@ -9,10 +9,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- ADDED: Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="app-container">
-        <!-- Sidebar Navigation -->
+        <!-- Sidebar Navigation (No changes needed here) -->
         <nav class="sidebar">
             <div class="sidebar-header">
                 <h1>ESCKWEAR</h1>
@@ -23,49 +26,73 @@
                 <li><a href="inventory.html">Inventory</a></li>
                 <li><a href="suppliers.html">Suppliers</a></li>
                 <li><a href="usermanagement.html">User Management</a></li>
-               
             </ul>
             <div class="sidebar-footer">
-                <a href ="settings.html">Settings</a>
+                <a href="settings.html">Settings</a>
             </div>
         </nav>
 
         <!-- Main Content -->
         <main class="main-content" id="main-content">
             <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+            
             <header class="main-header">
                 <h2>Dashboard Overview</h2>
-                <button id="download-btn">Download Report (PDF)</button>
+                
+                <!-- ADDED: Filter Controls -->
+                <div class="filter-section">
+                    <input type="date" id="start-date" class="date-input">
+                    <span>to</span>
+                    <input type="date" id="end-date" class="date-input">
+                    <button id="filter-btn" class="filter-btn">Apply Filter</button>
+                    <button id="download-btn">Download PDF</button>
+                </div>
             </header>
 
             <!-- Summary Cards -->
             <div class="summary-cards">
                 <div class="card">
                     <h3>Total Stock Level</h3>
-                    <p id ="total-stock"class="card-value">0</p>
-                    <span class="card-info">Units across 5 locations</span>
+                    <p id="total-stock" class="card-value">0</p>
+                    <span id="location-info" class="card-info">Units across 0 locations</span>
                 </div>
                 <div class="card">
-                    <h3>Inbound (Last 30 Days)</h3>
-                    <p id = "inbound-stocks"class="card-value">0</p>
-                    <span class="card-info">Units from 8 suppliers</span>
+                    <h3>Inbound</h3>
+                    <p id="inbound-stocks" class="card-value">0</p>
+                    <span class="card-info">Records in selected range</span>
                 </div>
                 <div class="card">
-                    <h3>Outbound (Last 30 Days)</h3>
-                    <p id = "outbound-stocks"class="card-value">980</p>
-                    <span class="card-info">Units sold or transferred</span>
+                    <h3>Outbound</h3>
+                    <p id="outbound-stocks" class="card-value">0</p>
+                    <span class="card-info">Records in selected range</span>
                 </div>
-                <div class="card">
-                    <h3>Stock Movements</h3>
-                    <p id= "movements-stocks" class="card-value">75</p>
-                    <span class="card-info">Internal transfers this month</span>
-                </div>
+                <!-- You can add more cards here as needed -->
             </div>
 
-            <!-- More content like charts or tables would go here -->
-            <div class="content-placeholder">
-                <h3>Recent Activity</h3>
-                <p>A table or chart of recent inventory transactions would be displayed here.</p>
+            <!-- ADDED: Chart Section -->
+            <div class="dashboard-grid">
+                <div class="chart-container">
+                    <h3>Stock Levels per ID</h3>
+                    <canvas id="inventoryChart"></canvas>
+                </div>
+
+                <!-- ADDED: Table for Recent Activity -->
+                <div class="content-placeholder activity-table-container">
+                    <h3>Detailed Activity</h3>
+                    <table id="activity-table">
+                        <thead>
+                            <tr>
+                                <th>Stock ID</th>
+                                <th>Quantity</th>
+                                <th>Location</th>
+                                <th>Last Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activity-body">
+                            <!-- JS will inject rows here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </main>
     </div>
@@ -73,6 +100,8 @@
     <!-- Libraries for PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- Your Dashboard Logic -->
     <script src="../js/dashboard.js"></script>
 
     <script>
@@ -81,6 +110,5 @@
         document.querySelector(".main-content").classList.toggle("expanded");
     }
     </script>
-
 </body>
 </html>
