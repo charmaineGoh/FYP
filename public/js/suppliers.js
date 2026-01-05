@@ -44,9 +44,9 @@ async function loadSuppliers(category = "all") {
         <td>${supplier.supplierPhone}</td>
         <td>${supplier.supplierEmail}</td>
         <td class="actions">
-          <button class="edit-btn" data-id="${supplier._id}">Edit</button>
-          <button class="delete-btn" data-id="${supplier._id}">Delete</button>
-          <button class="view-btn" data-id="${supplier._id}">View</button>
+          <button class="edit-btn" data-id="${supplier._id}" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+          <button class="delete-btn" data-id="${supplier._id}" title="Delete"><i class="bi bi-trash-fill"></i></button>
+          <button class="view-btn" data-id="${supplier._id}" title="View"><i class="bi bi-eye-fill"></i></button>
         </td>
       `;
       supplierTableBody.appendChild(row);

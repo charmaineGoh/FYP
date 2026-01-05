@@ -23,7 +23,13 @@
             <ul class="sidebar-nav">
                 <li class="active"><a href="dashboard.html">Dashboard</a></li>
                 <li><a href="products.html">Products</a></li>
-                <li><a href="inventory.html">Inventory</a></li>
+                <li class="dropdown-toggle">
+                    <a href="#">Inventory ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="inventory.html">Stock Levels</a></li>
+                        <li><a href="movement.html">Movement</a></li>
+                    </ul>
+                </li>
                 <li><a href="suppliers.html">Suppliers</a></li>
                 <li><a href="usermanagement.html">User Management</a></li>
             </ul>
@@ -100,6 +106,9 @@
     <!-- Libraries for PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- Auth Script -->
+    <script src="../js/auth.js"></script>
     
     <!-- Your Dashboard Logic -->
     <script src="../js/dashboard.js"></script>

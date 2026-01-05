@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="../css/inventory.css">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 <body>
 <div class="app-container">
@@ -18,7 +20,13 @@
     <ul class="sidebar-nav">
       <li><a href="dashboard.html">Dashboard</a></li>
       <li><a href="products.html">Products</a></li>
-      <li class="active"><a href="inventory.html">Inventory</a></li>
+      <li class="dropdown-toggle active">
+        <a href="#">Inventory ▼</a>
+        <ul class="dropdown-menu">
+          <li class="active"><a href="inventory.html">Stock Levels</a></li>
+          <li><a href="movement.html">Movement</a></li>
+        </ul>
+      </li>
       <li><a href="suppliers.html">Suppliers</a></li>
       <li><a href="usermanagement.html">User Management</a></li>
     </ul>
@@ -33,18 +41,28 @@
     <header class="main-header">
       <h2>Inventory</h2>
       <div class="filter-container">
-        <label for="filter-category">Filter by:</label>
-        <select id="filter-category">
-          <option value="all">All</option>
-          <option value="shirts">Shirts</option>
-          <option value="pants">Pants</option>
-          <option value="accessories">Accessories</option>
-        </select>
+        <input type="text" id="searchInput" placeholder="Search by Stock ID">
+        <button id="searchBtn" title="Search Inventory">Search</button>
         <button id="addInventoryBtn" class="icon-btn" title="Add Inventory">+</button>
       </div>
     </header>
 
-    <div id="inventoryList" class="inventory-list"></div>
+    <div id="inventoryList" class="inventory-table">
+      <table id="inventoryTableBody">
+        <thead>
+          <tr>
+            <th>Stock ID</th>
+            <th>Quantity</th>
+            <th>Warehouse</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Rows will be populated dynamically -->
+        </tbody>
+      </table>
+    </div>
+
   </main>
 </div>
 
@@ -55,19 +73,13 @@
     <h3>Add Inventory</h3>
     <form id="addInventoryForm">
       <label for="add-stockId">Stock ID:</label>
-      <input type="text" id="add-stockId" required>
-
-      <label for="add-productId">Product ID:</label>
-      <input type="text" id="add-productId">
+      <input type="text" id="add-stockId" placeholder="e.g., STK001" required>
 
       <label for="add-quantity">Quantity:</label>
-      <input type="number" id="add-quantity" required>
+      <input type="number" id="add-quantity" min="1" placeholder="Enter quantity" required>
 
       <label for="add-warehouseLocation">Warehouse Location:</label>
-      <input type="text" id="add-warehouseLocation" required>
-
-      <label for="add-image">Image URL:</label>
-      <input type="text" id="add-image">
+      <input type="text" id="add-warehouseLocation" placeholder="Enter warehouse location" required>
 
       <button type="submit" class="primary-btn">Save</button>
     </form>
@@ -78,25 +90,24 @@
 <div id="editModal" class="modal hidden">
   <div class="modal-content">
     <span class="close">&times;</span>
-    <h2>Edit Stock Item</h2>
+    <h3>Edit Stock Item</h3>
     <form id="editForm">
-      <label for="edit-stockId">Stock ID</label>
+      <label for="edit-stockId">Stock ID:</label>
       <input id="edit-stockId" readonly>
 
-      <label for="edit-quantity">Quantity</label>
-      <input id="edit-quantity" type="number" required>
+      <label for="edit-quantity">Quantity:</label>
+      <input id="edit-quantity" type="number" min="1" required>
 
-      <label for="edit-warehouseLocation">Warehouse</label>
-      <input id="edit-warehouseLocation" required>
+      <label for="edit-warehouseLocation">Warehouse Location:</label>
+      <input id="edit-warehouseLocation" placeholder="Enter warehouse location" required>
 
-      <label for="edit-image">Image URL</label>
-      <input id="edit-image">
-
-      <button type="submit" class="primary-btn">Save Changes</button>
+      <button type="submit" class="primary-btn">Save</button>
     </form>
   </div>
 </div>
+
 <!-- External JS -->
+<script src="../js/auth.js"></script>
 <script src="../js/inventory.js"></script>
 </body>
 </html>

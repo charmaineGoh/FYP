@@ -1,59 +1,32 @@
-// --- Get references to all the new elements ---
-const loginTab = document.getElementById('login-tab');
-const signupTab = document.getElementById('signup-tab');
 const loginForm = document.getElementById('login-form');
-const signupForm = document.getElementById('signup-form');
-
-const usernameInput = document.getElementById('username');
+const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const errorMessage = document.getElementById('error-message');
 
-// --- Tab Switching Logic ---
-loginTab.addEventListener('click', () => {
-    // Make login tab active
-    loginTab.classList.add('active');
-    signupTab.classList.remove('active');
+loginForm.addEventListener('submit', async function(event) {
+    event.preventDefault();
 
-    // Show login form and hide signup form
-    loginForm.classList.remove('hidden');
-    signupForm.classList.add('hidden');
-});
-
-signupTab.addEventListener('click', () => {
-    // Make signup tab active
-    signupTab.classList.add('active');
-    loginTab.classList.remove('active');
-
-    // Show signup form and hide login form
-    signupForm.classList.remove('hidden');
-    loginForm.classList.add('hidden');
-});
-
-// --- Login Form Submission Logic (same as before) ---
-loginForm.addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent page refresh
-
-    const username = usernameInput.value;
+    const email = emailInput.value;
     const password = passwordInput.value;
 
-    // FAKE authentication
-    if ((username === 'supervisor' && password === 'pass123') || (username === 'staff' && password === 'pass123')) {
-        console.log('Login successful!');
-        window.location.href = 'dashboard.html';
-    } else {
-        errorMessage.textContent = 'Invalid username or password.';
-    }
-});
+    try {
+        const res = await fetch('http://localhost:3000/users/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
 
-// --- (Optional) Add a simple handler for the signup form ---
-signupForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-    // In a real app, you would register the user here.
-    // For now, we'll just log it and redirect.
-    console.log('Signup form submitted. Simulating account creation...');
-    alert('Account created successfully! Please log in.');
-    
-    // Switch back to the login tab
-    loginTab.click();
+        if (res.ok) {
+            const data = await res.json();
+            localStorage.setItem('currentUser', JSON.stringify(data.user));
+            window.location.href = 'dashboard.html';
+        } else {
+            const err = await res.json();
+            errorMessage.textContent = err.error || 'Login failed';
+        }
+    } catch (err) {
+        console.error('Login error:', err);
+        errorMessage.textContent = 'Unable to connect to server';
+    }
 });
 

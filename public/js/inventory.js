@@ -5,56 +5,61 @@ function toggleSidebar() {
 
 const inventoryList = document.getElementById("inventoryList");
 
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
+
 // -------------------- Load Inventory --------------------
 async function loadInventory() {
   try {
     const res = await fetch("http://localhost:3000/stocks");
     const stocks = await res.json();
 
-    inventoryList.innerHTML = "";
+    const tbody = document.querySelector("#inventoryTableBody tbody");
+    tbody.innerHTML = "";
 
     if (!stocks || stocks.length === 0) {
-      inventoryList.innerHTML = "<p>No items in inventory.</p>";
+      tbody.innerHTML = "<tr><td colspan='4'>No items in inventory.</td></tr>";
       return;
     }
 
     stocks.forEach(stock => {
-      const card = createInventoryCard(stock);
-      inventoryList.appendChild(card);
+      const row = createInventoryRow(stock);
+      tbody.appendChild(row);
     });
   } catch (err) {
     console.error("Error fetching inventory:", err);
-    inventoryList.innerHTML = "<p>Failed to load inventory.</p>";
+    const tbody = document.querySelector("#inventoryTableBody tbody");
+    tbody.innerHTML = "<tr><td colspan='4'>Failed to load inventory.</td></tr>";
   }
 }
 
 loadInventory();
 
-// -------------------- Create Inventory Card --------------------
-function createInventoryCard(stock) {
-  const card = document.createElement("div");
-  card.classList.add("inventory-card");
+// -------------------- Create Inventory Row --------------------
+function createInventoryRow(stock) {
+  const row = document.createElement("tr");
 
-  card.innerHTML = `
-    <img src="${stock.image}" alt="${stock.stockId}">
-    <div class="inventory-info">
-      <h3>${stock.stockId}</h3>
-      <p>Quantity: ${stock.quantity}</p>
-      <p>Warehouse: ${stock.warehouseLocation}</p>
-    </div>
+  row.innerHTML = `
+    <td>${stock.stockId}</td>
+    <td>${stock.quantity}</td>
+    <td>${stock.warehouseLocation}</td>
+    <td>
+      <button class="edit-btn" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+    </td>
   `;
 
-  // Open edit modal with original values
-  card.addEventListener("click", () => {
+  // Open edit modal with original values when button is clicked
+  const editBtn = row.querySelector(".edit-btn");
+  editBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
     document.getElementById("edit-stockId").value = stock.stockId;
     document.getElementById("edit-quantity").value = stock.quantity;
     document.getElementById("edit-warehouseLocation").value = stock.warehouseLocation;
-    document.getElementById("edit-image").value = stock.image;
 
     editModal.classList.remove("hidden");
   });
 
-  return card;
+  return row;
 }
 
 // -------------------- Add Inventory Modal --------------------
@@ -68,17 +73,14 @@ window.addEventListener("click", e => {
   if (e.target === addModal) addModal.classList.add("hidden");
 });
 
-// Handle Add form submission (use add- prefixed IDs)
+// Handle Add form submission
 document.getElementById("addInventoryForm").addEventListener("submit", async e => {
   e.preventDefault();
 
-  const productIdValue = document.getElementById("add-productId").value.trim();
   const newStock = {
     stockId: document.getElementById("add-stockId").value,
-    productId: productIdValue === "" || productIdValue.toUpperCase() === "NIL" ? null : productIdValue,
     quantity: parseInt(document.getElementById("add-quantity").value, 10),
-    warehouseLocation: document.getElementById("add-warehouseLocation").value,
-    image: document.getElementById("add-image").value
+    warehouseLocation: document.getElementById("add-warehouseLocation").value
   };
 
   try {
@@ -94,7 +96,14 @@ document.getElementById("addInventoryForm").addEventListener("submit", async e =
       loadInventory();
     } else {
       const err = await res.json();
-      alert("❌ Failed: " + err.error);
+      const errorMessage = err.error || err.message || "Unknown error";
+      
+      // Check for duplicate key error
+      if (errorMessage.includes('E11000') || errorMessage.includes('duplicate key')) {
+        alert("❌ Stock ID already exists! Please use a different Stock ID.");
+      } else {
+        alert("❌ Failed: " + errorMessage);
+      }
     }
   } catch (err) {
     console.error("Error adding inventory:", err);
@@ -118,8 +127,7 @@ document.getElementById("editForm").addEventListener("submit", async (e) => {
   const updatedStock = {
     stockId: document.getElementById("edit-stockId").value,
     quantity: parseInt(document.getElementById("edit-quantity").value, 10),
-    warehouseLocation: document.getElementById("edit-warehouseLocation").value,
-    image: document.getElementById("edit-image").value
+    warehouseLocation: document.getElementById("edit-warehouseLocation").value
   };
 
   try {
@@ -141,4 +149,27 @@ document.getElementById("editForm").addEventListener("submit", async (e) => {
     console.error("Error updating stock:", err);
     alert("❌ Error updating stock.");
   }
+});
+
+searchBtn.addEventListener("click", () => {
+  const term = searchInput.value.trim().toLowerCase();
+
+  document.querySelectorAll("#inventoryTableBody tbody tr").forEach(row => {
+    const stockIdCell = row.querySelector("td:first-child"); // first column = Stock ID
+    if (stockIdCell) {
+      const stockId = stockIdCell.innerText.toLowerCase();
+      row.style.display = stockId.includes(term) ? "" : "none";
+    }
+  });
+});
+
+searchInput.addEventListener("input", () => {
+  const term = searchInput.value.trim().toLowerCase();
+  document.querySelectorAll("#inventoryTableBody tbody tr").forEach(row => {
+    const stockIdCell = row.querySelector("td:first-child"); // first column = Stock ID
+    if (stockIdCell) {
+      const stockId = stockIdCell.innerText.toLowerCase();
+      row.style.display = stockId.includes(term) ? "" : "none";
+    }
+  });
 });

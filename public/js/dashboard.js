@@ -7,22 +7,51 @@ const mainContent = document.getElementById('main-content');
 
 async function populateDashboard() {
   try {
-    const res = await fetch("http://localhost:3000/stocks");
-    const stocks = await res.json();
+    // Fetch stocks data
+    const stocksRes = await fetch("http://localhost:3000/stocks");
+    const stocks = await stocksRes.json();
+
+    // Fetch movements data
+    const movementsRes = await fetch("http://localhost:3000/movements");
+    const movements = await movementsRes.json();
+
+    // Get date filter values if they exist
+    const startDateInput = document.getElementById("start-date");
+    const endDateInput = document.getElementById("end-date");
+    
+    let filteredMovements = movements;
+    
+    // Apply date filtering if dates are selected
+    if (startDateInput && endDateInput && startDateInput.value && endDateInput.value) {
+      const startDate = new Date(startDateInput.value);
+      const endDate = new Date(endDateInput.value);
+      endDate.setHours(23, 59, 59, 999); // Include the entire end date
+      
+      filteredMovements = movements.filter(m => {
+        const movementDate = new Date(m.dateUpdated);
+        return movementDate >= startDate && movementDate <= endDate;
+      });
+    }
 
     // Calculate totals
     const totalStock = stocks.reduce((sum, s) => sum + s.quantity, 0);
+    const uniqueLocations = new Set(stocks.map(s => s.warehouseLocation)).size;
 
-    // Placeholder values until you have inbound/outbound/movements logic
-    const inbound = 0;
-    const outbound = 0;
-    const movements = 0;
+    // Calculate inbound and outbound from movements
+    const inbound = filteredMovements.filter(m => m.movementType === "Inbound").length;
+    const outbound = filteredMovements.filter(m => m.movementType === "Outbound").length;
 
     // Update the DOM
     document.getElementById("total-stock").textContent = totalStock;
-    document.getElementById("inbound-stock").textContent = inbound;
-    document.getElementById("outbound-stock").textContent = outbound;
-    document.getElementById("movements-stock").textContent = movements;
+    
+    // Update location info if element exists
+    const locationInfo = document.getElementById("location-info");
+    if (locationInfo) {
+      locationInfo.textContent = `Units across ${uniqueLocations} location${uniqueLocations !== 1 ? 's' : ''}`;
+    }
+    
+    document.getElementById("inbound-stocks").textContent = inbound;
+    document.getElementById("outbound-stocks").textContent = outbound;
   } catch (err) {
     console.error("Error populating dashboard:", err);
   }
@@ -30,6 +59,14 @@ async function populateDashboard() {
 
 // Run it once when the page loads
 populateDashboard();
+
+// Add filter button listener if it exists
+const filterBtn = document.getElementById("filter-btn");
+if (filterBtn) {
+  filterBtn.addEventListener("click", () => {
+    populateDashboard();
+  });
+}
 
 // Add a click event listener to the download button
 downloadBtn.addEventListener('click', () => {

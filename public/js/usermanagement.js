@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
       userTableBody.innerHTML = "";
 
       if (users.length === 0) {
-        userTableBody.innerHTML = `<tr><td colspan="7">No users found.</td></tr>`;
+        userTableBody.innerHTML = `<tr><td colspan="6">No users found.</td></tr>`;
         return;
       }
 
@@ -28,14 +28,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${user.name}</td>
-          <td>${user.companyName || ""}</td>
           <td>${user.position || ""}</td>
           <td>${user.role}</td>
           <td>${user.email || ""}</td>
           <td>${user.status || "active"}</td>
           <td class="actions">
-            <button class="edit-btn" data-id="${user._id}">Edit</button>
-            <button class="delete-btn" data-id="${user._id}">Delete</button>
+            <button class="edit-btn" data-id="${user._id}" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+            <button class="delete-btn" data-id="${user._id}" title="Delete"><i class="bi bi-trash-fill"></i></button>
           </td>
         `;
         userTableBody.appendChild(row);
@@ -43,12 +42,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // Edit button handler
         row.querySelector(".edit-btn").addEventListener("click", () => {
           document.getElementById("editUserId").value = user._id;
-          document.getElementById("editUserCompany").value = user.companyName; // fixed ID
           document.getElementById("editUserName").value = user.name;
           document.getElementById("editUserPosition").value = user.position;
           document.getElementById("editUserRole").value = user.role;
           document.getElementById("editUserEmail").value = user.email;
           document.getElementById("editUserStatus").value = user.status;
+          document.getElementById("editUserPassword").value = ""; // Clear password field
           editUserModal.classList.remove("hidden");
         });
 
@@ -69,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     } catch (err) {
       console.error("Error fetching users:", err);
-      userTableBody.innerHTML = `<tr><td colspan="7">Failed to load users.</td></tr>`;
+      userTableBody.innerHTML = `<tr><td colspan="6">Failed to load users.</td></tr>`;
     }
   }
 
@@ -88,10 +87,10 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     const user = {
       name: document.getElementById("userName").value,
-      companyName: document.getElementById("userCompany").value,
       position: document.getElementById("userPosition").value,
       role: document.getElementById("userRole").value,
       email: document.getElementById("userEmail").value,
+      password: document.getElementById("userPassword").value,
       status: document.getElementById("userStatus").value
     };
     const res = await fetch("http://localhost:3000/users", {
@@ -121,12 +120,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const userId = document.getElementById("editUserId").value;
     const user = {
       name: document.getElementById("editUserName").value,
-      companyName: document.getElementById("editUserCompany").value, // fixed ID
       position: document.getElementById("editUserPosition").value,
       role: document.getElementById("editUserRole").value,
       email: document.getElementById("editUserEmail").value,
       status: document.getElementById("editUserStatus").value
     };
+    
+    // Only include password if it was changed
+    const password = document.getElementById("editUserPassword").value;
+    if (password.trim() !== "") {
+      user.password = password;
+    }
+    
     const res = await fetch(`http://localhost:3000/users/${userId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },

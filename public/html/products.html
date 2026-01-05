@@ -21,7 +21,13 @@
     <ul class="sidebar-nav">
       <li><a href="dashboard.html">Dashboard</a></li>
       <li class="active"><a href="products.html">Products</a></li>
-      <li><a href="inventory.html">Inventory</a></li>
+      <li class="dropdown-toggle">
+        <a href="#">Inventory ▼</a>
+        <ul class="dropdown-menu">
+          <li><a href="inventory.html">Stock Levels</a></li>
+          <li><a href="movement.html">Movement</a></li>
+        </ul>
+      </li>
       <li><a href="suppliers.html">Suppliers</a></li>
       <li><a href="usermanagement.html">User Management</a></li>
     </ul>
@@ -71,7 +77,7 @@
       <input type="text" id="productDescription" required>
 
       <label for="productImage">Image:</label>
-      <input type="text" id="productImage" required>
+      <input type="file" id="productImage" accept="image/*" required>
 
       <label for="productPrice">Price:</label>
       <input type="number" id="productPrice" required>
@@ -106,7 +112,7 @@
       <input id="editProductDescription" required>
 
       <label for="editProductImage">Image:</label>
-      <input type="text" id="editProductImage" required>
+      <input type="file" id="editProductImage" accept="image/*">
 
       <label for="editProductPrice">Price:</label>
       <input type="number" id="editProductPrice" required>
@@ -114,11 +120,15 @@
       <label for="editProductQuantity">Quantity:</label>
       <input type="number" id="editProductQuantity" required>
 
-      <button type="submit" class="primary-btn">Save</button>
+      <div class="button-group">
+        <button type="submit" class="primary-btn">Save</button>
+        <button type="button" id="deleteProductBtn" class="danger-btn">Delete</button>
+      </div>
     </form>
   </div>
 </div>
     
+<script src="../js/auth.js"></script>
 <script src="../js/products.js"></script>
 
 </body>

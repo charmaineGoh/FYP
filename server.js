@@ -6,6 +6,7 @@ const stockRoutes = require('./routes/stockRoutes');
 const productRoutes = require('./routes/productRoutes');
 const supplierRoutes = require('./routes/supplierRoutes');
 const userRoutes = require('./routes/userRoutes');
+const movementRoutes = require('./routes/movementRoutes');
 
 
 
@@ -23,6 +24,7 @@ app.use('/stocks', stockRoutes); // The dashboard stats will be at /stocks/dashb
 app.use('/products', productRoutes);
 app.use('/suppliers', supplierRoutes);
 app.use('/users', userRoutes);
+app.use('/movements', movementRoutes);
 
 // Static files (Make sure your dashboard.html is inside the 'public' folder)
 app.use(express.static('public')); 

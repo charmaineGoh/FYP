@@ -20,7 +20,13 @@
             <ul class="sidebar-nav">
                 <li><a href="dashboard.html">Dashboard</a></li>
                 <li><a href="products.html">Products</a></li>
-                <li><a href="inventory.html">Inventory</a></li>
+                <li class="dropdown-toggle">
+                  <a href="#">Inventory ▼</a>
+                  <ul class="dropdown-menu">
+                    <li><a href="inventory.html">Stock Levels</a></li>
+                    <li><a href="movement.html">Movement</a></li>
+                  </ul>
+                </li>
                 <li><a href="suppliers.html">Suppliers</a></li>
                 <li><a href="usermanagement.html">User Management</a></li>
             </ul>
@@ -112,6 +118,7 @@
             </div>
         </main>
     </div>
+    <script src="../js/auth.js"></script>
     <script src="../js/settings.js"></script>
 </body>
 </html>

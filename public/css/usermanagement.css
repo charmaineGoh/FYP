@@ -3,14 +3,19 @@
     --font-header: 'Raleway', sans-serif;
     --font-body: 'Work Sans', sans-serif;
 
-    /* Color Palette from PRD */
-    --color-bg: #F4F7FC; /* Light grey-blue */
-    --color-primary: hsl(220, 18%, 51%); /* Blue grey */
-    --color-secondary: #A39BBE; /* Muted Lavender */
-    --color-accent: #E8C8D4; /* Blush Pink */
+    /* Professional E-commerce Color Palette */
+    --color-bg: #F8F9FC;
+    --color-primary: #6366F1; /* Modern Indigo */
+    --color-primary-dark: #4F46E5;
+    --color-secondary: #8B5CF6; /* Purple */
+    --color-secondary-light: #A78BFA;
+    --color-accent: #06B6D4; /* Cyan */
     --color-white: #FFFFFF;
-    --color-text: #333333;
-    --color-error: #D9534F;
+    --color-text: #1F2937;
+    --color-text-light: #6B7280;
+    --color-border: #E5E7EB;
+    --color-error: #EF4444;
+    --color-success: #10B981;
 }
 
 body {
@@ -149,32 +154,31 @@ body {
 }
 
 .sidebar {
-    width: 250px;
+    width: 260px;
     background: var(--color-white);
     display: flex;
     flex-direction: column;
-    border-right: 1px solid #DDE2E8;
-    transition: all 0.3s ease;
+    border-right: 1px solid var(--color-border);
+    transition: width 0.3s ease;
+    flex-shrink: 0;
+}
+
+.sidebar.collapsed {
+    width: 0;
     overflow: hidden;
 }
 
 .sidebar-header {
-    padding: 25px 20px;
-    border-bottom: 1px solid #DDE2E8;
-}
-
-/* Collapsed sidebar */
-.sidebar.collapsed {
-    width: 0;
-    padding: 0;
+    padding: 30px 20px;
+    border-bottom: 1px solid var(--color-border);
 }
 
 .sidebar-header h1 {
     font-family: var(--font-header);
     color: var(--color-primary);
-    font-size: 1.8rem;
-    text-align: center;
+    font-size: 1.6rem;
     margin: 0;
+    letter-spacing: 1px;
 }
 
 .sidebar-nav {
@@ -186,41 +190,56 @@ body {
 
 .sidebar-nav li a {
     display: block;
-    padding: 15px 25px;
+    padding: 12px 25px;
     text-decoration: none;
     color: var(--color-primary);
     font-weight: 500;
-    transition: background-color 0.3s, color 0.3s;
+    transition: all 0.2s;
 }
 
 .sidebar-nav li.active a,
 .sidebar-nav li a:hover {
-    background-color: var(--color-bg);
+    background-color: #f0f2f6;
     color: var(--color-text);
-    border-right: 3px solid var(--color-secondary);
+    border-right: 4px solid var(--color-secondary);
 }
 
-.sidebar-footer {
-  margin-top: auto; /* pushes footer to bottom */
-  list-style: none;
-  padding: 0;
-  margin: 0;
+/* Dropdown Menu */
+.dropdown-toggle > a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dropdown-menu {
+    list-style: none;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.dropdown-toggle:hover .dropdown-menu {
+    max-height: 500px;
+}
+
+.dropdown-menu li a {
+    padding-left: 45px;
+    font-size: 0.9rem;
+    background-color: #f8f9fc;
+}
+
+.dropdown-menu li.active a {
+    background-color: #f0f2f6;
+    border-left: 4px solid var(--color-secondary);
+    padding-left: 41px;
 }
 
 .sidebar-footer a {
-  display: block;
-  padding: 15px 25px;
-  text-decoration: none;
-  color: var(--color-primary);
-  font-weight: 500;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.sidebar-footer a:hover,
-.sidebar-footer.active a {
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  border-right: 3px solid var(--color-secondary);
+    padding: 20px 25px;
+    display: block;
+    text-decoration: none;
+    color: var(--color-primary);
+    border-top: 1px solid var(--color-border);
 }
 
 /* Hamburger button */
@@ -587,12 +606,35 @@ body {
   color: #fff;
   border: none;
   border-radius: 4px;
-  font-weight: 500;
+  font-weight: 600;
+  width: 100%;
   transition: background-color 0.3s ease;
 }
 
 .modal-content button.primary-btn:hover {
   background-color: #b7a7da;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+
+.danger-btn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #EF4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  width: 100%;
+}
+
+.danger-btn:hover {
+  background-color: #DC2626;
 }
 
 .modal .close {

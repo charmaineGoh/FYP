@@ -51,7 +51,7 @@ function createProductCard(product) {
     document.getElementById("editProductName").value = product.productName;
     document.getElementById("editProductCategory").value = product.category;
     document.getElementById("editProductDescription").value = product.description;
-    document.getElementById("editProductImage").value = product.image;
+    document.getElementById("editProductImage").dataset.currentImage = product.image;
     document.getElementById("editProductPrice").value = product.price;
     document.getElementById("editProductQuantity").value = product.quantity;
 
@@ -76,11 +76,16 @@ window.addEventListener("click", e => {
 document.getElementById("addProductForm").addEventListener("submit", async e => {
   e.preventDefault();
 
+  const imageFile = document.getElementById("productImage").files[0];
+  
+  // Convert image file to base64 or create object URL
+  const imageUrl = imageFile ? URL.createObjectURL(imageFile) : null;
+
   const product = {
     productName: document.getElementById("productName").value,
     category: document.getElementById("productCategory").value,
     description: document.getElementById("productDescription").value,
-    image: document.getElementById("productImage").value, // ⚠️ if using file upload, switch to FormData
+    image: imageUrl,
     price: parseFloat(document.getElementById("productPrice").value),
     quantity: parseInt(document.getElementById("productQuantity").value, 10)
   };
@@ -120,11 +125,16 @@ document.getElementById("editProductForm").addEventListener("submit", async e =>
   e.preventDefault();
 
   const productId = document.getElementById("editProductId").value;
+  const imageFile = document.getElementById("editProductImage").files[0];
+  
+  // Use new image if provided, otherwise keep the current one
+  const imageUrl = imageFile ? URL.createObjectURL(imageFile) : document.getElementById("editProductImage").dataset.currentImage;
+
   const product = {
     productName: document.getElementById("editProductName").value,
     category: document.getElementById("editProductCategory").value,
     description: document.getElementById("editProductDescription").value,
-    image: document.getElementById("editProductImage").value,
+    image: imageUrl,
     price: parseFloat(document.getElementById("editProductPrice").value),
     quantity: parseInt(document.getElementById("editProductQuantity").value, 10)
   };
@@ -147,6 +157,45 @@ document.getElementById("editProductForm").addEventListener("submit", async e =>
   } catch (err) {
     console.error("Error updating product:", err);
     alert("❌ Error updating product.");
+  }
+});
+
+// Handle Delete Product button using event delegation
+document.addEventListener("click", async (e) => {
+  if (e.target && e.target.id === "deleteProductBtn") {
+    if (!confirm("Are you sure you want to delete this product?")) {
+      return;
+    }
+
+    const productId = document.getElementById("editProductId").value;
+    console.log("Attempting to delete product with ID:", productId);
+    
+    if (!productId) {
+      alert("❌ No product selected");
+      return;
+    }
+
+    try {
+      const res = await fetch(`http://localhost:3000/products/${productId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" }
+      });
+
+      console.log("Delete response status:", res.status);
+      
+      if (res.ok) {
+        alert("✅ Product deleted!");
+        editModal.classList.add("hidden");
+        loadProduct();
+      } else {
+        const err = await res.json();
+        console.error("Delete error response:", err);
+        alert("❌ Failed to delete: " + (err.error || "Unknown error"));
+      }
+    } catch (err) {
+      console.error("Error deleting product:", err);
+      alert("❌ Error deleting product: " + err.message);
+    }
   }
 });
 

@@ -27,22 +27,22 @@ router.get("/", async (req, res) => {
 router.get("/:productId", async (req, res) => {
   try {
     const { productId } = req.params;
-    const product = await Product.findOne({ productId });
+    const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
     }
     res.json(product);
   } catch (err) {
-    console.error("Error fetching stock:", err.message);
-    res.status(500).json({ error: "Failed to fetch stock" });
+    console.error("Error fetching product:", err.message);
+    res.status(500).json({ error: "Failed to fetch product" });
   }
 });
 
 router.put("/:productId", async (req, res) => {
   try {
     const { productId } = req.params;
-    const updatedProduct = await Product.findOneAndUpdate(
-      { productId },
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
       req.body,
       { new: true }
     );
@@ -53,6 +53,20 @@ router.put("/:productId", async (req, res) => {
   } catch (err) {
     console.error("Error updating product:", err);
     res.status(400).json({ error: err.message });
+  }
+});
+
+router.delete("/:productId", async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const deletedProduct = await Product.findByIdAndDelete(productId);
+    if (!deletedProduct) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+    res.json({ message: "Product deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting product:", err);
+    res.status(500).json({ error: "Failed to delete product" });
   }
 });
 
