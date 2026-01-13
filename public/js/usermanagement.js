@@ -1,4 +1,32 @@
+// Profile dropdown functionality
+function initializeProfile() {
+  const user = checkAuth();
+  if (!user) return;
+
+  const profileAvatar = document.getElementById('profile-avatar');
+  const profileDropdown = document.getElementById('profile-dropdown');
+  const profileName = document.getElementById('profile-name');
+  const profileInitial = document.getElementById('profile-initial');
+
+  // Set profile name and initial
+  profileName.textContent = user.name || user.email || 'User';
+  const initial = (user.name || user.email).charAt(0).toUpperCase();
+  profileInitial.textContent = initial;
+
+  // Toggle dropdown on avatar click
+  profileAvatar.addEventListener('click', (e) => {
+    e.stopPropagation();
+    profileDropdown.classList.toggle('show');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', () => {
+    profileDropdown.classList.remove('show');
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  initializeProfile();
   const userTableBody = document.querySelector("#userTable tbody");
 
   const addUserModal = document.getElementById("addUserModal");

@@ -3,6 +3,33 @@ function toggleSidebar() {
   document.querySelector(".main-content").classList.toggle("expanded");
 }
 
+// Profile dropdown functionality
+function initializeProfile() {
+  const user = checkAuth();
+  if (!user) return;
+
+  const profileAvatar = document.getElementById('profile-avatar');
+  const profileDropdown = document.getElementById('profile-dropdown');
+  const profileName = document.getElementById('profile-name');
+  const profileInitial = document.getElementById('profile-initial');
+
+  // Set profile name and initial
+  profileName.textContent = user.name || user.email || 'User';
+  const initial = (user.name || user.email).charAt(0).toUpperCase();
+  profileInitial.textContent = initial;
+
+  // Toggle dropdown on avatar click
+  profileAvatar.addEventListener('click', (e) => {
+    e.stopPropagation();
+    profileDropdown.classList.toggle('show');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', () => {
+    profileDropdown.classList.remove('show');
+  });
+}
+
 const inventoryList = document.getElementById("inventoryList");
 
 const searchInput = document.getElementById("searchInput");
@@ -26,6 +53,9 @@ async function loadInventory() {
       const row = createInventoryRow(stock);
       tbody.appendChild(row);
     });
+
+    // Check and display low stock alerts
+    updateLowStockAlert(stocks);
   } catch (err) {
     console.error("Error fetching inventory:", err);
     const tbody = document.querySelector("#inventoryTableBody tbody");
@@ -38,15 +68,20 @@ loadInventory();
 // -------------------- Create Inventory Row --------------------
 function createInventoryRow(stock) {
   const row = document.createElement("tr");
+  const isLowStock = stock.quantity < 10;
 
   row.innerHTML = `
     <td>${stock.stockId}</td>
-    <td>${stock.quantity}</td>
+    <td><span class="quantity-value">${stock.quantity}</span>${isLowStock ? '<span class="low-stock-badge">●</span>' : ''}</td>
     <td>${stock.warehouseLocation}</td>
     <td>
       <button class="edit-btn" title="Edit"><i class="bi bi-pencil-fill"></i></button>
     </td>
   `;
+  
+  if (isLowStock) {
+    row.classList.add('low-stock-row');
+  }
 
   // Open edit modal with original values when button is clicked
   const editBtn = row.querySelector(".edit-btn");
@@ -162,6 +197,26 @@ searchBtn.addEventListener("click", () => {
     }
   });
 });
+// -------------------- Low Stock Alert --------------------
+function updateLowStockAlert(stocks) {
+  const lowStockAlertsEnabled = localStorage.getItem("lowStockAlerts") === "true";
+  
+  if (!lowStockAlertsEnabled) {
+    document.getElementById('lowStockAlert').style.display = 'none';
+    return;
+  }
+  
+  const lowStockItems = stocks.filter(stock => stock.quantity < 10);
+  const alertDiv = document.getElementById('lowStockAlert');
+  const countSpan = document.getElementById('lowStockCount');
+
+  if (lowStockItems.length > 0) {
+    alertDiv.style.display = 'flex';
+    countSpan.textContent = `${lowStockItems.length} item${lowStockItems.length > 1 ? 's' : ''} below 10 units`;
+  } else {
+    alertDiv.style.display = 'none';
+  }
+}
 
 searchInput.addEventListener("input", () => {
   const term = searchInput.value.trim().toLowerCase();
@@ -173,3 +228,7 @@ searchInput.addEventListener("input", () => {
     }
   });
 });
+
+// Initialize profile on page load
+loadInventory();
+initializeProfile();

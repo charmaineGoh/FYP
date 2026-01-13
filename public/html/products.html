@@ -17,6 +17,16 @@
   <nav class="sidebar">
     <div class="sidebar-header">
       <h1>ESCKWEAR</h1>
+      <!-- Profile Section -->
+      <div class="profile-section-sidebar">
+        <div class="profile-avatar-sidebar" id="profile-avatar" title="Click to logout">
+          <span id="profile-initial">U</span>
+        </div>
+        <div class="profile-dropdown-sidebar" id="profile-dropdown">
+          <div class="profile-name" id="profile-name">User Name</div>
+          <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+      </div>
     </div>
     <ul class="sidebar-nav">
       <li><a href="dashboard.html">Dashboard</a></li>
@@ -41,7 +51,10 @@
     <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
 
     <header class="main-header">
-      <h2>Products</h2>
+      <div class="header-left">
+        <h2>Products</h2>
+      </div>
+      
       <div class="filter-container">
         <label for="filter-category">Filter by:</label>
         <select id="filter-category">

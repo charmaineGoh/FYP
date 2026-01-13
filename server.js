@@ -26,8 +26,99 @@ app.use('/suppliers', supplierRoutes);
 app.use('/users', userRoutes);
 app.use('/movements', movementRoutes);
 
+// HTML page routes (must come BEFORE static middleware)
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public/html/index.html');
+});
+
+app.get('/index.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/index.html');
+});
+
+app.get('/dashboard.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/dashboard.html');
+});
+
+app.get('/products.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/products.html');
+});
+
+app.get('/inventory.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/inventory.html');
+});
+
+app.get('/movement.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/movement.html');
+});
+
+app.get('/suppliers.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/suppliers.html');
+});
+
+app.get('/supplierDetails.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/supplierDetails.html');
+});
+
+app.get('/usermanagement.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/usermanagement.html');
+});
+
+app.get('/settings.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/settings.html');
+});
+
+app.get('/addproduct.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/addproduct.html');
+});
+
 // Static files (Make sure your dashboard.html is inside the 'public' folder)
-app.use(express.static('public')); 
+app.use(express.static('public'));
+
+// Root route - serve index.html
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public/html/index.html');
+});
+
+// HTML page routes
+app.get('/index.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/index.html');
+});
+
+app.get('/dashboard.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/dashboard.html');
+});
+
+app.get('/products.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/products.html');
+});
+
+app.get('/inventory.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/inventory.html');
+});
+
+app.get('/movement.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/movement.html');
+});
+
+app.get('/suppliers.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/suppliers.html');
+});
+
+app.get('/supplierDetails.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/supplierDetails.html');
+});
+
+app.get('/usermanagement.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/usermanagement.html');
+});
+
+app.get('/settings.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/settings.html');
+});
+
+app.get('/addproduct.html', (req, res) => {
+  res.sendFile(__dirname + '/public/html/addproduct.html');
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
