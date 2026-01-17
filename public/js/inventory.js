@@ -38,7 +38,7 @@ const searchBtn = document.getElementById("searchBtn");
 // -------------------- Load Inventory --------------------
 async function loadInventory() {
   try {
-    const res = await fetch("http://localhost:3000/stocks");
+    const res = await fetch("/stocks");
     const stocks = await res.json();
 
     const tbody = document.querySelector("#inventoryTableBody tbody");
@@ -63,25 +63,32 @@ async function loadInventory() {
   }
 }
 
-loadInventory();
-
 // -------------------- Create Inventory Row --------------------
 function createInventoryRow(stock) {
   const row = document.createElement("tr");
   const isLowStock = stock.quantity < 10;
+  const supplierName = stock.supplierId?.supplierName || "—";
 
   row.innerHTML = `
     <td>${stock.stockId}</td>
     <td><span class="quantity-value">${stock.quantity}</span>${isLowStock ? '<span class="low-stock-badge">●</span>' : ''}</td>
     <td>${stock.warehouseLocation}</td>
+    <td>${supplierName}</td>
     <td>
       <button class="edit-btn" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+      ${!stock.productId ? `<button class="add-to-products-btn" title="Add to Products"><i class="bi bi-plus-circle"></i></button>` : ''}
     </td>
   `;
   
   if (isLowStock) {
     row.classList.add('low-stock-row');
   }
+
+  // Store stock data in row for easy access
+  row.dataset.stockId = stock.stockId;
+  row.dataset.productId = stock.productId?._id || '';
+  row.dataset.supplierId = stock.supplierId?._id || '';
+  row.dataset.quantity = stock.quantity;
 
   // Open edit modal with original values when button is clicked
   const editBtn = row.querySelector(".edit-btn");
@@ -90,9 +97,21 @@ function createInventoryRow(stock) {
     document.getElementById("edit-stockId").value = stock.stockId;
     document.getElementById("edit-quantity").value = stock.quantity;
     document.getElementById("edit-warehouseLocation").value = stock.warehouseLocation;
+    document.getElementById("edit-supplierId").value = stock.supplierId?._id || '';
 
     editModal.classList.remove("hidden");
   });
+
+  // Add to Products functionality
+  const addToProductsBtn = row.querySelector(".add-to-products-btn");
+  if (addToProductsBtn) {
+    addToProductsBtn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      
+      // Show a modal to get product details
+      showAddProductFromInventoryModal(stock);
+    });
+  }
 
   return row;
 }
@@ -102,35 +121,103 @@ const addModal = document.getElementById("addInventoryModal");
 const addCloseBtn = addModal.querySelector(".close");
 const addBtn = document.getElementById("addInventoryBtn");
 
-addBtn.addEventListener("click", () => addModal.classList.remove("hidden"));
+addBtn.addEventListener("click", async () => {
+  // Load products and suppliers list for selection
+  await loadProductsForSelection();
+  await loadSuppliersForSelection();
+  addModal.classList.remove("hidden");
+});
 addCloseBtn.addEventListener("click", () => addModal.classList.add("hidden"));
 window.addEventListener("click", e => {
   if (e.target === addModal) addModal.classList.add("hidden");
 });
 
+// Load products for selection dropdown
+async function loadProductsForSelection() {
+  try {
+    const res = await fetch("/products");
+    const products = await res.json();
+
+    const productSelect = document.getElementById("add-productId");
+    if (productSelect) {
+      productSelect.innerHTML = '<option value="">-- Select Product (Optional) --</option>';
+      products.forEach(product => {
+        const option = document.createElement("option");
+        option.value = product._id;
+        option.textContent = `${product.productName} (${product.category})`;
+        productSelect.appendChild(option);
+      });
+    }
+  } catch (err) {
+    console.error("Error loading products:", err);
+  }
+}
+
+// Load suppliers for selection dropdown
+async function loadSuppliersForSelection() {
+  try {
+    const res = await fetch("/suppliers");
+    const suppliers = await res.json();
+
+    const supplierSelect = document.getElementById("add-supplierId");
+    const editSupplierSelect = document.getElementById("edit-supplierId");
+    
+    const supplierOptions = '<option value="">-- Select Supplier (Optional) --</option>' + 
+      suppliers.map(supplier => `<option value="${supplier._id}">${supplier.supplierName}</option>`).join('');
+    
+    if (supplierSelect) {
+      supplierSelect.innerHTML = supplierOptions;
+    }
+    if (editSupplierSelect) {
+      editSupplierSelect.innerHTML = supplierOptions;
+    }
+  } catch (err) {
+    console.error("Error loading suppliers:", err);
+  }
+}
+
 // Handle Add form submission
 document.getElementById("addInventoryForm").addEventListener("submit", async e => {
   e.preventDefault();
 
+  const productId = document.getElementById("add-productId")?.value || null;
+  const supplierId = document.getElementById("add-supplierId")?.value || null;
+  const stockId = document.getElementById("add-stockId")?.value || null;
+
   const newStock = {
-    stockId: document.getElementById("add-stockId").value,
+    productId: productId || undefined,
+    supplierId: supplierId || undefined,
+    stockId: stockId || undefined,
     quantity: parseInt(document.getElementById("add-quantity").value, 10),
     warehouseLocation: document.getElementById("add-warehouseLocation").value
   };
 
+  console.log("Adding stock with supplier:", newStock);
+
   try {
-    const res = await fetch("http://localhost:3000/stocks", {
+    const res = await fetch("/stocks", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newStock)
     });
 
+    console.log("Add response status:", res.status);
+
     if (res.ok) {
+      const savedStock = await res.json();
+      console.log("Stock saved:", savedStock);
       alert("✅ Inventory added!");
       addModal.classList.add("hidden");
       loadInventory();
     } else {
-      const err = await res.json();
+      const contentType = res.headers.get('content-type') || '';
+      let err;
+      if (contentType.includes('application/json')) {
+        try { err = await res.json(); } catch { err = { error: 'Invalid JSON error response' }; }
+      } else {
+        const text = await res.text();
+        err = { error: text || res.statusText };
+      }
       const errorMessage = err.error || err.message || "Unknown error";
       
       // Check for duplicate key error
@@ -155,29 +242,66 @@ window.addEventListener("click", e => {
   if (e.target === editModal) editModal.classList.add("hidden");
 });
 
+// Load products for edit modal's product selection
+async function loadProductsForEditSelection() {
+  try {
+    const res = await fetch("/products");
+    const products = await res.json();
+
+    const productSelect = document.getElementById("edit-productId");
+    if (productSelect) {
+      productSelect.innerHTML = '<option value="">-- No Product Linked --</option>';
+      products.forEach(product => {
+        const option = document.createElement("option");
+        option.value = product._id;
+        option.textContent = `${product.productName} (${product.category})`;
+        productSelect.appendChild(option);
+      });
+    }
+  } catch (err) {
+    console.error("Error loading products:", err);
+  }
+}
 // Handle edit form submission (use edit- prefixed IDs)
 document.getElementById("editForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  const supplierId = document.getElementById("edit-supplierId")?.value || null;
+  const stockId = document.getElementById("edit-stockId").value;
+
   const updatedStock = {
-    stockId: document.getElementById("edit-stockId").value,
+    stockId: stockId,
+    supplierId: supplierId || undefined,
     quantity: parseInt(document.getElementById("edit-quantity").value, 10),
     warehouseLocation: document.getElementById("edit-warehouseLocation").value
   };
 
+  console.log("Updating stock:", updatedStock);
+
   try {
-    const res = await fetch(`http://localhost:3000/stocks/${updatedStock.stockId}`, {
+    const res = await fetch(`/stocks/${stockId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updatedStock)
     });
 
+    console.log("Update response status:", res.status);
+
     if (res.ok) {
+      const updatedData = await res.json();
+      console.log("Stock updated:", updatedData);
       alert("✅ Stock updated!");
       editModal.classList.add("hidden");
       loadInventory();
     } else {
-      const err = await res.json();
+      const contentType = res.headers.get('content-type') || '';
+      let err;
+      if (contentType.includes('application/json')) {
+        try { err = await res.json(); } catch { err = { error: 'Invalid JSON error response' }; }
+      } else {
+        const text = await res.text();
+        err = { error: text || res.statusText };
+      }
       alert("❌ Failed to update: " + err.error);
     }
   } catch (err) {
@@ -197,6 +321,134 @@ searchBtn.addEventListener("click", () => {
     }
   });
 });
+
+// -------------------- Add Product from Inventory --------------------
+function showAddProductFromInventoryModal(stock) {
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.innerHTML = `
+    <div class="modal-content">
+      <span class="close" onclick="this.parentElement.parentElement.remove()">&times;</span>
+      <h3>Add to Products</h3>
+      <form id="addProductFromInventoryForm">
+        <label for="productName">Product Name:</label>
+        <input type="text" id="productName" placeholder="Enter product name" value="${stock.stockId}" required>
+
+        <label for="productCategory">Category:</label>
+        <select id="productCategory" required>
+          <option value="Shirts">Shirts</option>
+          <option value="Pants">Pants</option>
+          <option value="Accessories">Accessories</option>
+        </select>
+
+        <label for="productDescription">Description:</label>
+        <input type="text" id="productDescription" placeholder="Enter product description" required>
+
+        <label for="productImage">Product Image:</label>
+        <input type="file" id="productImage" accept="image/*" required>
+
+        <label for="productPrice">Price:</label>
+        <input type="number" id="productPrice" step="0.01" placeholder="Enter price" required>
+
+        <label for="productQuantity">Quantity (from stock):</label>
+        <input type="number" id="productQuantity" value="${stock.quantity}" readonly>
+
+        <button type="submit" class="btn-primary">Add to Products</button>
+      </form>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  modal.classList.remove('hidden');
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.remove();
+    }
+  });
+
+  document.getElementById('addProductFromInventoryForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const imageFile = document.getElementById("productImage").files[0];
+    
+    // Convert image file to Base64
+    let imageUrl = null;
+    if (imageFile) {
+      // Check file size (max 2MB)
+      if (imageFile.size > 2097152) {
+        alert("❌ Image is too large. Please use an image smaller than 2MB.");
+        return;
+      }
+
+      imageUrl = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (event) => resolve(event.target.result);
+        reader.readAsDataURL(imageFile);
+      });
+    } else {
+      alert("❌ Please select an image");
+      return;
+    }
+
+    const newProduct = {
+      productName: document.getElementById("productName").value,
+      category: document.getElementById("productCategory").value,
+      description: document.getElementById("productDescription").value,
+      image: imageUrl,
+      price: parseFloat(document.getElementById("productPrice").value),
+      quantity: parseInt(document.getElementById("productQuantity").value, 10)
+    };
+
+    console.log("Submitting product:", newProduct);
+
+    try {
+      const res = await fetch("/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newProduct)
+      });
+
+      console.log("Response status:", res.status);
+
+      if (res.ok) {
+        const product = await res.json();
+        console.log("Product created:", product);
+        
+        // Now link the stock to this product by updating stock with product name
+        const updateStockRes = await fetch(`/stocks/${stock.stockId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ quantity: stock.quantity })
+        });
+
+        if (updateStockRes.ok) {
+          alert("✅ Product added and linked to inventory!");
+          modal.remove();
+          loadInventory();
+        } else {
+          alert("✅ Product added!");
+          modal.remove();
+          loadInventory();
+        }
+      } else {
+        const contentType = res.headers.get('content-type') || '';
+        let err;
+        if (contentType.includes('application/json')) {
+          try { err = await res.json(); } catch { err = { error: 'Invalid JSON error response' }; }
+        } else {
+          const text = await res.text();
+          err = { error: text || res.statusText };
+        }
+        console.error("Backend error:", err);
+        alert("❌ Failed to add product: " + (err.error || "Unknown error"));
+      }
+    } catch (err) {
+      console.error("Error adding product from inventory:", err);
+      alert("❌ Error adding product: " + err.message);
+    }
+  });
+}
 // -------------------- Low Stock Alert --------------------
 function updateLowStockAlert(stocks) {
   const lowStockAlertsEnabled = localStorage.getItem("lowStockAlerts") === "true";
@@ -232,3 +484,4 @@ searchInput.addEventListener("input", () => {
 // Initialize profile on page load
 loadInventory();
 initializeProfile();
+loadSuppliersForSelection();

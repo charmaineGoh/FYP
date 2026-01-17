@@ -3,10 +3,46 @@ const router = express.Router();
 const Product = require("../models/product");
 
 router.post("/", async (req, res) => {
-  console.log("Received product data:", req.body);
+  console.log("Received product data - Keys:", Object.keys(req.body));
+  console.log("Product name:", req.body.productName);
+  console.log("Price:", req.body.price, typeof req.body.price);
+  console.log("Quantity:", req.body.quantity, typeof req.body.quantity);
+  console.log("Category:", req.body.category);
+  console.log("Description:", req.body.description);
+  console.log("Image size:", req.body.image ? req.body.image.length : "No image");
+
   try {
+    const { productName, price, quantity, description, image, category } = req.body;
+    
+    // Validate required fields
+    if (!productName || typeof productName !== 'string' || productName.trim() === '') {
+      return res.status(400).json({ error: "Product name is required and must be a string" });
+    }
+
+    if (price === undefined || price === null || typeof price !== 'number' || price <= 0) {
+      return res.status(400).json({ error: "Price is required, must be a number, and greater than 0" });
+    }
+
+    if (quantity === undefined || quantity === null || typeof quantity !== 'number' || quantity < 0) {
+      return res.status(400).json({ error: "Quantity is required and must be a non-negative number" });
+    }
+
+    if (!description || typeof description !== 'string' || description.trim() === '') {
+      return res.status(400).json({ error: "Description is required and must be a string" });
+    }
+
+    if (!category || typeof category !== 'string' || category.trim() === '') {
+      return res.status(400).json({ error: "Category is required and must be a string" });
+    }
+
+    // Check image size (Base64 can be large - limit to 2MB)
+    if (image && image.length > 2097152) {
+      return res.status(400).json({ error: "Image is too large. Please use a smaller image (max 2MB)" });
+    }
+
     const product = new Product(req.body);
     await product.save();
+    console.log("Product saved successfully:", product._id);
     res.status(201).json(product);
   } catch (err) {
     console.error("Error saving product:", err);

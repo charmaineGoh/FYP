@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Stock = require('../models/stock');
+const Product = require('../models/product');
 
 // ✅ NEW: Get Dashboard Stats (Filterable by Date)
 // Access this via: GET /stocks/stats?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD
@@ -48,9 +49,33 @@ router.get('/stats', async (req, res) => {
 router.post("/", async (req, res) => {
   console.log("Received stock data:", req.body);
   try {
-    const stock = new Stock(req.body);
+    const { productId, stockId, quantity, warehouseLocation } = req.body;
+
+    // If productId is provided, verify it exists and use it to auto-generate stockId if needed
+    let finalStockId = stockId;
+    if (productId) {
+      const product = await Product.findById(productId);
+      if (!product) {
+        return res.status(404).json({ error: "Product not found" });
+      }
+
+      // Auto-generate stockId from productId if not provided
+      if (!finalStockId) {
+        const count = await Stock.countDocuments({ productId });
+        finalStockId = `STK-${productId.toString().slice(-8)}-${count + 1}`;
+      }
+    }
+
+    const stock = new Stock({
+      productId,
+      stockId: finalStockId,
+      quantity,
+      warehouseLocation
+    });
+
     await stock.save();
-    res.status(201).json(stock);
+    const populatedStock = await stock.populate('productId');
+    res.status(201).json(populatedStock);
   } catch (err) {
     console.error("Error saving stock:", err);
     res.status(400).json({ error: err.message });
@@ -60,7 +85,7 @@ router.post("/", async (req, res) => {
 // ✅ Get all inventory
 router.get('/', async (req, res) => {
   try {
-    const stocks = await Stock.find(); 
+    const stocks = await Stock.find().populate('productId').populate('supplierId'); 
     res.json(stocks);
   } catch (err) {
     console.error("Error fetching inventory:", err.message);
@@ -73,7 +98,7 @@ router.get('/', async (req, res) => {
 router.get("/:stockId", async (req, res) => {
   try {
     const { stockId } = req.params;
-    const stock = await Stock.findOne({ stockId }).populate("productId");
+    const stock = await Stock.findOne({ stockId }).populate("productId").populate("supplierId");
     if (!stock) {
       return res.status(404).json({ error: "Stock not found" });
     }
@@ -92,10 +117,26 @@ router.put("/:stockId", async (req, res) => {
       { stockId },
       { ...req.body, lastUpdated: Date.now() }, // Ensure timestamp updates
       { new: true }
-    );
+    ).populate('productId').populate('supplierId');
 
     if (!updated) {
       return res.status(404).json({ error: "Stock not found" });
+    }
+
+    // Find product by name matching stockId (since stock ID = product name)
+    const product = await Product.findOne({ productName: stockId });
+    
+    if (product) {
+      // Get all stocks with matching stockId and sum their quantities
+      const allStocksWithThisId = await Stock.find({ stockId: stockId });
+      const totalQuantity = allStocksWithThisId.reduce((sum, stock) => sum + stock.quantity, 0);
+      
+      // Update product quantity
+      await Product.findByIdAndUpdate(
+        product._id,
+        { quantity: totalQuantity },
+        { new: true }
+      );
     }
 
     res.json(updated);

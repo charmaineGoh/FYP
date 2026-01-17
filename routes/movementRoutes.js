@@ -42,42 +42,46 @@ router.post('/', async (req, res) => {
   try {
     const { stockId, movementType, from, to, quantity } = req.body;
 
-    // Validate that stock exists
-    const stock = await Stock.findOne({ stockId: stockId });
+    // Try to find existing stock; if missing, auto-create so it appears in Stock Levels
+    let stock = await Stock.findOne({ stockId: stockId });
+    let stockAutoCreated = false;
     if (!stock) {
-      return res.status(404).json({ message: 'Stock ID not found' });
-    }
-
-    // For outbound movements, check if quantity is available
-    if (movementType === 'Outbound') {
-      if (stock.quantity < quantity) {
-        return res.status(400).json({ 
-          message: `Insufficient quantity. Available: ${stock.quantity}, Requested: ${quantity}` 
+      try {
+        const warehouseLocation = movementType === 'Inbound' ? to : from;
+        const initialQty = movementType === 'Inbound' ? quantity : 0; // Outbound starts at 0
+        stock = new Stock({
+          stockId,
+          quantity: initialQty,
+          warehouseLocation: warehouseLocation || 'Unassigned',
         });
+        await stock.save();
+        stockAutoCreated = true;
+      } catch (err) {
+        console.error('Failed to auto-create stock:', err.message);
       }
     }
 
     // Create movement record
-    const movement = new Movement({
-      stockId,
-      movementType,
-      from,
-      to,
-      quantity
-    });
-
+    const movement = new Movement({ stockId, movementType, from, to, quantity });
     await movement.save();
 
-    // Update stock quantity based on movement type
-    if (movementType === 'Inbound') {
-      stock.quantity += quantity;
-    } else if (movementType === 'Outbound') {
-      stock.quantity -= quantity;
+    if (stock) {
+      // Only enforce availability checks and update quantities if stock existed prior
+      if (movementType === 'Outbound' && !stockAutoCreated) {
+        if (stock.quantity < quantity) {
+          return res.status(400).json({
+            message: `Insufficient quantity. Available: ${stock.quantity}, Requested: ${quantity}`
+          });
+        }
+        stock.quantity -= quantity;
+      } else if (movementType === 'Inbound' && !stockAutoCreated) {
+        stock.quantity += quantity;
+      }
+      stock.lastUpdated = new Date();
+      await stock.save();
     }
-    stock.lastUpdated = new Date();
-    await stock.save();
 
-    res.status(201).json({ message: 'Movement recorded successfully', movement });
+    res.status(201).json({ message: 'Movement recorded successfully', movement, stockCreated: stockAutoCreated });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -93,38 +97,34 @@ router.put('/:movementId', async (req, res) => {
       return res.status(404).json({ message: 'Movement not found' });
     }
 
-    // Get the stock record
-    const stock = await Stock.findOne({ stockId: movement.stockId });
-    
-    // Reverse the original movement effect on quantity
-    if (movement.movementType === 'Inbound') {
-      stock.quantity -= movement.quantity;
-    } else if (movement.movementType === 'Outbound') {
-      stock.quantity += movement.quantity;
-    }
-
-    // Validate new stock ID if changed
-    if (stockId !== movement.stockId) {
-      const newStock = await Stock.findOne({ stockId: stockId });
-      if (!newStock) {
-        return res.status(404).json({ message: 'New Stock ID not found' });
+    // Reverse original movement effect if original stock exists
+    const originalStock = await Stock.findOne({ stockId: movement.stockId });
+    if (originalStock) {
+      if (movement.movementType === 'Inbound') {
+        originalStock.quantity -= movement.quantity;
+      } else if (movement.movementType === 'Outbound') {
+        originalStock.quantity += movement.quantity;
       }
+      originalStock.lastUpdated = new Date();
+      await originalStock.save();
     }
 
-    // Apply new movement
-    if (movementType === 'Inbound') {
-      stock.quantity += quantity;
-    } else if (movementType === 'Outbound') {
-      if (stock.quantity < quantity) {
-        return res.status(400).json({ 
-          message: `Insufficient quantity. Available: ${stock.quantity}, Requested: ${quantity}` 
-        });
+    // Apply new movement to target stock if it exists; otherwise skip stock updates
+    const targetStock = await Stock.findOne({ stockId: stockId });
+    if (targetStock) {
+      if (movementType === 'Inbound') {
+        targetStock.quantity += quantity;
+      } else if (movementType === 'Outbound') {
+        if (targetStock.quantity < quantity) {
+          return res.status(400).json({
+            message: `Insufficient quantity. Available: ${targetStock.quantity}, Requested: ${quantity}`
+          });
+        }
+        targetStock.quantity -= quantity;
       }
-      stock.quantity -= quantity;
+      targetStock.lastUpdated = new Date();
+      await targetStock.save();
     }
-
-    stock.lastUpdated = new Date();
-    await stock.save();
 
     // Update movement record
     movement.stockId = stockId;
@@ -149,17 +149,17 @@ router.delete('/:movementId', async (req, res) => {
       return res.status(404).json({ message: 'Movement not found' });
     }
 
-    // Reverse the movement effect on stock quantity
+    // Reverse the movement effect on stock quantity only if stock exists
     const stock = await Stock.findOne({ stockId: movement.stockId });
-    
-    if (movement.movementType === 'Inbound') {
-      stock.quantity -= movement.quantity;
-    } else if (movement.movementType === 'Outbound') {
-      stock.quantity += movement.quantity;
+    if (stock) {
+      if (movement.movementType === 'Inbound') {
+        stock.quantity -= movement.quantity;
+      } else if (movement.movementType === 'Outbound') {
+        stock.quantity += movement.quantity;
+      }
+      stock.lastUpdated = new Date();
+      await stock.save();
     }
-
-    stock.lastUpdated = new Date();
-    await stock.save();
 
     await Movement.findByIdAndDelete(req.params.movementId);
     res.json({ message: 'Movement deleted successfully' });

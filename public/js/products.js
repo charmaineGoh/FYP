@@ -3,6 +3,8 @@ function toggleSidebar() {
   document.querySelector(".main-content").classList.toggle("expanded");
 }
 
+console.log("[products] script loaded");
+
 // Profile dropdown functionality
 function initializeProfile() {
   const user = checkAuth();
@@ -33,11 +35,28 @@ function initializeProfile() {
 // Get product list container
 const productList = document.getElementById('productList');
 
-// Load products from backend
-async function loadProduct() {
+// Load products with optional category filter (default all)
+async function loadProduct(category = "all") {
   try {
-    const res = await fetch("http://localhost:3000/products");
-    const products = await res.json();
+    console.log("[products] fetching /products …");
+    const res = await fetch("/products");
+    const contentType = res.headers.get('content-type') || '';
+
+    if (!res.ok) {
+      let err;
+      if (contentType.includes('application/json')) {
+        try { err = await res.json(); } catch { err = { error: 'Invalid JSON error response' }; }
+      } else {
+        const text = await res.text();
+        err = { error: text || res.statusText };
+      }
+      console.error("Fetch /products failed:", err);
+      productList.innerHTML = `<p>Failed to load products: ${err.error || 'Unknown error'}</p>`;
+      return;
+    }
+
+    const products = contentType.includes('application/json') ? await res.json() : [];
+    console.log(`[products] fetch ok, received ${products.length} items`);
 
     productList.innerHTML = '';
 
@@ -46,18 +65,30 @@ async function loadProduct() {
       return;
     }
 
-    products.forEach(product => {
+    // Filter by category if provided
+    const filtered = category === "all"
+      ? products
+      : products.filter(p => p.category?.toLowerCase() === category.toLowerCase());
+
+    if (filtered.length === 0) {
+      productList.innerHTML = "<p>No products found in this category.</p>";
+      return;
+    }
+
+    filtered.forEach(product => {
       const card = createProductCard(product);
       productList.appendChild(card);
     });
+    console.log(`Rendered ${filtered.length} products (filtered)`);
   } catch (err) {
     console.error("Error fetching products:", err);
     productList.innerHTML = "<p>Failed to load products.</p>";
   }
 }
+
+// Initial load
 loadProduct();
 
-// Create product card
 function createProductCard(product) {
   const card = document.createElement("div");
   card.classList.add("product-card");
@@ -72,7 +103,6 @@ function createProductCard(product) {
     </div>
   `;
 
-  // Open edit modal when card clicked
   card.addEventListener("click", () => {
     document.getElementById("editProductId").value = product._id || product.productId;
     document.getElementById("editProductName").value = product.productName;
@@ -104,9 +134,19 @@ document.getElementById("addProductForm").addEventListener("submit", async e => 
   e.preventDefault();
 
   const imageFile = document.getElementById("productImage").files[0];
-  
-  // Convert image file to base64 or create object URL
-  const imageUrl = imageFile ? URL.createObjectURL(imageFile) : null;
+  if (!imageFile) {
+    alert("❌ Please select an image");
+    return;
+  }
+  if (imageFile.size > 2097152) {
+    alert("❌ Image is too large. Please use an image smaller than 2MB.");
+    return;
+  }
+  const imageUrl = await new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (event) => resolve(event.target.result);
+    reader.readAsDataURL(imageFile);
+  });
 
   const product = {
     productName: document.getElementById("productName").value,
@@ -118,7 +158,7 @@ document.getElementById("addProductForm").addEventListener("submit", async e => 
   };
 
   try {
-    const res = await fetch("http://localhost:3000/products", {
+    const res = await fetch("/products", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(product)
@@ -129,8 +169,15 @@ document.getElementById("addProductForm").addEventListener("submit", async e => 
       addModal.classList.add("hidden");
       loadProduct();
     } else {
-      const err = await res.json();
-      alert("❌ Failed: " + err.error);
+      const contentType = res.headers.get('content-type') || '';
+      let err;
+      if (contentType.includes('application/json')) {
+        try { err = await res.json(); } catch { err = { error: 'Invalid JSON error response' }; }
+      } else {
+        const text = await res.text();
+        err = { error: text || res.statusText };
+      }
+      alert("❌ Failed: " + (err.error || 'Unknown error'));
     }
   } catch (err) {
     console.error("Error adding product:", err);
@@ -153,9 +200,19 @@ document.getElementById("editProductForm").addEventListener("submit", async e =>
 
   const productId = document.getElementById("editProductId").value;
   const imageFile = document.getElementById("editProductImage").files[0];
-  
-  // Use new image if provided, otherwise keep the current one
-  const imageUrl = imageFile ? URL.createObjectURL(imageFile) : document.getElementById("editProductImage").dataset.currentImage;
+
+  let imageUrl = document.getElementById("editProductImage").dataset.currentImage;
+  if (imageFile) {
+    if (imageFile.size > 2097152) {
+      alert("❌ Image is too large. Please use an image smaller than 2MB.");
+      return;
+    }
+    imageUrl = await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (event) => resolve(event.target.result);
+      reader.readAsDataURL(imageFile);
+    });
+  }
 
   const product = {
     productName: document.getElementById("editProductName").value,
@@ -167,7 +224,7 @@ document.getElementById("editProductForm").addEventListener("submit", async e =>
   };
 
   try {
-    const res = await fetch(`http://localhost:3000/products/${productId}`, {
+    const res = await fetch(`/products/${productId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(product)
@@ -178,8 +235,15 @@ document.getElementById("editProductForm").addEventListener("submit", async e =>
       editModal.classList.add("hidden");
       loadProduct();
     } else {
-      const err = await res.json();
-      alert("❌ Failed to update: " + err.error);
+      const contentType = res.headers.get('content-type') || '';
+      let err;
+      if (contentType.includes('application/json')) {
+        try { err = await res.json(); } catch { err = { error: 'Invalid JSON error response' }; }
+      } else {
+        const text = await res.text();
+        err = { error: text || res.statusText };
+      }
+      alert("❌ Failed to update: " + (err.error || 'Unknown error'));
     }
   } catch (err) {
     console.error("Error updating product:", err);
@@ -195,78 +259,40 @@ document.addEventListener("click", async (e) => {
     }
 
     const productId = document.getElementById("editProductId").value;
-    console.log("Attempting to delete product with ID:", productId);
-    
     if (!productId) {
       alert("❌ No product selected");
       return;
     }
 
     try {
-      const res = await fetch(`http://localhost:3000/products/${productId}`, {
+      const res = await fetch(`/products/${productId}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" }
       });
 
-      console.log("Delete response status:", res.status);
-      
       if (res.ok) {
         alert("✅ Product deleted!");
         editModal.classList.add("hidden");
         loadProduct();
       } else {
-        const err = await res.json();
-        console.error("Delete error response:", err);
+        const contentType = res.headers.get('content-type') || '';
+        let err;
+        if (contentType.includes('application/json')) {
+          try { err = await res.json(); } catch { err = { error: 'Invalid JSON error response' }; }
+        } else {
+          const text = await res.text();
+          err = { error: text || res.statusText };
+        }
         alert("❌ Failed to delete: " + (err.error || "Unknown error"));
       }
     } catch (err) {
-      console.error("Error deleting product:", err);
       alert("❌ Error deleting product: " + err.message);
     }
   }
 });
 
-//Filter
 const filterSelect = document.getElementById("filter-category");
-
-// Load products with optional category filter
-async function loadProduct(category = "all") {
-  try {
-    const res = await fetch("http://localhost:3000/products");
-    const products = await res.json();
-
-    productList.innerHTML = '';
-
-    if (!products || products.length === 0) {
-      productList.innerHTML = "<p>No products found.</p>";
-      return;
-    }
-
-    // Filter by category
-    const filtered = category === "all"
-      ? products
-      : products.filter(p => p.category.toLowerCase() === category.toLowerCase());
-
-    if (filtered.length === 0) {
-      productList.innerHTML = "<p>No products found in this category.</p>";
-      return;
-    }
-
-    filtered.forEach(product => {
-      const card = createProductCard(product);
-      productList.appendChild(card);
-    });
-  } catch (err) {
-    console.error("Error fetching products:", err);
-    productList.innerHTML = "<p>Failed to load products.</p>";
-  }
-}
-
-// Initial load
-loadProduct();
 initializeProfile();
-
-// Listen for filter changes
 filterSelect.addEventListener("change", () => {
   const selectedCategory = filterSelect.value;
   loadProduct(selectedCategory);

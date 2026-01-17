@@ -109,6 +109,11 @@ function renderInventoryChart(stocks) {
   const sortedStocks = [...stocks].sort((a, b) => a.stockId.localeCompare(b.stockId));
   const labels = sortedStocks.map((s) => s.stockId);
   const quantities = sortedStocks.map((s) => s.quantity);
+  
+  // Set colors based on quantity - red if below 10, blue otherwise
+  const backgroundColors = quantities.map(q => q < 10 ? 'rgba(239, 68, 68, 0.15)' : 'rgba(21, 94, 239, 0.15)');
+  const borderColors = quantities.map(q => q < 10 ? 'rgba(239, 68, 68, 0.8)' : 'rgba(21, 94, 239, 0.8)');
+  const hoverColors = quantities.map(q => q < 10 ? 'rgba(239, 68, 68, 0.25)' : 'rgba(21, 94, 239, 0.25)');
 
   if (inventoryChart) inventoryChart.destroy();
 
@@ -121,10 +126,12 @@ function renderInventoryChart(stocks) {
         {
           label: 'Stock Quantity',
           data: quantities,
-          backgroundColor: 'rgba(21, 94, 239, 0.15)',
-          borderColor: 'rgba(21, 94, 239, 0.8)',
-          borderWidth: 1.5,
-          hoverBackgroundColor: 'rgba(21, 94, 239, 0.25)',
+          backgroundColor: backgroundColors,
+          borderColor: borderColors,
+          borderWidth: 2,
+          hoverBackgroundColor: hoverColors,
+          barThickness: 40,
+          minBarLength: 5,
         },
       ],
     },
@@ -148,7 +155,12 @@ function renderInventoryChart(stocks) {
         y: {
           beginAtZero: true,
           title: { display: true, text: 'Number of Stocks' },
-          ticks: { precision: 0 },
+          ticks: { 
+            precision: 0,
+            stepSize: 1
+          },
+          min: 0,
+          suggestedMax: Math.max(...quantities) + 5
         },
       },
     },

@@ -71,6 +71,7 @@
             <th>Stock ID</th>
             <th>Quantity</th>
             <th>Warehouse</th>
+            <th>Supplier</th>
             <th></th>
           </tr>
         </thead>
@@ -89,8 +90,18 @@
     <span class="close">&times;</span>
     <h3>Add Inventory</h3>
     <form id="addInventoryForm">
-      <label for="add-stockId">Stock ID:</label>
-      <input type="text" id="add-stockId" placeholder="e.g., STK001" required>
+      <label for="add-productId">Product (Optional):</label>
+      <select id="add-productId">
+        <option value="">-- Select Product (Optional) --</option>
+      </select>
+
+      <label for="add-supplierId">Supplier (Optional):</label>
+      <select id="add-supplierId">
+        <option value="">-- Select Supplier (Optional) --</option>
+      </select>
+
+      <label for="add-stockId">Stock ID (Auto-generated if left blank):</label>
+      <input type="text" id="add-stockId" placeholder="e.g., STK001 (leave blank for auto-generation)">
 
       <label for="add-quantity">Quantity:</label>
       <input type="number" id="add-quantity" min="1" placeholder="Enter quantity" required>
@@ -111,6 +122,11 @@
     <form id="editForm">
       <label for="edit-stockId">Stock ID:</label>
       <input id="edit-stockId" readonly>
+
+      <label for="edit-supplierId">Supplier (Optional):</label>
+      <select id="edit-supplierId">
+        <option value="">-- Select Supplier (Optional) --</option>
+      </select>
 
       <label for="edit-quantity">Quantity:</label>
       <input id="edit-quantity" type="number" min="1" required>

@@ -11,8 +11,10 @@ const movementRoutes = require('./routes/movementRoutes');
 
 
 const app = express();
-app.use(express.json());
-app.use(require('cors')()); // Add this if you face 'CORS' errors during development
+// Middleware: enable CORS and set larger body limits for JSON/urlencoded (Base64 images)
+app.use(require('cors')());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Connect MongoDB
 mongoose.connect(process.env.MONGO_URI)
@@ -49,10 +51,6 @@ app.get('/inventory.html', (req, res) => {
 
 app.get('/movement.html', (req, res) => {
   res.sendFile(__dirname + '/public/html/movement.html');
-});
-
-app.get('/suppliers.html', (req, res) => {
-  res.sendFile(__dirname + '/public/html/suppliers.html');
 });
 
 app.get('/supplierDetails.html', (req, res) => {
