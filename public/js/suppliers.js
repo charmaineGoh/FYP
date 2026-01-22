@@ -188,7 +188,7 @@ searchBtn.addEventListener("click", () => {
   const term = searchInput.value.trim().toLowerCase();
 
   document.querySelectorAll("#supplierTable tbody tr").forEach(row => {
-    const supplierNameCell = row.querySelector("td:first-child"); // first column = Supplier Name
+    const supplierNameCell = row.querySelector("td:first-child"); 
     if (supplierNameCell) {
       const name = supplierNameCell.innerText.toLowerCase();
       row.style.display = name.includes(term) ? "" : "none";
@@ -199,7 +199,7 @@ searchBtn.addEventListener("click", () => {
 searchInput.addEventListener("input", () => {
   const term = searchInput.value.trim().toLowerCase();
   document.querySelectorAll("#supplierTable tbody tr").forEach(row => {
-    const supplierNameCell = row.querySelector("td:first-child"); // first column = Supplier Name
+    const supplierNameCell = row.querySelector("td:first-child"); 
     if (supplierNameCell) {
       const name = supplierNameCell.innerText.toLowerCase();
       row.style.display = name.includes(term) ? "" : "none";

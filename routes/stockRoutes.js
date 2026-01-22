@@ -3,13 +3,13 @@ const router = express.Router();
 const Stock = require('../models/stock');
 const Product = require('../models/product');
 
-// ✅ NEW: Get Dashboard Stats (Filterable by Date)
+// Get Dashboard Stats (Filterable by Date)
 // Access this via: GET /stocks/stats?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD
 router.get('/stats', async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
 
-    // Build filter object based on 'lastUpdated' from your schema
+    // Build filter object based on 'lastUpdated' from  schema
     let query = {};
     if (startDate && endDate) {
       query.lastUpdated = {
@@ -35,7 +35,7 @@ router.get('/stats', async (req, res) => {
     res.json({
       totalStock,
       locationCount: uniqueLocations,
-      recentMovements: stocks.length, // Treating filtered records as movements
+      recentMovements: stocks.length, 
       rawData: stocks,
       chartData: chartData
     });
@@ -45,13 +45,13 @@ router.get('/stats', async (req, res) => {
   }
 });
 
-// ✅ Add inventory (stock)
+// Add inventory (stock)
 router.post("/", async (req, res) => {
   console.log("Received stock data:", req.body);
   try {
     const { productId, stockId, quantity, warehouseLocation } = req.body;
 
-    // If productId is provided, verify it exists and use it to auto-generate stockId if needed
+    
     let finalStockId = stockId;
     if (productId) {
       const product = await Product.findById(productId);
@@ -82,7 +82,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// ✅ Get all inventory
+// Get all inventory
 router.get('/', async (req, res) => {
   try {
     const stocks = await Stock.find().populate('productId').populate('supplierId'); 
@@ -93,8 +93,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// ✅ Get one stock by stockId
-// (Moved below /stats so "stats" isn't treated as an ID)
+// Get one stock by stockId
+
 router.get("/:stockId", async (req, res) => {
   try {
     const { stockId } = req.params;
@@ -109,13 +109,13 @@ router.get("/:stockId", async (req, res) => {
   }
 });
 
-// ✅ Update stock by stockId
+// Update stock by stockId
 router.put("/:stockId", async (req, res) => {
   try {
     const { stockId } = req.params;
     const updated = await Stock.findOneAndUpdate(
       { stockId },
-      { ...req.body, lastUpdated: Date.now() }, // Ensure timestamp updates
+      { ...req.body, lastUpdated: Date.now() }, 
       { new: true }
     ).populate('productId').populate('supplierId');
 
@@ -123,7 +123,7 @@ router.put("/:stockId", async (req, res) => {
       return res.status(404).json({ error: "Stock not found" });
     }
 
-    // Find product by name matching stockId (since stock ID = product name)
+    // Find product by name matching stockId since stock ID = product name
     const product = await Product.findOne({ productName: stockId });
     
     if (product) {
@@ -146,7 +146,7 @@ router.put("/:stockId", async (req, res) => {
   }
 });
 
-// ✅ Delete stock by ID
+// Delete stock by ID
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;

@@ -1,4 +1,4 @@
-// This makes sure we can use the jsPDF library
+
 const { jsPDF } = window.jspdf;
 
 // Get references to the HTML elements
@@ -221,11 +221,11 @@ async function populateDashboard() {
         return movementDate >= startDate && movementDate <= endDate;
       });
 
-      // Build chart quantities as: starting qty before range + net movements inside range
+  
       chartStocks = stocks.map((stock) => {
         const stockMovements = movements.filter((m) => m.stockId === stock.stockId);
 
-        // Net movements from startDate to now (to roll back to starting quantity)
+        // Net movements from startDate to now 
         const netSinceStart = stockMovements.reduce((sum, m) => {
           const movementDate = new Date(m.dateUpdated);
           if (movementDate >= startDate) {

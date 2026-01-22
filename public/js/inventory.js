@@ -287,7 +287,7 @@ async function loadProductsForEditSelection() {
     console.error("Error loading products:", err);
   }
 }
-// Handle edit form submission (use edit- prefixed IDs)
+// Handle edit form submission 
 document.getElementById("editForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -502,7 +502,7 @@ function updateLowStockAlert(stocks) {
 searchInput.addEventListener("input", () => {
   const term = searchInput.value.trim().toLowerCase();
   document.querySelectorAll("#inventoryTableBody tbody tr").forEach(row => {
-    const stockIdCell = row.querySelector("td:first-child"); // first column = Stock ID
+    const stockIdCell = row.querySelector("td:first-child"); 
     if (stockIdCell) {
       const stockId = stockIdCell.innerText.toLowerCase();
       row.style.display = stockId.includes(term) ? "" : "none";

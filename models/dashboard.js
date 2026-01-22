@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function fetchDashboardData(startDate = '', endDate = '') {
     try {
-        // Call your new API route
+        // Call new API route
         let url = `/stocks/dashboard/stats`;
         if (startDate && endDate) {
             url += `?startDate=${startDate}&endDate=${endDate}`;

@@ -64,7 +64,7 @@ router.post('/', async (req, res) => {
       }
     }
 
-    // If stock exists and category provided, update category (helps dashboard grouping)
+    // If stock exists and category provided, update category 
     if (stock && category) {
       stock.category = category;
       await stock.save();
@@ -74,7 +74,7 @@ router.post('/', async (req, res) => {
     if (stock && from) {
       let supplier = await Supplier.findOne({ supplierName: from });
       
-      // If supplier doesn't exist, create a basic one
+      
       if (!supplier) {
         supplier = new Supplier({
           supplierName: from,
@@ -110,7 +110,7 @@ router.post('/', async (req, res) => {
         stock.quantity += quantity;
       }
       
-      // Find and link product if not already linked
+      // Find and link product 
       if (!stock.productId) {
         const linkedProduct = await Product.findOne({ productName: stockId });
         if (linkedProduct) {
@@ -176,7 +176,7 @@ router.put('/:movementId', async (req, res) => {
         }
       }
 
-      // If stock ID changed, update the stock document's stockId
+    
       if (stockIdChanged) {
         originalStock.stockId = stockId;
         
@@ -200,7 +200,7 @@ router.put('/:movementId', async (req, res) => {
       await originalStock.save();
     }
 
-    // Apply new movement to target stock if it exists; otherwise skip stock updates
+    // Apply new movement to target stock if it exists
     const targetStock = await Stock.findOne({ stockId: stockId });
     if (targetStock) {
       if (movementType === 'Inbound') {

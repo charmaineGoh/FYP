@@ -55,7 +55,7 @@ document.getElementById("notification-form").addEventListener("submit", function
   // Save settings to localStorage
   localStorage.setItem("lowStockAlerts", lowStockAlertsChecked);
   
-  // For now, just log or alert
+  //  log or alert
   console.log("Low Stock Alerts:", lowStockAlertsChecked);
   console.log("Email Notifications:", emailChecked);
   console.log("SMS Notifications:", smsChecked);

@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.getElementById("searchUserInput");
   const searchBtn = document.getElementById("searchUserBtn");
 
-  // Load Users 
+
   async function loadUsers() {
     try {
       const res = await fetch("http://localhost:3000/users");
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Initial load
+
   loadUsers();
 
   // Add User Modal 

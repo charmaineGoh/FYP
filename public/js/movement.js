@@ -335,7 +335,7 @@ async function applyFilters() {
     );
   }
 
-  // Filter by movement type if not 'All'
+  // Filter by movement type 
   if (movementType !== 'All') {
     filteredMovements = filteredMovements.filter(m => m.movementType === movementType);
   }

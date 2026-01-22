@@ -69,7 +69,7 @@ app.get('/addproduct.html', (req, res) => {
   res.sendFile(__dirname + '/public/html/addproduct.html');
 });
 
-// Static files (Make sure your dashboard.html is inside the 'public' folder)
+// Static files 
 app.use(express.static('public'));
 
 // Root route - serve index.html

@@ -35,7 +35,7 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ error: "Category is required and must be a string" });
     }
 
-    // Check image size (Base64 can be large - limit to 2MB)
+    // Check image size
     if (image && image.length > 2097152) {
       return res.status(400).json({ error: "Image is too large. Please use a smaller image (max 2MB)" });
     }

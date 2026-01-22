@@ -35,7 +35,7 @@ function initializeProfile() {
 // Get product list container
 const productList = document.getElementById('productList');
 
-// Load products with optional category filter (default all)
+// Load products with optional category filter 
 async function loadProduct(category = "all") {
   try {
     console.log("[products] fetching /products …");
@@ -118,7 +118,7 @@ function createProductCard(product) {
   return card;
 }
 
-// dd Product Modal 
+// add Product Modal 
 const addModal = document.getElementById("addProductModal");
 const addBtn = document.getElementById("addProductBtn");
 const addCloseBtn = addModal.querySelector(".close");
