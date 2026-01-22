@@ -10,11 +10,12 @@ loginForm.addEventListener('submit', async function(event) {
     const password = passwordInput.value;
 
     try {
-        const res = await fetch('http://localhost:3000/users/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
+        const res = await fetch('/api/login', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ email, password })
+});
+
 
         if (res.ok) {
             const data = await res.json();
