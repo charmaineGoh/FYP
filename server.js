@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-require('dotenv').config(); // load .env
+require('dotenv').config(); 
 
 const stockRoutes = require('./routes/stockRoutes');
 const productRoutes = require('./routes/productRoutes');
@@ -11,24 +11,24 @@ const movementRoutes = require('./routes/movementRoutes');
 
 
 const app = express();
-// Middleware: enable CORS and set larger body limits for JSON/urlencoded (Base64 images)
+// Middleware: enable CORS and set larger body limits for JSON/urlencoded 
 app.use(require('cors')());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-// Connect MongoDB
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('Error:', err));
 
 // Mount routes
-app.use('/stocks', stockRoutes); // The dashboard stats will be at /stocks/dashboard/stats
+app.use('/stocks', stockRoutes); 
 app.use('/products', productRoutes);
 app.use('/suppliers', supplierRoutes);
 app.use('/users', userRoutes);
 app.use('/movements', movementRoutes);
 
-// HTML page routes (must come BEFORE static middleware)
+// HTML page routes 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/html/index.html');
 });
