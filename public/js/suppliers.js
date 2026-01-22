@@ -48,7 +48,7 @@ const searchBtn = document.getElementById("searchBtn");
 //  Load Suppliers 
 async function loadSuppliers(category = "all") {
   try {
-    const res = await fetch("http://localhost:3000/suppliers");
+    const res = await fetch("/suppliers");
     const suppliers = await res.json();
 
     supplierTableBody.innerHTML = "";
@@ -93,7 +93,7 @@ async function loadSuppliers(category = "all") {
       // Delete button handler
       row.querySelector(".delete-btn").addEventListener("click", async () => {
         if (confirm(`Delete supplier ${supplier.supplierName}?`)) {
-          const res = await fetch(`http://localhost:3000/suppliers/${supplier._id}`, {
+          const res = await fetch(`/suppliers/${supplier._id}`, {
             method: "DELETE"
           });
           if (res.ok) {
@@ -133,7 +133,7 @@ document.getElementById("addSupplierForm").addEventListener("submit", async e =>
     supplierCity: document.getElementById("supplierCity").value,
     supplierCountry: document.getElementById("supplierCountry").value
   };
-  const res = await fetch("http://localhost:3000/suppliers", {
+  const res = await fetch("/suppliers", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(supplier)
@@ -167,7 +167,7 @@ document.getElementById("editSupplierForm").addEventListener("submit", async e =
     supplierCity: document.getElementById("editSupplierCity").value,
     supplierCountry: document.getElementById("editSupplierCountry").value
   };
-  const res = await fetch(`http://localhost:3000/suppliers/${supplierId}`, {
+  const res = await fetch(`/suppliers/${supplierId}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(supplier)

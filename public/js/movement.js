@@ -119,7 +119,7 @@ async function checkStockAvailability(stockId, formType) {
   if (!stockId) return;
 
   try {
-    const response = await fetch(`http://localhost:3000/stocks`);
+    const response = await fetch(`/stocks`);
     const stocks = await response.json();
     const stock = stocks.find(s => s.stockId === stockId);
 
@@ -146,7 +146,7 @@ async function checkStockAvailability(stockId, formType) {
 
 async function loadMovements() {
   try {
-    const response = await fetch('http://localhost:3000/movements');
+    const response = await fetch('/movements');
     movements = await response.json();
     displayMovements(movements);
   } catch (error) {
@@ -199,7 +199,7 @@ async function handleAddMovement(e) {
   const quantity = parseInt(document.getElementById('add-quantity').value);
 
   try {
-    const response = await fetch('http://localhost:3000/movements', {
+    const response = await fetch('/movements', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -232,7 +232,7 @@ async function handleAddMovement(e) {
 
 async function editMovement(movementId) {
   try {
-    const response = await fetch(`http://localhost:3000/movements/${movementId}`);
+    const response = await fetch(`/movements/${movementId}`);
     const movement = await response.json();
 
     document.getElementById('edit-movementId').value = movement._id;
@@ -264,7 +264,7 @@ async function handleEditMovement(e) {
   const quantity = parseInt(document.getElementById('edit-quantity').value);
 
   try {
-    const response = await fetch(`http://localhost:3000/movements/${movementId}`, {
+    const response = await fetch(`/movements/${movementId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -303,7 +303,7 @@ async function handleDeleteMovement() {
   const movementId = document.getElementById('edit-movementId').value;
 
   try {
-    const response = await fetch(`http://localhost:3000/movements/${movementId}`, {
+    const response = await fetch(`/movements/${movementId}`, {
       method: 'DELETE'
     });
 
