@@ -193,6 +193,7 @@ async function handleAddMovement(e) {
 
   const stockId = document.getElementById('add-stockId').value;
   const movementType = document.getElementById('add-movementType').value;
+  const category = document.getElementById('add-category').value;
   const from = document.getElementById('add-from').value;
   const to = document.getElementById('add-to').value;
   const quantity = parseInt(document.getElementById('add-quantity').value);
@@ -206,6 +207,7 @@ async function handleAddMovement(e) {
       body: JSON.stringify({
         stockId,
         movementType,
+        category,
         from,
         to,
         quantity
@@ -236,6 +238,7 @@ async function editMovement(movementId) {
     document.getElementById('edit-movementId').value = movement._id;
     document.getElementById('edit-stockId').value = movement.stockId;
     document.getElementById('edit-movementType').value = movement.movementType;
+    document.getElementById('edit-category').value = movement.category || '';
     document.getElementById('edit-from').value = movement.from;
     document.getElementById('edit-to').value = movement.to;
     document.getElementById('edit-quantity').value = movement.quantity;
@@ -255,6 +258,7 @@ async function handleEditMovement(e) {
   const movementId = document.getElementById('edit-movementId').value;
   const stockId = document.getElementById('edit-stockId').value;
   const movementType = document.getElementById('edit-movementType').value;
+  const category = document.getElementById('edit-category').value;
   const from = document.getElementById('edit-from').value;
   const to = document.getElementById('edit-to').value;
   const quantity = parseInt(document.getElementById('edit-quantity').value);
@@ -268,6 +272,7 @@ async function handleEditMovement(e) {
       body: JSON.stringify({
         stockId,
         movementType,
+        category,
         from,
         to,
         quantity

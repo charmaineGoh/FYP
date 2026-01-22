@@ -1,6 +1,4 @@
-/* ================================
-   Global Styles & Variables
-================================ */
+
 :root {
     --font-header: 'Raleway', sans-serif;
     --font-body: 'Work Sans', sans-serif;
@@ -25,9 +23,9 @@ body {
     height: 100vh;
 }
 
-/* ================================
-   Login Page Layout
-================================ */
+
+   /* Login Page Layout */
+
 .page-container {
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -142,9 +140,7 @@ body {
     border-radius: 4px;
 }
 
-/* ================================
-   Form Styles
-================================ */
+/*  Form Styles  */
 .form-content {
     background-color: #E8EEF9;
     padding: 40px;
@@ -215,9 +211,7 @@ button[type="submit"]:hover {
     color: var(--color-error);
 }
 
-/* ================================
-   Mobile Responsiveness
-================================ */
+/*  Mobile Responsiveness  */
 @media (max-width: 900px) {
     .page-container {
         grid-template-columns: 1fr;

@@ -45,7 +45,7 @@ const searchInput = document.getElementById("searchInput");
 const searchBtn = document.getElementById("searchBtn");
 
 
-// -------------------- Load Suppliers --------------------
+//  Load Suppliers 
 async function loadSuppliers(category = "all") {
   try {
     const res = await fetch("http://localhost:3000/suppliers");
@@ -73,7 +73,6 @@ async function loadSuppliers(category = "all") {
         <td class="actions">
           <button class="edit-btn" data-id="${supplier._id}" title="Edit"><i class="bi bi-pencil-fill"></i></button>
           <button class="delete-btn" data-id="${supplier._id}" title="Delete"><i class="bi bi-trash-fill"></i></button>
-          <button class="view-btn" data-id="${supplier._id}" title="View"><i class="bi bi-eye-fill"></i></button>
         </td>
       `;
       supplierTableBody.appendChild(row);
@@ -106,14 +105,6 @@ async function loadSuppliers(category = "all") {
         }
       });
     });
-
-    // View button handler
-    document.querySelectorAll(".view-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const supplierId = btn.getAttribute("data-id");
-        window.location.href = `supplierDetails.html?id=${supplierId}`;
-      });
-    })
   } catch (err) {
     console.error("Error fetching suppliers:", err);
     supplierTableBody.innerHTML = `<tr><td colspan="6">Failed to load suppliers.</td></tr>`;
@@ -123,7 +114,7 @@ async function loadSuppliers(category = "all") {
 // Initial load
 loadSuppliers();
 
-// -------------------- Add Supplier Modal --------------------
+//  Add Supplier Modal 
 addBtn.addEventListener("click", () => addModal.classList.remove("hidden"));
 addCloseBtn.addEventListener("click", () => addModal.classList.add("hidden"));
 window.addEventListener("click", e => {
@@ -157,7 +148,7 @@ document.getElementById("addSupplierForm").addEventListener("submit", async e =>
   }
 });
 
-// -------------------- Edit Supplier Modal --------------------
+//  Edit Supplier Modal 
 editCloseBtn.addEventListener("click", () => editModal.classList.add("hidden"));
 window.addEventListener("click", e => {
   if (e.target === editModal) editModal.classList.add("hidden");
@@ -191,7 +182,7 @@ document.getElementById("editSupplierForm").addEventListener("submit", async e =
   }
 });
 
-//-----------------Search-----------//
+//  Search 
 
 searchBtn.addEventListener("click", () => {
   const term = searchInput.value.trim().toLowerCase();

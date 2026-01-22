@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.getElementById("searchUserInput");
   const searchBtn = document.getElementById("searchUserBtn");
 
-  // -------------------- Load Users --------------------
+  // Load Users 
   async function loadUsers() {
     try {
       const res = await fetch("http://localhost:3000/users");
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initial load
   loadUsers();
 
-  // -------------------- Add User Modal --------------------
+  // Add User Modal 
   addBtn.addEventListener("click", () => addUserModal.classList.remove("hidden"));
   addCloseBtn.addEventListener("click", () => addUserModal.classList.add("hidden"));
   window.addEventListener("click", e => {
@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // -------------------- Edit User Modal --------------------
+  // Edit User Modal 
   editCloseBtn.addEventListener("click", () => editUserModal.classList.add("hidden"));
   window.addEventListener("click", e => {
     if (e.target === editUserModal) editUserModal.classList.add("hidden");
@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // -------------------- Search --------------------
+  // Search 
   searchBtn.addEventListener("click", () => {
     const term = searchInput.value.trim().toLowerCase();
     document.querySelectorAll("#userTable tbody tr").forEach(row => {

@@ -35,7 +35,7 @@ const inventoryList = document.getElementById("inventoryList");
 const searchInput = document.getElementById("searchInput");
 const searchBtn = document.getElementById("searchBtn");
 
-// -------------------- Load Inventory --------------------
+// Load Inventory 
 async function loadInventory() {
   try {
     const res = await fetch("/stocks");
@@ -63,7 +63,7 @@ async function loadInventory() {
   }
 }
 
-// -------------------- Create Inventory Row --------------------
+// Create Inventory Row 
 function createInventoryRow(stock) {
   const row = document.createElement("tr");
   const isLowStock = stock.quantity < 10;
@@ -76,6 +76,7 @@ function createInventoryRow(stock) {
     <td>${supplierName}</td>
     <td>
       <button class="edit-btn" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+      <button class="delete-btn" title="Delete"><i class="bi bi-trash-fill"></i></button>
       ${!stock.productId ? `<button class="add-to-products-btn" title="Add to Products"><i class="bi bi-plus-circle"></i></button>` : ''}
     </td>
   `;
@@ -102,6 +103,30 @@ function createInventoryRow(stock) {
     editModal.classList.remove("hidden");
   });
 
+  // Delete button functionality
+  const deleteBtn = row.querySelector(".delete-btn");
+  deleteBtn.addEventListener("click", async (e) => {
+    e.stopPropagation();
+    
+    if (confirm(`Are you sure you want to delete stock ${stock.stockId}?`)) {
+      try {
+        const res = await fetch(`http://localhost:3000/stocks/${stock._id}`, {
+          method: "DELETE"
+        });
+        
+        if (res.ok) {
+          alert("✅ Stock deleted successfully!");
+          loadInventory();
+        } else {
+          alert("❌ Failed to delete stock.");
+        }
+      } catch (error) {
+        console.error("Error deleting stock:", error);
+        alert("❌ Error deleting stock.");
+      }
+    }
+  });
+
   // Add to Products functionality
   const addToProductsBtn = row.querySelector(".add-to-products-btn");
   if (addToProductsBtn) {
@@ -116,7 +141,7 @@ function createInventoryRow(stock) {
   return row;
 }
 
-// -------------------- Add Inventory Modal --------------------
+// Add Inventory Modal 
 const addModal = document.getElementById("addInventoryModal");
 const addCloseBtn = addModal.querySelector(".close");
 const addBtn = document.getElementById("addInventoryBtn");
@@ -233,7 +258,7 @@ document.getElementById("addInventoryForm").addEventListener("submit", async e =
   }
 });
 
-// -------------------- Edit Inventory Modal --------------------
+// Edit Inventory Modal 
 const editModal = document.getElementById("editModal");
 const editCloseBtn = editModal.querySelector(".close");
 
@@ -322,10 +347,14 @@ searchBtn.addEventListener("click", () => {
   });
 });
 
-// -------------------- Add Product from Inventory --------------------
+// Add Product from Inventory 
 function showAddProductFromInventoryModal(stock) {
   const modal = document.createElement('div');
   modal.className = 'modal';
+  
+  // Determine which category to pre-select
+  const categoryToSelect = stock.category || (stock.productId?.category) || 'Shirts';
+  
   modal.innerHTML = `
     <div class="modal-content">
       <span class="close" onclick="this.parentElement.parentElement.remove()">&times;</span>
@@ -336,9 +365,9 @@ function showAddProductFromInventoryModal(stock) {
 
         <label for="productCategory">Category:</label>
         <select id="productCategory" required>
-          <option value="Shirts">Shirts</option>
-          <option value="Pants">Pants</option>
-          <option value="Accessories">Accessories</option>
+          <option value="Shirts" ${categoryToSelect.toLowerCase() === 'shirts' ? 'selected' : ''}>Shirts</option>
+          <option value="Pants" ${categoryToSelect.toLowerCase() === 'pants' ? 'selected' : ''}>Pants</option>
+          <option value="Accessories" ${categoryToSelect.toLowerCase() === 'accessories' ? 'selected' : ''}>Accessories</option>
         </select>
 
         <label for="productDescription">Description:</label>
@@ -449,7 +478,7 @@ function showAddProductFromInventoryModal(stock) {
     }
   });
 }
-// -------------------- Low Stock Alert --------------------
+// Low Stock Alert 
 function updateLowStockAlert(stocks) {
   const lowStockAlertsEnabled = localStorage.getItem("lowStockAlerts") === "true";
   

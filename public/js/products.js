@@ -118,7 +118,7 @@ function createProductCard(product) {
   return card;
 }
 
-// ----- Add Product Modal -----
+// dd Product Modal 
 const addModal = document.getElementById("addProductModal");
 const addBtn = document.getElementById("addProductBtn");
 const addCloseBtn = addModal.querySelector(".close");
@@ -185,7 +185,7 @@ document.getElementById("addProductForm").addEventListener("submit", async e => 
   }
 });
 
-// ----- Edit Product Modal -----
+// Edit Product Modal 
 const editModal = document.getElementById("editProductModal");
 const editCloseBtn = editModal.querySelector(".close");
 

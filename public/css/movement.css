@@ -1,15 +1,15 @@
-/* --- Global Styles & Variables --- */
+
 :root {
     --font-header: 'Raleway', sans-serif;
     --font-body: 'Work Sans', sans-serif;
 
-    /* Professional E-commerce Color Palette */
+   
     --color-bg: #F8F9FC;
-    --color-primary: #6366F1; /* Modern Indigo */
+    --color-primary: #6366F1; 
     --color-primary-dark: #4F46E5;
-    --color-secondary: #8B5CF6; /* Purple */
+    --color-secondary: #8B5CF6; 
     --color-secondary-light: #A78BFA;
-    --color-accent: #06B6D4; /* Cyan */
+    --color-accent: #06B6D4; 
     --color-white: #FFFFFF;
     --color-text: #1F2937;
     --color-text-light: #6B7280;
@@ -25,7 +25,7 @@ body {
   color: var(--color-text);
 }
 
-/* --- Dashboard Layout --- */
+/*  Dashboard Layout  */
 .app-container {
     display: flex;
     width: 100%;
@@ -351,12 +351,19 @@ body {
 }
 
 .edit-btn {
-  color: #6366F1;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
 }
 
 .edit-btn:hover {
-  background-color: rgba(99, 102, 241, 0.1);
-  border-color: #6366F1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
 }
 
 .delete-btn {
@@ -440,16 +447,16 @@ body {
 }
 
 .modal {
-  position: fixed;       /* stays on top of everything */
+  position: fixed;       
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5); /* dark overlay */
-  display: flex;         /* allows centering */
+  background: rgba(0,0,0,0.5); 
+  display: flex;         
   justify-content: center;
   align-items: center;
-  z-index: 1000;         /* ensures it's above other elements */
+  z-index: 1000;         
 }
 
 .modal.hidden {

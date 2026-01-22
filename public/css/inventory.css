@@ -1,15 +1,15 @@
-/* --- Global Styles & Variables --- */
+
 :root {
     --font-header: 'Raleway', sans-serif;
     --font-body: 'Work Sans', sans-serif;
 
-    /* Professional E-commerce Color Palette */
+    
     --color-bg: #F8F9FC;
-    --color-primary: #6366F1; /* Modern Indigo */
+    --color-primary: #6366F1; 
     --color-primary-dark: #4F46E5;
-    --color-secondary: #8B5CF6; /* Purple */
+    --color-secondary: #8B5CF6; 
     --color-secondary-light: #A78BFA;
-    --color-accent: #06B6D4; /* Cyan */
+    --color-accent: #06B6D4;
     --color-white: #FFFFFF;
     --color-text: #1F2937;
     --color-text-light: #6B7280;
@@ -25,7 +25,7 @@ body {
   color: var(--color-text);
 }
 
-/* --- Dashboard Layout --- */
+/*  Dashboard Layout  */
 .app-container {
     display: flex;
     width: 100%;
@@ -34,7 +34,7 @@ body {
 }
 .header-controls {
     display: flex;
-    flex-direction: column; /* Makes + button appear above filter */
+    flex-direction: column; 
     align-items: flex-end;
     gap: 10px;
 }
@@ -89,6 +89,7 @@ body {
     font-size: 0.9rem;
     transition: all 0.3s;
     box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+    margin-right: 5px;
 }
 
 .edit-btn:hover {
@@ -96,7 +97,27 @@ body {
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
 }
 
-/* --- Low Stock Alert --- */
+/* Delete button */
+.delete-btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+    margin-right: 5px;
+}
+
+.delete-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+/*  Low Stock Alert  */
 .low-stock-alert {
     display: flex;
     align-items: center;
@@ -137,7 +158,7 @@ body {
     border-color: #FEE2E2;
 }
 
-/* --- Dashboard Layout --- */
+/*  Dashboard Layout  */
 .app-container {
     display: flex;
     width: 100%;
@@ -298,7 +319,7 @@ body {
 .main-content {
     flex-grow: 1;
     padding: 30px;
-    overflow-y: auto; /* Allows scrolling if content is long */
+    overflow-y: auto; 
     transition: all 0.3s ease;
 }
 
@@ -441,16 +462,16 @@ body {
 }
 
 .modal {
-  position: fixed;       /* stays on top of everything */
+  position: fixed;       
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5); /* dark overlay */
-  display: flex;         /* allows centering */
+  background: rgba(0,0,0,0.5); 
+  display: flex;         
   justify-content: center;
   align-items: center;
-  z-index: 1000;         /* ensures it’s above other elements */
+  z-index: 1000;         
 }
 .modal-content {
   background-color: #fff;
@@ -573,7 +594,7 @@ body {
 
 #filter-category:focus {
   outline: none;
-  border-color: #0078d7; /* Microsoft blue accent */
+  border-color: #0078d7; 
   box-shadow: 0 0 0 2px rgba(0,120,215,0.2);
 }
 
@@ -624,6 +645,6 @@ body {
 
 /* Hover state */
 #searchBtn:hover {
-    background-color: #b7a7da; /* softer lavender, same family */
+    background-color: #b7a7da; 
     box-shadow: 0 6px 16px rgba(163, 155, 190, 0.45);
 }

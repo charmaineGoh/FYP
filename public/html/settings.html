@@ -55,28 +55,6 @@
             </div>
                 <h3>Manage your account settings here.</h3>
             <div class="settings-container">
-                <div class= "settings-card" id = "general-settings">
-                    <h2>General Settings</h2>
-                    <p>Company Name & Logo</p>
-                    <form id="company-form" class="company-form">
-                    <div class="company-row">
-                        <div class="company-label">
-                        <strong>Company Name</strong>
-                        <span class="description">Enter your company name.</span>
-                        </div>
-                        <input type="text" id="company-name" placeholder="ESCKWEAR" required>
-                    </div>
-
-                    <div class="company-row">
-                        <div class="company-label">
-                        <strong>Logo</strong>
-                        <span class="description">Upload a logo for your company.</span>
-                        </div>
-                        <input type="file" id="company-logo" accept="image/*" required>
-                    </div>
-                    <button type="submit">Save Changes</button>
-                    </form>
-                </div>
                 <div class= "settings-card" id = "notification-settings">
                     <h2>Notification Settings</h2>
                     <p>Notification Preferences</p>
@@ -92,18 +70,13 @@
                         </label>
                     </div>
 
-                    <div class="notification-row email-row">
-                        <label for="admin-email"><strong>Administrative Email</strong></label>
-                        <input type="email" id="admin-email" placeholder="env@esckwear.com" required>
-                    </div>
-
                     <button type="submit">Save</button>
                     </form>
                 </div>
                 <div class = "settings-card" id = "team-settings">
                     <h2>Team Settings</h2>
                     <p>Manage team members and permissions.</p>
-                    <button id="add-team-member">Add Team Member</button>
+                    <button id="add-team-member" onclick="window.location.href='usermanagement.html'">Add Team Member</button>
                 </div>
             </div>
         </main>

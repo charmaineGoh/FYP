@@ -1,15 +1,15 @@
-/* --- Global Styles & Variables --- */
+
 :root {
     --font-header: 'Raleway', sans-serif;
     --font-body: 'Work Sans', sans-serif;
 
-    /* Professional E-commerce Color Palette */
+ 
     --color-bg: #F8F9FC;
-    --color-primary: #6366F1; /* Modern Indigo */
+    --color-primary: #6366F1; 
     --color-primary-dark: #4F46E5;
-    --color-secondary: #8B5CF6; /* Purple */
+    --color-secondary: #8B5CF6; 
     --color-secondary-light: #A78BFA;
-    --color-accent: #06B6D4; /* Cyan */
+    --color-accent: #06B6D4; 
     --color-white: #FFFFFF;
     --color-text: #1F2937;
     --color-text-light: #6B7280;
@@ -29,13 +29,13 @@ body {
     height: 100vh;
 }
 
-/* --- Login Page Styles (New) --- */
+/* Login Page Styles (New) */
 .page-container {
     display: grid;
-    grid-template-columns: 1fr 2fr; /* Left panel is 1/3, right is 2/3 */
+    grid-template-columns: 1fr 2fr; 
     width: 100%;
     height: 100vh;
-    overflow: hidden; /* Prevents scrollbars */
+    overflow: hidden; 
 }
 
 .welcome-panel {
@@ -46,7 +46,7 @@ body {
     align-items: center;
     padding: 40px;
     text-align: center;
-    border-top: 5px solid var(--color-secondary); /* Blue/Purple top border */
+    border-top: 5px solid var(--color-secondary); 
     border-right: 5px solid var(--color-secondary);
 }
 
@@ -97,13 +97,13 @@ body {
 
 .tabs-container {
     display: flex;
-    margin-bottom: -1px; /* Pulls the form content up slightly */
+    margin-bottom: -1px; 
 }
 
 .tab {
     padding: 15px 30px;
     border: 1px solid #DDE2E8;
-    background-color: #F4F7FC; /* Inactive tab color */
+    background-color: #F4F7FC; 
     border-bottom: 1px solid #DDE2E8;
     border-radius: 15px 15px 0 0;
     cursor: pointer;
@@ -120,10 +120,10 @@ body {
 }
 
 .form-content {
-    background-color: #E8EEF9; /* Matches the wireframe's grey form area */
+    background-color: #E8EEF9; 
     padding: 40px;
     border: 1px solid #DDE2E8;
-    border-radius: 0 15px 15px 15px; /* Note the top-left is 0 */
+    border-radius: 0 15px 15px 15px; 
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
@@ -131,10 +131,10 @@ body {
     display: none;
 }
 
-/* --- Mobile Responsiveness for Login Page --- */
+/* Mobile Responsiveness for Login Page  */
 @media (max-width: 900px) {
     .page-container {
-        grid-template-columns: 1fr; /* Stack panels on top of each other */
+        grid-template-columns: 1fr; 
     }
     .welcome-panel {
         display: none; /* Hide the welcome panel on small screens */
@@ -145,7 +145,7 @@ body {
     }
 }
 
-/* --- Dashboard Layout --- */
+/* Dashboard Layout  */
 .app-container {
     display: flex;
     width: 100%;
@@ -409,16 +409,16 @@ body {
 }
 
 #download-btn {
-    width: auto; /* Override default button width */
+    width: auto; 
     padding: 10px 20px;
     background-color: var(--color-secondary);
 }
 
 #download-btn:hover {
-    background-color: #928AAD; /* Darker lavender */
+    background-color: #928AAD; 
 }
 
-/* --- Summary Cards --- */
+/*  Summary Cards  */
 .summary-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -459,7 +459,7 @@ body {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-/* --- Mobile Responsiveness --- */
+/* Mobile Responsiveness  */
 @media (max-width: 768px) {
     .app-container {
         flex-direction: column;
@@ -489,9 +489,9 @@ body {
         border-bottom: 3px solid var(--color-secondary);
     }
     .main-header {
-    display: flex;              /* places children side by side */
-    justify-content: space-between; /* pushes heading left, filter right */
-    align-items: center;        /* vertically align */
+    display: flex;              
+    justify-content: space-between; 
+    align-items: center;       
     padding: 10px 20px;
     border-bottom: 1px solid #ddd;
 }
@@ -499,7 +499,7 @@ body {
     .filter-container {
         display: flex;
         align-items: center;
-        gap: 8px;                   /* space between label and dropdown */
+        gap: 8px;                   
     }
 
     .filter-container label {
@@ -527,7 +527,7 @@ body {
         box-shadow: 0 0 8px rgba(0,95,204,0.6);
     }
 
-/* --- User Management Table --- */
+/*  User Management Table  */
     .user-table {
         background: var(--color-white);
         border-radius: 8px;
@@ -571,7 +571,7 @@ body {
     /* Checkbox alignment */
     .user-table td input[type="checkbox"] {
         margin-right: 8px;
-        accent-color: var(--color-secondary); /* modern browsers */
+        accent-color: var(--color-secondary); 
     }
 
     /* Status badges */
@@ -580,14 +580,14 @@ body {
     }
 
     .user-table td:nth-child(5).active {
-        color: #28a745; /* green */
+        color: #28a745; 
     }
 
     .user-table td:nth-child(5).inactive {
-        color: var(--color-error); /* red */
+        color: var(--color-error); 
     }
 
-    /* Permission styling */
+    /* Permission styling  */
     .user-table td:nth-child(6) {
         font-style: italic;
         color: var(--color-secondary);
@@ -622,6 +622,28 @@ body {
 
 .search-container button:hover {
   background-color: #b7a7da;
+}
+
+/* Icon button for Add User */
+.icon-btn {
+  margin-left: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: bold;
+  background-color: #9e8bf7;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.icon-btn:hover {
+  background-color: #4b4275;
 }
 
 /* Table */

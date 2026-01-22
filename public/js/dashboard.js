@@ -6,7 +6,9 @@ const downloadBtn = document.getElementById('download-btn');
 const downloadExcelBtn = document.getElementById('download-excel-btn');
 const mainContent = document.getElementById('main-content');
 
-let inventoryChart;
+let shirtsChart;
+let pantsChart;
+let accessoriesChart;
 
 // Profile dropdown functionality
 function initializeProfile() {
@@ -103,9 +105,23 @@ function renderActivityTable(stocks, movements) {
 }
 
 function renderInventoryChart(stocks) {
-  const canvas = document.getElementById('inventoryChart');
+  const getCategory = (stock) => (stock.productId?.category || stock.category || '').toLowerCase();
+  // Separate stocks by category
+  const shirtStocks = stocks.filter((s) => getCategory(s) === 'shirts');
+  const pantStocks = stocks.filter((s) => getCategory(s) === 'pants');
+  const accessoryStocks = stocks.filter((s) => getCategory(s) === 'accessories');
+
+  // Render each category chart
+  renderCategoryChart('shirtsChart', 'Shirts', shirtStocks, 'shirts');
+  renderCategoryChart('pantsChart', 'Pants', pantStocks, 'pants');
+  renderCategoryChart('accessoriesChart', 'Accessories', accessoryStocks, 'accessories');
+}
+
+function renderCategoryChart(canvasId, categoryName, stocks, chartType) {
+  const canvas = document.getElementById(canvasId);
   if (!canvas) return;
 
+  // Sort stocks by stockId
   const sortedStocks = [...stocks].sort((a, b) => a.stockId.localeCompare(b.stockId));
   const labels = sortedStocks.map((s) => s.stockId);
   const quantities = sortedStocks.map((s) => s.quantity);
@@ -115,16 +131,19 @@ function renderInventoryChart(stocks) {
   const borderColors = quantities.map(q => q < 10 ? 'rgba(239, 68, 68, 0.8)' : 'rgba(21, 94, 239, 0.8)');
   const hoverColors = quantities.map(q => q < 10 ? 'rgba(239, 68, 68, 0.25)' : 'rgba(21, 94, 239, 0.25)');
 
-  if (inventoryChart) inventoryChart.destroy();
+  // Destroy existing chart
+  if (chartType === 'shirts' && shirtsChart) shirtsChart.destroy();
+  if (chartType === 'pants' && pantsChart) pantsChart.destroy();
+  if (chartType === 'accessories' && accessoriesChart) accessoriesChart.destroy();
 
   const ctx = canvas.getContext('2d');
-  inventoryChart = new Chart(ctx, {
+  const newChart = new Chart(ctx, {
     type: 'bar',
     data: {
       labels,
       datasets: [
         {
-          label: 'Stock Quantity',
+          label: `${categoryName} Stock Quantity`,
           data: quantities,
           backgroundColor: backgroundColors,
           borderColor: borderColors,
@@ -154,17 +173,22 @@ function renderInventoryChart(stocks) {
         },
         y: {
           beginAtZero: true,
-          title: { display: true, text: 'Number of Stocks' },
+          title: { display: true, text: 'Quantity' },
           ticks: { 
             precision: 0,
             stepSize: 1
           },
           min: 0,
-          suggestedMax: Math.max(...quantities) + 5
+          suggestedMax: quantities.length > 0 ? Math.max(...quantities) + 5 : 10
         },
       },
     },
   });
+
+  // Store the chart instance
+  if (chartType === 'shirts') shirtsChart = newChart;
+  if (chartType === 'pants') pantsChart = newChart;
+  if (chartType === 'accessories') accessoriesChart = newChart;
 }
 
 async function populateDashboard() {
@@ -282,14 +306,13 @@ if (filterBtn) {
 downloadBtn.addEventListener('click', () => {
     console.log('Download button clicked!');
 
-    // Use html2canvas to capture the main content area
-    // The scale option improves the quality of the capture
+    
+    
     html2canvas(mainContent, { scale: 2 }).then(canvas => {
-        // Get the image data from the canvas
+      
         const imgData = canvas.toDataURL('image/png');
 
-        // Create a new PDF document
-        // 'p' for portrait, 'mm' for millimeters, 'a4' for page size
+        
         const pdf = new jsPDF('p', 'mm', 'a4');
 
         // Get the dimensions of the PDF and the captured image
@@ -299,12 +322,11 @@ downloadBtn.addEventListener('click', () => {
         const canvasHeight = canvas.height;
         const ratio = canvasWidth / canvasHeight;
 
-        // Calculate the width and height of the image to fit in the PDF
+       
         let imgWidth = pdfWidth;
         let imgHeight = imgWidth / ratio;
 
-        // If the image height is greater than the PDF height, we might need to adjust
-        // For simplicity, we'll just add it as is. For multi-page, more logic is needed.
+       
         if (imgHeight > pdfHeight) {
             console.warn("Content is taller than a single A4 page. It may be cut off.");
         }

@@ -1,15 +1,15 @@
-/* --- Global Styles & Variables --- */
+
 :root {
     --font-header: 'Raleway', sans-serif;
     --font-body: 'Work Sans', sans-serif;
 
-    /* Professional E-commerce Color Palette */
+    
     --color-bg: #F8F9FC;
-    --color-primary: #6366F1; /* Modern Indigo */
+    --color-primary: #6366F1; 
     --color-primary-dark: #4F46E5;
-    --color-secondary: #8B5CF6; /* Purple */
+    --color-secondary: #8B5CF6; 
     --color-secondary-light: #A78BFA;
-    --color-accent: #06B6D4; /* Cyan */
+    --color-accent: #06B6D4; 
     --color-white: #FFFFFF;
     --color-text: #1F2937;
     --color-text-light: #6B7280;
@@ -29,10 +29,10 @@ body {
     height: 100vh;
 }
 
-/* --- Login Page Styles (New) --- */
+/*  Login Page Styles  */
 .page-container {
     display: grid;
-    grid-template-columns: 1fr 2fr; /* Left panel is 1/3, right is 2/3 */
+    grid-template-columns: 1fr 2fr; 
     width: 100%;
     height: 100vh;
     overflow: hidden; /* Prevents scrollbars */
@@ -46,7 +46,7 @@ body {
     align-items: center;
     padding: 40px;
     text-align: center;
-    border-top: 5px solid var(--color-secondary); /* Blue/Purple top border */
+    border-top: 5px solid var(--color-secondary); 
     border-right: 5px solid var(--color-secondary);
 }
 
@@ -97,7 +97,7 @@ body {
 
 .tabs-container {
     display: flex;
-    margin-bottom: -1px; /* Pulls the form content up slightly */
+    margin-bottom: -1px; 
 }
 
 .tab {
@@ -115,15 +115,15 @@ body {
 }
 
 .tab.active {
-    background-color: #E8EEF9; /* Active tab color, slightly lighter than form */
+    background-color: #E8EEF9; 
     border-bottom: none;
 }
 
 .form-content {
-    background-color: #E8EEF9; /* Matches the wireframe's grey form area */
+    background-color: #E8EEF9; 
     padding: 40px;
     border: 1px solid #DDE2E8;
-    border-radius: 0 15px 15px 15px; /* Note the top-left is 0 */
+    border-radius: 0 15px 15px 15px; 
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
@@ -131,7 +131,7 @@ body {
     display: none;
 }
 
-/* --- Mobile Responsiveness for Login Page --- */
+/*  Mobile Responsiveness for Login Page */
 @media (max-width: 900px) {
     .page-container {
         grid-template-columns: 1fr; /* Stack panels on top of each other */
@@ -145,7 +145,7 @@ body {
     }
 }
 
-/* --- Dashboard Layout --- */
+/*  Dashboard Layout  */
 .app-container {
     display: flex;
     width: 100%;
@@ -305,7 +305,7 @@ body {
 .main-content {
     flex-grow: 1;
     padding: 30px;
-    overflow-y: auto; /* Allows scrolling if content is long */
+    overflow-y: auto;
     transition: all 0.3s ease;
 }
 
@@ -494,7 +494,7 @@ body {
 }
 
 #company-form button[type="submit"]:hover {
-    background-color: #b7a7da; /* softer lavender, same family */
+    background-color: #b7a7da; 
 }
 
 .notification-form {
@@ -548,7 +548,7 @@ body {
   color: var(--color-text);
 }
 
-/* Switch styling (already in your CSS) */
+/* Switch styling */
 .switch {
   position: relative;
   display: inline-block;
@@ -602,5 +602,5 @@ input:checked + .slider:before {
 }
 
 #notification-form button[type="submit"]:hover {
-    background-color: #b7a7da; /* softer lavender, same family */
+    background-color: #b7a7da; 
 }
