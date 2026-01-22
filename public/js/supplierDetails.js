@@ -45,7 +45,7 @@ async function loadSupplierDetails() {
   }
 
   try {
-    const res = await fetch(`http://localhost:3000/suppliers/${supplierId}`);
+    const res = await fetch(`/suppliers/${supplierId}`);
     if (!res.ok) throw new Error("Failed to fetch supplier");
     const supplier = await res.json();
 
