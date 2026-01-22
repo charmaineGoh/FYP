@@ -7,6 +7,7 @@ const productRoutes = require('./routes/productRoutes');
 const supplierRoutes = require('./routes/supplierRoutes');
 const userRoutes = require('./routes/userRoutes');
 const movementRoutes = require('./routes/movementRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 
 
@@ -22,6 +23,7 @@ mongoose.connect(process.env.MONGO_URI)
   .catch((err) => console.error('Error:', err));
 
 // Mount routes
+app.use('/api', authRoutes);
 app.use('/stocks', stockRoutes); 
 app.use('/products', productRoutes);
 app.use('/suppliers', supplierRoutes);
