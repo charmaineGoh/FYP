@@ -115,7 +115,7 @@ body {
 }
 
 .tab.active {
-    background-color: #E8EEF9; /* Active tab color, slightly lighter than form */
+    background-color: #E8EEF9; 
     border-bottom: none;
 }
 
@@ -137,7 +137,7 @@ body {
         grid-template-columns: 1fr; 
     }
     .welcome-panel {
-        display: none; /* Hide the welcome panel on small screens */
+        display: none; 
     }
     .form-panel {
         justify-content: flex-start;
