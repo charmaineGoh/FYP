@@ -4,7 +4,7 @@ const Stock = require('../models/stock');
 const Product = require('../models/product');
 
 // Get Dashboard Stats (Filterable by Date)
-// Access this via: GET /stocks/stats?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD
+
 router.get('/stats', async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
@@ -59,7 +59,7 @@ router.post("/", async (req, res) => {
         return res.status(404).json({ error: "Product not found" });
       }
 
-      // Auto-generate stockId from productId if not provided
+      // Auto-generate stockId from productId 
       if (!finalStockId) {
         const count = await Stock.countDocuments({ productId });
         finalStockId = `STK-${productId.toString().slice(-8)}-${count + 1}`;
@@ -123,11 +123,11 @@ router.put("/:stockId", async (req, res) => {
       return res.status(404).json({ error: "Stock not found" });
     }
 
-    // Find product by name matching stockId since stock ID = product name
+ 
     const product = await Product.findOne({ productName: stockId });
     
     if (product) {
-      // Get all stocks with matching stockId and sum their quantities
+     
       const allStocksWithThisId = await Stock.find({ stockId: stockId });
       const totalQuantity = allStocksWithThisId.reduce((sum, stock) => sum + stock.quantity, 0);
       
