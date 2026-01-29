@@ -71,7 +71,7 @@ function createInventoryRow(stock) {
 
   row.innerHTML = `
     <td>${stock.stockId}</td>
-    <td><span class="quantity-value">${stock.quantity}</span>${isLowStock ? '<span class="low-stock-badge">●</span>' : ''}</td>
+    <td><span class="quantity-value">${stock.quantity}</span></td>
     <td>${stock.warehouseLocation}</td>
     <td>${supplierName}</td>
     <td>
@@ -133,7 +133,7 @@ function createInventoryRow(stock) {
     addToProductsBtn.addEventListener("click", async (e) => {
       e.stopPropagation();
       
-      // Show a modal to get product details
+      
       showAddProductFromInventoryModal(stock);
     });
   }
@@ -401,10 +401,10 @@ function showAddProductFromInventoryModal(stock) {
 
     const imageFile = document.getElementById("productImage").files[0];
     
-    // Convert image file to Base64
+    
     let imageUrl = null;
     if (imageFile) {
-      // Check file size (max 2MB)
+      
       if (imageFile.size > 2097152) {
         alert("❌ Image is too large. Please use an image smaller than 2MB.");
         return;
@@ -444,7 +444,7 @@ function showAddProductFromInventoryModal(stock) {
         const product = await res.json();
         console.log("Product created:", product);
         
-        // Now link the stock to this product by updating stock with product name
+        
         const updateStockRes = await fetch(`/stocks/${stock.stockId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
