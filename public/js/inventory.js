@@ -37,8 +37,8 @@ const searchBtn = document.getElementById("searchBtn");
 
 // Sorting state
 let sortState = {
-  column: null,
-  direction: 'asc' // 'asc' or 'desc'
+  column: 'quantity',
+  direction: 'asc' 
 };
 
 let currentStocks = []; // Store current stocks for sorting
@@ -50,7 +50,9 @@ async function loadInventory() {
     const stocks = await res.json();
     currentStocks = stocks; // Store for sorting
 
-    renderInventoryTable(stocks);
+    // Sort by quantity (lowest to highest) on first load
+    const sortedStocks = [...stocks].sort((a, b) => a.quantity - b.quantity);
+    renderInventoryTable(sortedStocks);
 
     // Check and display low stock alerts
     updateLowStockAlert(stocks);
@@ -563,20 +565,10 @@ function initializeSortHandlers() {
   
   quantityHeader.style.cursor = 'pointer';
   quantityHeader.addEventListener('click', () => {
-    // Toggle between asc, desc, and none
-    if (sortState.column === 'quantity') {
-      if (sortState.direction === 'asc') {
-        sortState.direction = 'desc';
-      } else {
-        // Reset to unsorted (reload original)
-        sortState.column = null;
-        sortState.direction = 'asc';
-        renderInventoryTable(currentStocks);
-        updateSortIndicators(null, 'asc');
-        return;
-      }
+    // Toggle between ascending and descending
+    if (sortState.direction === 'asc') {
+      sortState.direction = 'desc';
     } else {
-      sortState.column = 'quantity';
       sortState.direction = 'asc';
     }
     
@@ -597,6 +589,9 @@ searchInput.addEventListener("input", () => {
 
 // Initialize profile on page load
 loadInventory();
-setTimeout(() => initializeSortHandlers(), 100); // Delay to ensure table is rendered
+setTimeout(() => {
+  initializeSortHandlers();
+  updateSortIndicators('quantity', 'asc'); // Show ascending indicator on load
+}, 100); // Delay to ensure table is rendered
 initializeProfile();
 loadSuppliersForSelection();
