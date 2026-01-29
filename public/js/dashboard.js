@@ -194,11 +194,11 @@ function renderCategoryChart(canvasId, categoryName, stocks, chartType) {
 async function populateDashboard() {
   try {
     // Fetch stocks data
-    const stocksRes = await fetch("http://localhost:3000/stocks");
+    const stocksRes = await fetch("/stocks");
     const stocks = await stocksRes.json();
 
     // Fetch movements data
-    const movementsRes = await fetch("http://localhost:3000/movements");
+    const movementsRes = await fetch("/movements");
     const movements = await movementsRes.json();
 
     // Get date filter values if they exist

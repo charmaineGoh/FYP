@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function loadUsers() {
     try {
-      const res = await fetch("http://localhost:3000/users");
+      const res = await fetch("/users");
       const users = await res.json();
 
       userTableBody.innerHTML = "";
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Delete button handler
         row.querySelector(".delete-btn").addEventListener("click", async () => {
           if (confirm(`Delete user ${user.name}?`)) {
-            const res = await fetch(`http://localhost:3000/users/${user._id}`, {
+            const res = await fetch(`/users/${user._id}`, {
               method: "DELETE"
             });
             if (res.ok) {
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
       password: document.getElementById("userPassword").value,
       status: document.getElementById("userStatus").value
     };
-    const res = await fetch("http://localhost:3000/users", {
+    const res = await fetch("/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(user)
@@ -160,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
       user.password = password;
     }
     
-    const res = await fetch(`http://localhost:3000/users/${userId}`, {
+    const res = await fetch(`/users/${userId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(user)

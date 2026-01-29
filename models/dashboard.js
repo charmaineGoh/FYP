@@ -54,7 +54,7 @@ async function fetchDashboardData(startDate = '', endDate = '') {
 function initChart() {
     const ctx = document.getElementById('salesChart').getContext('2d');
     salesChart = new Chart(ctx, {
-        type: 'bar', // Bar chart looks good for stock levels
+        type: 'bar', 
         data: {
             labels: [],
             datasets: [{

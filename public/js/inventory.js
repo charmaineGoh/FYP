@@ -110,7 +110,7 @@ function createInventoryRow(stock) {
     
     if (confirm(`Are you sure you want to delete stock ${stock.stockId}?`)) {
       try {
-        const res = await fetch(`http://localhost:3000/stocks/${stock._id}`, {
+        const res = await fetch(`/stocks/${stock._id}`, {
           method: "DELETE"
         });
         

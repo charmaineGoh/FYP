@@ -7,6 +7,7 @@ const productRoutes = require('./routes/productRoutes');
 const supplierRoutes = require('./routes/supplierRoutes');
 const userRoutes = require('./routes/userRoutes');
 const movementRoutes = require('./routes/movementRoutes');
+const User = require('./models/user');
 
 
 
@@ -22,6 +23,18 @@ mongoose.connect(process.env.MONGO_URI)
   .catch((err) => console.error('Error:', err));
 
 // Mount routes
+app.post('/api/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
+    const user = await User.findOne({ email });
+    if (!user || user.password !== password) return res.status(401).json({ error: 'Invalid email or password' });
+    res.json({ user: { id: user._id, name: user.name, email: user.email, role: user.role } });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 app.use('/stocks', stockRoutes); 
 app.use('/products', productRoutes);
 app.use('/suppliers', supplierRoutes);

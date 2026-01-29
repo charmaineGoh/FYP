@@ -22,8 +22,12 @@ loginForm.addEventListener('submit', async function(event) {
             localStorage.setItem('currentUser', JSON.stringify(data.user));
             window.location.href = 'dashboard.html';
         } else {
-            const err = await res.json();
-            errorMessage.textContent = err.error || 'Login failed';
+            try {
+                const err = await res.json();
+                errorMessage.textContent = err.error || 'Login failed';
+            } catch (e) {
+                errorMessage.textContent = 'Login failed';
+            }
         }
     } catch (err) {
         console.error('Login error:', err);
