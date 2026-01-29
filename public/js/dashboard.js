@@ -250,9 +250,12 @@ async function populateDashboard() {
       });
     }
 
-    // Calculate totals
-    const totalStock = chartStocks.reduce((sum, s) => sum + s.quantity, 0);
-    const uniqueLocations = new Set(chartStocks.map(s => s.warehouseLocation)).size;
+    // Calculate totals 
+    const esckwearStocks = chartStocks.filter(s => 
+      s.warehouseLocation && s.warehouseLocation.toLowerCase().includes('esckwear')
+    );
+    const totalStock = esckwearStocks.reduce((sum, s) => sum + s.quantity, 0);
+    const uniqueLocations = 1; 
 
     // Calculate inbound and outbound from movements
     const inbound = filteredMovements.filter(m => m.movementType === "Inbound").length;
@@ -281,7 +284,7 @@ async function populateDashboard() {
     // Update location info if element exists
     const locationInfo = document.getElementById("location-info");
     if (locationInfo) {
-      locationInfo.textContent = `Units across ${uniqueLocations} location${uniqueLocations !== 1 ? 's' : ''}`;
+      locationInfo.textContent = `Units in ESCKWEAR Warehouse`;
     }
     
     document.getElementById("inbound-stocks").textContent = inbound;
