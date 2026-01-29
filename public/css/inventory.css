@@ -61,6 +61,26 @@ body {
   font-weight: 600;
   color: #ffffff;
   border-bottom: 2px solid var(--color-primary);
+  user-select: none;
+}
+
+.inventory-table th:nth-child(2) {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.inventory-table th:nth-child(2):hover {
+  background-color: #8a77dd;
+}
+
+.inventory-table th.sort-asc,
+.inventory-table th.sort-desc {
+  background-color: #8a77dd;
+}
+
+.sort-arrow {
+  font-size: 0.9em;
+  margin-left: 4px;
 }
 
 .inventory-table tr:nth-child(even) {

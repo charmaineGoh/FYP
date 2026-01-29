@@ -35,24 +35,22 @@ const inventoryList = document.getElementById("inventoryList");
 const searchInput = document.getElementById("searchInput");
 const searchBtn = document.getElementById("searchBtn");
 
+// Sorting state
+let sortState = {
+  column: null,
+  direction: 'asc' // 'asc' or 'desc'
+};
+
+let currentStocks = []; // Store current stocks for sorting
+
 // Load Inventory 
 async function loadInventory() {
   try {
     const res = await fetch("/stocks");
     const stocks = await res.json();
+    currentStocks = stocks; // Store for sorting
 
-    const tbody = document.querySelector("#inventoryTableBody tbody");
-    tbody.innerHTML = "";
-
-    if (!stocks || stocks.length === 0) {
-      tbody.innerHTML = "<tr><td colspan='4'>No items in inventory.</td></tr>";
-      return;
-    }
-
-    stocks.forEach(stock => {
-      const row = createInventoryRow(stock);
-      tbody.appendChild(row);
-    });
+    renderInventoryTable(stocks);
 
     // Check and display low stock alerts
     updateLowStockAlert(stocks);
@@ -61,6 +59,46 @@ async function loadInventory() {
     const tbody = document.querySelector("#inventoryTableBody tbody");
     tbody.innerHTML = "<tr><td colspan='4'>Failed to load inventory.</td></tr>";
   }
+}
+
+// Render inventory table with sorting
+function renderInventoryTable(stocks) {
+  const tbody = document.querySelector("#inventoryTableBody tbody");
+  tbody.innerHTML = "";
+
+  if (!stocks || stocks.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='5'>No items in inventory.</td></tr>";
+    return;
+  }
+
+  stocks.forEach(stock => {
+    const row = createInventoryRow(stock);
+    tbody.appendChild(row);
+  });
+}
+
+// Sort inventory by quantity
+function sortInventory(column, direction) {
+  const sortedStocks = [...currentStocks];
+  
+  if (column === 'quantity') {
+    sortedStocks.sort((a, b) => {
+      const aVal = a.quantity;
+      const bVal = b.quantity;
+      
+      if (direction === 'asc') {
+        return aVal - bVal;
+      } else {
+        return bVal - aVal;
+      }
+    });
+  }
+  
+  // Update header indicators
+  updateSortIndicators(column, direction);
+  
+  // Render sorted table
+  renderInventoryTable(sortedStocks);
 }
 
 // Create Inventory Row 
@@ -499,6 +537,53 @@ function updateLowStockAlert(stocks) {
   }
 }
 
+// Update sort column indicators in header
+function updateSortIndicators(column, direction) {
+  // Clear all indicators
+  document.querySelectorAll("#inventoryTableBody th").forEach(th => {
+    th.classList.remove('sort-asc', 'sort-desc');
+    const arrow = th.querySelector('.sort-arrow');
+    if (arrow) arrow.remove();
+  });
+
+  // Add indicator to current sort column
+  if (column === 'quantity') {
+    const quantityHeader = document.querySelectorAll("#inventoryTableBody th")[1]; // Quantity is 2nd column
+    quantityHeader.classList.add(direction === 'asc' ? 'sort-asc' : 'sort-desc');
+    const arrow = document.createElement('span');
+    arrow.className = 'sort-arrow';
+    arrow.textContent = direction === 'asc' ? ' ↑' : ' ↓';
+    quantityHeader.appendChild(arrow);
+  }
+}
+
+// Initialize header click handlers for sorting
+function initializeSortHandlers() {
+  const quantityHeader = document.querySelectorAll("#inventoryTableBody th")[1]; // Quantity column
+  
+  quantityHeader.style.cursor = 'pointer';
+  quantityHeader.addEventListener('click', () => {
+    // Toggle between asc, desc, and none
+    if (sortState.column === 'quantity') {
+      if (sortState.direction === 'asc') {
+        sortState.direction = 'desc';
+      } else {
+        // Reset to unsorted (reload original)
+        sortState.column = null;
+        sortState.direction = 'asc';
+        renderInventoryTable(currentStocks);
+        updateSortIndicators(null, 'asc');
+        return;
+      }
+    } else {
+      sortState.column = 'quantity';
+      sortState.direction = 'asc';
+    }
+    
+    sortInventory('quantity', sortState.direction);
+  });
+}
+
 searchInput.addEventListener("input", () => {
   const term = searchInput.value.trim().toLowerCase();
   document.querySelectorAll("#inventoryTableBody tbody tr").forEach(row => {
@@ -512,5 +597,6 @@ searchInput.addEventListener("input", () => {
 
 // Initialize profile on page load
 loadInventory();
+setTimeout(() => initializeSortHandlers(), 100); // Delay to ensure table is rendered
 initializeProfile();
 loadSuppliersForSelection();
