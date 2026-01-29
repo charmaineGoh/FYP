@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESCKWEAR IMS - Dashboard</title>
     <link rel="stylesheet" href="../css/dashboard.css">
-    <!-- Google Fonts -->
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     
-    <!-- ADDED: Chart.js Library -->
+    <!-- Chart.js Library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="app-container">
-        <!-- Sidebar Navigation (No changes needed here) -->
+        
         <nav class="sidebar">
             <div class="sidebar-header">
                 <h1>ESCKWEAR</h1>
@@ -57,7 +57,7 @@
                     <h2>Dashboard Overview</h2>
                 </div>
                 
-                <!-- ADDED: Filter Controls -->
+                <!-- Filter Controls -->
                 <div class="filter-section">
                     <input type="date" id="start-date" class="date-input">
                     <span>to</span>
@@ -85,10 +85,10 @@
                     <p id="outbound-stocks" class="card-value">0</p>
                     <span class="card-info">Records in selected range</span>
                 </div>
-                <!-- You can add more cards here as needed -->
+              
             </div>
 
-            <!-- ADDED: Chart Section -->
+            <!-- Chart Section -->
             <div class="dashboard-grid">
                 <div class="chart-container">
                     <h3>Stock Levels - Shirts</h3>
@@ -105,7 +105,7 @@
                     <canvas id="accessoriesChart"></canvas>
                 </div>
 
-                <!-- ADDED: Table for Recent Activity -->
+                <!-- Table for Recent Activity -->
                 <div class="content-placeholder activity-table-container">
                     <h3>Detailed Activity</h3>
                     <table id="activity-table">
@@ -118,7 +118,7 @@
                             </tr>
                         </thead>
                         <tbody id="activity-body">
-                            <!-- JS will inject rows here -->
+                          
                         </tbody>
                     </table>
                 </div>
@@ -136,7 +136,7 @@
     <!-- Auth Script -->
     <script src="../js/auth.js"></script>
     
-    <!-- Your Dashboard Logic -->
+   
     <script src="../js/dashboard.js"></script>
 
     <script>

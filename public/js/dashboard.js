@@ -214,7 +214,7 @@ async function populateDashboard() {
     if (startDateInput && endDateInput && startDateInput.value && endDateInput.value) {
       startDate = new Date(startDateInput.value);
       endDate = new Date(endDateInput.value);
-      endDate.setHours(23, 59, 59, 999); // Include the entire end date
+      endDate.setHours(23, 59, 59, 999); 
       
       filteredMovements = movements.filter(m => {
         const movementDate = new Date(m.dateUpdated);
@@ -251,8 +251,8 @@ async function populateDashboard() {
     }
 
     // Calculate totals
-    const totalStock = stocks.reduce((sum, s) => sum + s.quantity, 0);
-    const uniqueLocations = new Set(stocks.map(s => s.warehouseLocation)).size;
+    const totalStock = chartStocks.reduce((sum, s) => sum + s.quantity, 0);
+    const uniqueLocations = new Set(chartStocks.map(s => s.warehouseLocation)).size;
 
     // Calculate inbound and outbound from movements
     const inbound = filteredMovements.filter(m => m.movementType === "Inbound").length;
@@ -291,10 +291,10 @@ async function populateDashboard() {
   }
 }
 
-// Run it once when the page loads
+
 populateDashboard();
 
-// Add filter button listener if it exists
+
 const filterBtn = document.getElementById("filter-btn");
 if (filterBtn) {
   filterBtn.addEventListener("click", () => {
@@ -302,7 +302,7 @@ if (filterBtn) {
   });
 }
 
-// Add a click event listener to the download button
+
 downloadBtn.addEventListener('click', () => {
     console.log('Download button clicked!');
 
@@ -331,10 +331,10 @@ downloadBtn.addEventListener('click', () => {
             console.warn("Content is taller than a single A4 page. It may be cut off.");
         }
 
-        // Add the image to the PDF
+        
         pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
 
-        // Save the PDF with a specific filename
+        
         pdf.save('ESCKWEAR_Dashboard_Report.pdf');
     });
 });
