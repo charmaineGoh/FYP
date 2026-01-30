@@ -43,24 +43,28 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem("lowStockAlerts", lowStockAlertsCheckbox.checked);
     console.log("Low Stock Alerts setting saved:", lowStockAlertsCheckbox.checked);
   });
-});
 
-document.getElementById("notification-form").addEventListener("submit", function(e) {
-  e.preventDefault(); 
+  // Add form submit listener
+  const notificationForm = document.getElementById("notification-form");
+  if (notificationForm) {
+    notificationForm.addEventListener("submit", function(e) {
+      e.preventDefault(); 
 
-  const lowStockAlertsChecked = document.getElementById("low-stock-alerts").checked;
-  const emailChecked = document.getElementById("email-notifications").checked;
-  const smsChecked = document.getElementById("sms-notifications").checked;
+      const lowStockAlertsChecked = document.getElementById("low-stock-alerts").checked;
+      const emailChecked = document.getElementById("email-notifications").checked;
+      const smsChecked = document.getElementById("sms-notifications").checked;
 
-  // Save settings to localStorage
-  localStorage.setItem("lowStockAlerts", lowStockAlertsChecked);
-  
-  //  log or alert
-  console.log("Low Stock Alerts:", lowStockAlertsChecked);
-  console.log("Email Notifications:", emailChecked);
-  console.log("SMS Notifications:", smsChecked);
+      // Save settings to localStorage
+      localStorage.setItem("lowStockAlerts", lowStockAlertsChecked);
+      
+      //  log or alert
+      console.log("Low Stock Alerts:", lowStockAlertsChecked);
+      console.log("Email Notifications:", emailChecked);
+      console.log("SMS Notifications:", smsChecked);
 
-  
-  const alertStatus = lowStockAlertsChecked ? "enabled" : "disabled";
-  alert(`✅ Settings saved!\nLow Stock Alert: ${alertStatus}`);
+      
+      const alertStatus = lowStockAlertsChecked ? "enabled" : "disabled";
+      alert(`✅ Settings saved!\nLow Stock Alert: ${alertStatus}`);
+    });
+  }
 });
