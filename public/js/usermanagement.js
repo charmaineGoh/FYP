@@ -128,6 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     if (res.ok) {
       alert("✅ User added!");
+      document.getElementById("addUserForm").reset();
       addUserModal.classList.add("hidden");
       loadUsers();
     } else {
