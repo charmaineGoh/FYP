@@ -298,26 +298,22 @@ document.getElementById("editProductForm").addEventListener("submit", async e =>
       alert("✅ Product updated!");
       editModal.classList.add("hidden");
       
-      // Sync product quantity with inventory stocks
-      try {
-        const oldProduct = cachedProducts.find(p => p._id === productId);
-        const quantityDiff = updatedProduct.quantity - (oldProduct?.quantity || 0);
-        
-        // If quantity changed, sync with inventory
-        if (quantityDiff !== 0) {
-          console.log(`[sync] Product quantity changed by ${quantityDiff}, syncing to inventory...`);
-          // Update cache
-          const idx = cachedProducts.findIndex(p => p._id === productId);
-          if (idx !== -1) {
-            cachedProducts[idx] = updatedProduct;
-          }
-        }
-      } catch (syncErr) {
-        console.log("[sync] Warning: Could not sync inventory", syncErr);
+      // Update cache
+      const idx = cachedProducts.findIndex(p => p._id === productId);
+      if (idx !== -1) {
+        cachedProducts[idx] = updatedProduct;
       }
       
       // Reload products immediately without full page refresh
       loadProduct(currentFilter, currentPage);
+      
+      // Trigger immediate inventory refresh if inventory page is open
+      if (window.location.pathname.includes('inventory') || document.querySelector('#inventoryTableBody')) {
+        console.log("[sync] Triggering immediate inventory refresh...");
+        if (typeof loadInventory === 'function') {
+          loadInventory(false);
+        }
+      }
     } else {
       const contentType = res.headers.get('content-type') || '';
       let err;
