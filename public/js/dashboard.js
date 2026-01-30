@@ -356,10 +356,10 @@ if (downloadExcelBtn) {
   downloadExcelBtn.addEventListener('click', () => {
     console.log('Download Excel button clicked!');
 
-    // Create a new workbook
+   
     const wb = XLSX.utils.book_new();
 
-    // Get date range text
+    
     let dateRangeText = 'All Time';
     if (dashboardData.startDate && dashboardData.endDate) {
       dateRangeText = `${formatDateForExcel(dashboardData.startDate)} to ${formatDateForExcel(dashboardData.endDate)}`;

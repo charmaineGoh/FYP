@@ -88,3 +88,122 @@ background: #556487;
     background: #c4c8d0;
 }
 
+/* Responsive Design */
+/* Tablet - 768px and below */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+
+    .form-container {
+        max-width: 100%;
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+    }
+
+    label {
+        font-size: 0.95rem;
+        margin-top: 12px;
+    }
+
+    input, select, textarea {
+        padding: 10px;
+        margin-top: 5px;
+        font-size: 14px;
+    }
+
+    textarea {
+        height: 100px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        justify-content: stretch;
+    }
+
+    .back-btn,
+    .submit-btn {
+        width: 100%;
+        padding: 10px 15px;
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+        margin-top: 0;
+    }
+
+    .back-btn:last-child,
+    .submit-btn:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/* Mobile - 480px and below */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .form-container {
+        max-width: 100%;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        font-size: 1.1rem;
+        margin: 0 0 12px 0;
+    }
+
+    label {
+        font-size: 0.9rem;
+        margin-top: 10px;
+        margin-bottom: 3px;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 8px;
+        margin-top: 4px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        height: 80px;
+        font-size: 14px;
+    }
+
+    select {
+        padding-right: 30px;
+        background-position: right 8px center;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+
+    .back-btn,
+    .submit-btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 0.85rem;
+        margin: 0;
+        border-radius: 5px;
+    }
+
+    .back-btn {
+        order: 2;
+    }
+
+    .submit-btn {
+        order: 1;
+    }
+}

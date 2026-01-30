@@ -212,9 +212,13 @@ button[type="submit"]:hover {
 }
 
 /*  Mobile Responsiveness  */
-@media (max-width: 900px) {
+
+/* Tablet - 768px and below */
+@media (max-width: 768px) {
     .page-container {
         grid-template-columns: 1fr;
+        height: auto;
+        min-height: 100vh;
     }
 
     .welcome-panel {
@@ -222,7 +226,142 @@ button[type="submit"]:hover {
     }
 
     .form-panel {
-        padding-top: 80px;
+        padding: 30px 20px;
+        min-height: 100vh;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .logo-placeholder {
+        top: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+
+    .form-wrapper {
+        max-width: 100%;
+    }
+
+    .form-wrapper h2 {
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+    }
+
+    .welcome-text {
+        font-size: 0.95rem;
+    }
+
+    .form-content {
+        padding: 30px 20px;
+        border-radius: 12px;
+    }
+
+    .input-group {
+        margin-bottom: 18px;
+    }
+
+    .input-group label {
+        font-size: 0.95rem;
+        margin-bottom: 5px;
+    }
+
+    .input-group input {
+        padding: 11px;
+        font-size: 1rem;
+    }
+
+    button[type="submit"] {
+        padding: 11px;
+        font-size: 0.95rem;
+    }
+
+    .forgot-password {
+        font-size: 0.8rem;
+    }
+}
+
+/* Mobile - 480px and below */
+@media (max-width: 480px) {
+    body {
+        height: auto;
+    }
+
+    .page-container {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .form-panel {
+        padding: 20px;
+        min-height: 100vh;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .logo-placeholder {
+        top: 15px;
+        right: 15px;
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+
+    .form-wrapper {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .form-wrapper h2 {
+        font-size: 1.3rem;
+    }
+
+    .welcome-text {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+
+    .form-content {
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .invite-note {
+        font-size: 0.85rem;
+        padding: 8px 12px;
+        margin-bottom: 20px;
+    }
+
+    .input-group {
+        margin-bottom: 15px;
+    }
+
+    .input-group label {
+        font-size: 0.9rem;
+        margin-bottom: 4px;
+    }
+
+    .input-group input {
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+
+    button[type="submit"] {
+        padding: 10px;
+        font-size: 0.9rem;
+        border-radius: 5px;
+    }
+
+    .forgot-password {
+        font-size: 0.75rem;
+        margin-top: 10px;
+    }
+
+    .error-message {
+        font-size: 0.85rem;
     }
 }
 

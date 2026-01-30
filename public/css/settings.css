@@ -604,3 +604,204 @@ input:checked + .slider:before {
 #notification-form button[type="submit"]:hover {
     background-color: #b7a7da; 
 }
+/* Responsive Design */
+/* Tablet - 768px and below */
+@media (max-width: 768px) {
+    .page-container {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    body {
+        height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .welcome-panel {
+        display: none;
+    }
+
+    .form-panel {
+        padding: 30px 20px;
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .logo-placeholder {
+        top: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+
+    .form-wrapper {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .tabs-container {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .tab {
+        flex: 1;
+        min-width: 120px;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+
+    .tab-content {
+        padding: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 10px;
+        font-size: 0.95rem;
+    }
+
+    .toggle-switch {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    #notification-form button[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+
+    .password-requirements {
+        font-size: 0.85rem;
+    }
+}
+
+/* Mobile - 480px and below */
+@media (max-width: 480px) {
+    body {
+        font-size: 14px;
+        height: auto;
+    }
+
+    .page-container {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .form-panel {
+        padding: 20px;
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .logo-placeholder {
+        top: 15px;
+        right: 15px;
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+
+    .form-wrapper {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .tabs-container {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .tab {
+        width: 100%;
+        padding: 12px;
+        border-bottom: 2px solid transparent;
+        border-right: none;
+        font-size: 0.85rem;
+        text-align: left;
+    }
+
+    .tab.active {
+        border-bottom: 2px solid var(--color-secondary);
+        border-right: none;
+        background-color: #f8f9fc;
+    }
+
+    .tab-content {
+        padding: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 12px;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        font-size: 14px;
+        border-radius: 4px;
+    }
+
+    .toggle-switch {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .switch {
+        width: 50px;
+        height: 24px;
+    }
+
+    .slider {
+        height: 20px;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(22px);
+    }
+
+    .slider:before {
+        height: 18px;
+        width: 18px;
+    }
+
+    #notification-form button[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .password-requirements {
+        font-size: 0.8rem;
+        margin-top: 10px;
+    }
+
+    .requirement {
+        padding: 5px 0;
+    }
+}
