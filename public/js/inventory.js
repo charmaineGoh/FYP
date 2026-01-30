@@ -134,7 +134,7 @@ function sortInventory(column, direction) {
   renderInventoryTable(sortedStocks);
 }
 
-// Create Inventory Row 
+// Create Inventory Rowwww
 function createInventoryRow(stock) {
   const row = document.createElement("tr");
   const isLowStock = stock.quantity < 10;
