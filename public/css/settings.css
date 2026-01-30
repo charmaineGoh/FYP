@@ -821,5 +821,5 @@ input:checked + .slider:before {
 }
 
 #add-team-member:hover {
-    background-color: #b7a7da;
+    background-color: #a77eff;
 }
