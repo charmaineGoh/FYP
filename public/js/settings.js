@@ -60,5 +60,7 @@ document.getElementById("notification-form").addEventListener("submit", function
   console.log("Email Notifications:", emailChecked);
   console.log("SMS Notifications:", smsChecked);
 
-  alert("Settings saved!");
+  
+  const alertStatus = lowStockAlertsChecked ? "enabled" : "disabled";
+  alert(`✅ Settings saved!\nLow Stock Alert: ${alertStatus}`);
 });
