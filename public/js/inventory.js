@@ -59,7 +59,8 @@ async function loadInventory(silentRefresh = false) {
     
     // Log silent refresh for debugging
     if (silentRefresh) {
-      console.log("[inventory.js] Auto-synced stock data with products");
+      const timestamp = new Date().toLocaleTimeString();
+      console.log(`[inventory.js] Auto-synced stock data with products at ${timestamp}`);
     }
   } catch (err) {
     console.error("Error fetching inventory:", err);
