@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.getElementById("notification-form").addEventListener("submit", function(e) {
-  e.preventDefault(); // stop page reload
+  e.preventDefault(); 
 
   const lowStockAlertsChecked = document.getElementById("low-stock-alerts").checked;
   const emailChecked = document.getElementById("email-notifications").checked;
