@@ -115,6 +115,11 @@ async function loadProduct(category = "all", page = 1) {
 
 // Add pagination controls
 function addPaginationControls(total, currentPage) {
+  const paginationContainer = document.getElementById('pagination');
+  
+  // Clear existing pagination
+  paginationContainer.innerHTML = '';
+  
   const paginationDiv = document.createElement('div');
   paginationDiv.style.cssText = 'display: flex; justify-content: center; gap: 10px; margin-top: 30px; padding: 20px;';
   
@@ -142,7 +147,7 @@ function addPaginationControls(total, currentPage) {
     paginationDiv.appendChild(nextBtn);
   }
 
-  productList.parentElement.appendChild(paginationDiv);
+  paginationContainer.appendChild(paginationDiv);
 }
 
 // Initial load
