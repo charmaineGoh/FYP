@@ -35,9 +35,25 @@ function initializeProfile() {
 // Get product list container
 const productList = document.getElementById('productList');
 
-// Load products with optional category filter 
-async function loadProduct(category = "all") {
+// Track loading state
+let isLoadingProducts = false;
+let cachedProducts = [];
+let currentFilter = 'all';
+
+// Pagination state
+const PRODUCTS_PER_PAGE = 12;
+let currentPage = 1;
+let totalPages = 1;
+
+// Load products with optional category filter and pagination
+async function loadProduct(category = "all", page = 1) {
+  if (isLoadingProducts) return; 
+  
   try {
+    isLoadingProducts = true;
+    currentFilter = category;
+    currentPage = page;
+    
     console.log("[products] fetching /products …");
     const res = await fetch("/products");
     const contentType = res.headers.get('content-type') || '';
@@ -56,34 +72,77 @@ async function loadProduct(category = "all") {
     }
 
     const products = contentType.includes('application/json') ? await res.json() : [];
+    cachedProducts = products; // Cache for filtering
     console.log(`[products] fetch ok, received ${products.length} items`);
 
-    productList.innerHTML = '';
-
-    if (!products || products.length === 0) {
-      productList.innerHTML = "<p>No products found.</p>";
-      return;
-    }
-
     // Filter by category if provided
-    const filtered = category === "all"
+    let filtered = category === "all"
       ? products
       : products.filter(p => p.category?.toLowerCase() === category.toLowerCase());
 
     if (filtered.length === 0) {
       productList.innerHTML = "<p>No products found in this category.</p>";
+      isLoadingProducts = false;
       return;
     }
 
-    filtered.forEach(product => {
+    // Implement pagination
+    totalPages = Math.ceil(filtered.length / PRODUCTS_PER_PAGE);
+    const startIdx = (page - 1) * PRODUCTS_PER_PAGE;
+    const endIdx = startIdx + PRODUCTS_PER_PAGE;
+    const paginatedProducts = filtered.slice(startIdx, endIdx);
+
+    productList.innerHTML = '';
+
+    paginatedProducts.forEach(product => {
       const card = createProductCard(product);
       productList.appendChild(card);
     });
-    console.log(`Rendered ${filtered.length} products (filtered)`);
+
+    // Add pagination controls
+    if (totalPages > 1) {
+      addPaginationControls(filtered.length, page);
+    }
+
+    console.log(`Rendered ${paginatedProducts.length} products (page ${page} of ${totalPages})`);
   } catch (err) {
     console.error("Error fetching products:", err);
     productList.innerHTML = "<p>Failed to load products.</p>";
+  } finally {
+    isLoadingProducts = false;
   }
+}
+
+// Add pagination controls
+function addPaginationControls(total, currentPage) {
+  const paginationDiv = document.createElement('div');
+  paginationDiv.style.cssText = 'display: flex; justify-content: center; gap: 10px; margin-top: 30px; padding: 20px;';
+  
+  // Previous button
+  if (currentPage > 1) {
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = '← Previous';
+    prevBtn.style.cssText = 'padding: 8px 16px; background: #9e8bf7; color: white; border: none; border-radius: 4px; cursor: pointer;';
+    prevBtn.onclick = () => loadProduct(currentFilter, currentPage - 1);
+    paginationDiv.appendChild(prevBtn);
+  }
+
+  // Page info
+  const pageInfo = document.createElement('span');
+  pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+  pageInfo.style.cssText = 'padding: 8px 16px; align-self: center; font-weight: 600;';
+  paginationDiv.appendChild(pageInfo);
+
+  // Next button
+  if (currentPage < totalPages) {
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = 'Next →';
+    nextBtn.style.cssText = 'padding: 8px 16px; background: #9e8bf7; color: white; border: none; border-radius: 4px; cursor: pointer;';
+    nextBtn.onclick = () => loadProduct(currentFilter, currentPage + 1);
+    paginationDiv.appendChild(nextBtn);
+  }
+
+  productList.parentElement.appendChild(paginationDiv);
 }
 
 // Initial load
@@ -165,9 +224,13 @@ document.getElementById("addProductForm").addEventListener("submit", async e => 
     });
 
     if (res.ok) {
+      const newProduct = await res.json();
       alert("✅ Product added!");
       addModal.classList.add("hidden");
-      loadProduct();
+      
+      // Immediately add new product to cache and refresh without full reload
+      cachedProducts.push(newProduct);
+      loadProduct(currentFilter, 1); // Reset to first page
     } else {
       const contentType = res.headers.get('content-type') || '';
       let err;
@@ -231,9 +294,30 @@ document.getElementById("editProductForm").addEventListener("submit", async e =>
     });
 
     if (res.ok) {
+      const updatedProduct = await res.json();
       alert("✅ Product updated!");
       editModal.classList.add("hidden");
-      loadProduct();
+      
+      // Sync product quantity with inventory stocks
+      try {
+        const oldProduct = cachedProducts.find(p => p._id === productId);
+        const quantityDiff = updatedProduct.quantity - (oldProduct?.quantity || 0);
+        
+        // If quantity changed, sync with inventory
+        if (quantityDiff !== 0) {
+          console.log(`[sync] Product quantity changed by ${quantityDiff}, syncing to inventory...`);
+          // Update cache
+          const idx = cachedProducts.findIndex(p => p._id === productId);
+          if (idx !== -1) {
+            cachedProducts[idx] = updatedProduct;
+          }
+        }
+      } catch (syncErr) {
+        console.log("[sync] Warning: Could not sync inventory", syncErr);
+      }
+      
+      // Reload products immediately without full page refresh
+      loadProduct(currentFilter, currentPage);
     } else {
       const contentType = res.headers.get('content-type') || '';
       let err;
@@ -273,7 +357,10 @@ document.addEventListener("click", async (e) => {
       if (res.ok) {
         alert("✅ Product deleted!");
         editModal.classList.add("hidden");
-        loadProduct();
+        
+        // Remove from cache and refresh immediately
+        cachedProducts = cachedProducts.filter(p => p._id !== productId);
+        loadProduct(currentFilter, 1); // Reset to first page
       } else {
         const contentType = res.headers.get('content-type') || '';
         let err;
@@ -293,8 +380,14 @@ document.addEventListener("click", async (e) => {
 
 const filterSelect = document.getElementById("filter-category");
 initializeProfile();
+
+// Debounce filter changes to prevent excessive loads
+let filterTimeout;
 filterSelect.addEventListener("change", () => {
-  const selectedCategory = filterSelect.value;
-  loadProduct(selectedCategory);
+  clearTimeout(filterTimeout);
+  filterTimeout = setTimeout(() => {
+    const selectedCategory = filterSelect.value;
+    loadProduct(selectedCategory, 1); // Reset to first page
+  }, 300); // Wait 300ms after user stops interacting
 });
 

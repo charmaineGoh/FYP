@@ -43,12 +43,12 @@ let sortState = {
 
 let currentStocks = []; // Store current stocks for sorting
 
-// Load Inventory 
-async function loadInventory() {
+// Load Inventory with automatic sync from products
+async function loadInventory(silentRefresh = false) {
   try {
     const res = await fetch("/stocks");
     const stocks = await res.json();
-    currentStocks = stocks; // Store for sorting
+    currentStocks = stocks; 
 
     // Sort by quantity (lowest to highest) on first load
     const sortedStocks = [...stocks].sort((a, b) => a.quantity - b.quantity);
@@ -56,10 +56,41 @@ async function loadInventory() {
 
     // Check and display low stock alerts
     updateLowStockAlert(stocks);
+    
+    // Log silent refresh for debugging
+    if (silentRefresh) {
+      console.log("[inventory.js] Auto-synced stock data with products");
+    }
   } catch (err) {
     console.error("Error fetching inventory:", err);
     const tbody = document.querySelector("#inventoryTableBody tbody");
-    tbody.innerHTML = "<tr><td colspan='4'>Failed to load inventory.</td></tr>";
+    if (tbody) {
+      tbody.innerHTML = "<tr><td colspan='4'>Failed to load inventory.</td></tr>";
+    }
+  }
+}
+
+// Auto-refresh inventory every 30 seconds to sync with product changes
+let autoRefreshInterval = null;
+
+function startAutoRefresh() {
+  if (autoRefreshInterval) {
+    clearInterval(autoRefreshInterval);
+  }
+  
+  
+  autoRefreshInterval = setInterval(() => {
+    loadInventory(true); 
+  }, 30000);
+  
+  console.log("[inventory.js] Auto-refresh started (30s intervals)");
+}
+
+function stopAutoRefresh() {
+  if (autoRefreshInterval) {
+    clearInterval(autoRefreshInterval);
+    autoRefreshInterval = null;
+    console.log("[inventory.js] Auto-refresh stopped");
   }
 }
 
@@ -595,3 +626,9 @@ setTimeout(() => {
 }, 100); // Delay to ensure table is rendered
 initializeProfile();
 loadSuppliersForSelection();
+
+// Start auto-refresh to sync with product changes
+startAutoRefresh();
+
+// Stop auto-refresh when user leaves the page
+window.addEventListener('beforeunload', stopAutoRefresh);

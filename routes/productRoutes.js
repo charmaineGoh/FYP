@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Product = require("../models/product");
+const Stock = require("../models/stock");
 
 router.post("/", async (req, res) => {
   console.log("Received product data - Keys:", Object.keys(req.body));
@@ -77,14 +78,45 @@ router.get("/:productId", async (req, res) => {
 router.put("/:productId", async (req, res) => {
   try {
     const { productId } = req.params;
+    
+    // Get old product data to detect quantity changes
+    const oldProduct = await Product.findById(productId);
+    if (!oldProduct) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+    
+    const oldQuantity = oldProduct.quantity;
+    const newQuantity = req.body.quantity;
+    const quantityDiff = newQuantity - oldQuantity;
+    
+    // Update product
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
       req.body,
       { new: true }
     );
-    if (!updatedProduct) {
-      return res.status(404).json({ error: "Product not found" });
+    
+    // Sync quantity changes to inventory stocks
+    if (quantityDiff !== 0) {
+      console.log(`[sync] Product quantity changed by ${quantityDiff}. Syncing to inventory...`);
+      
+      // Find all stocks linked to this product and update their quantities
+      const stocks = await Stock.find({ productId: productId });
+      
+      for (const stock of stocks) {
+        const newStockQuantity = Math.max(0, stock.quantity + quantityDiff);
+        await Stock.findByIdAndUpdate(
+          stock._id,
+          { 
+            quantity: newStockQuantity,
+            lastUpdated: new Date()
+          },
+          { new: true }
+        );
+        console.log(`[sync] Updated stock ${stock.stockId}: ${stock.quantity} → ${newStockQuantity}`);
+      }
     }
+    
     res.json(updatedProduct);
   } catch (err) {
     console.error("Error updating product:", err);
