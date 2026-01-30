@@ -221,7 +221,7 @@ const addBtn = document.getElementById("addInventoryBtn");
 if (addBtn) {
   addBtn.addEventListener("click", () => {
     
-    window.location.href = "/public/html/movement.html";
+    window.location.href = "/html/movement.html";
   });
 }
 addCloseBtn.addEventListener("click", () => addModal.classList.add("hidden"));
