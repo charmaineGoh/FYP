@@ -171,6 +171,9 @@ function createInventoryRow(stock) {
     document.getElementById("edit-quantity").value = stock.quantity;
     document.getElementById("edit-warehouseLocation").value = stock.warehouseLocation;
     document.getElementById("edit-supplierId").value = stock.supplierId?._id || '';
+    
+    // Store the original stock ID for the form submission handler
+    document.getElementById("editForm").dataset.originalStockId = stock.stockId;
 
     editModal.classList.remove("hidden");
   });
@@ -363,11 +366,12 @@ async function loadProductsForEditSelection() {
 document.getElementById("editForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  const originalStockId = document.getElementById("editForm").dataset.originalStockId;
   const supplierId = document.getElementById("edit-supplierId")?.value || null;
-  const stockId = document.getElementById("edit-stockId").value;
+  const newStockId = document.getElementById("edit-stockId").value;
 
   const updatedStock = {
-    stockId: stockId,
+    stockId: newStockId,
     supplierId: supplierId || undefined,
     quantity: parseInt(document.getElementById("edit-quantity").value, 10),
     warehouseLocation: document.getElementById("edit-warehouseLocation").value
@@ -376,7 +380,7 @@ document.getElementById("editForm").addEventListener("submit", async (e) => {
   console.log("Updating stock:", updatedStock);
 
   try {
-    const res = await fetch(`/stocks/${stockId}`, {
+    const res = await fetch(`/stocks/${originalStockId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updatedStock)
