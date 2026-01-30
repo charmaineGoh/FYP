@@ -65,7 +65,7 @@ async function loadInventory(silentRefresh = false) {
     console.error("Error fetching inventory:", err);
     const tbody = document.querySelector("#inventoryTableBody tbody");
     if (tbody) {
-      tbody.innerHTML = "<tr><td colspan='4'>Failed to load inventory.</td></tr>";
+      tbody.innerHTML = "<tr><td colspan='6'>Failed to load inventory.</td></tr>";
     }
   }
 }
@@ -139,9 +139,11 @@ function createInventoryRow(stock) {
   const row = document.createElement("tr");
   const isLowStock = stock.quantity < 10;
   const supplierName = stock.supplierId?.supplierName || "—";
+  const productName = stock.productId?.productName || "—";
 
   row.innerHTML = `
     <td>${stock.stockId}</td>
+    <td>${productName}</td>
     <td><span class="quantity-value">${stock.quantity}</span></td>
     <td>${stock.warehouseLocation}</td>
     <td>${supplierName}</td>
