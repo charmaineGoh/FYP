@@ -24,7 +24,7 @@ function initializeProfile() {
     profileDropdown.classList.toggle('show');
   });
 
-  // Close dropdown when clicking outside
+  
   document.addEventListener('click', () => {
     profileDropdown.classList.remove('show');
   });
