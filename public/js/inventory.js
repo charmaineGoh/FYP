@@ -219,11 +219,9 @@ const addCloseBtn = addModal.querySelector(".close");
 const addBtn = document.getElementById("addInventoryBtn");
 
 if (addBtn) {
-  addBtn.addEventListener("click", async () => {
-    // Load products and suppliers list for selection
-    await loadProductsForSelection();
-    await loadSuppliersForSelection();
-    addModal.classList.remove("hidden");
+  addBtn.addEventListener("click", () => {
+    
+    window.location.href = "/public/html/movement.html";
   });
 }
 addCloseBtn.addEventListener("click", () => addModal.classList.add("hidden"));
