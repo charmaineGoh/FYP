@@ -218,12 +218,14 @@ const addModal = document.getElementById("addInventoryModal");
 const addCloseBtn = addModal.querySelector(".close");
 const addBtn = document.getElementById("addInventoryBtn");
 
-addBtn.addEventListener("click", async () => {
-  // Load products and suppliers list for selection
-  await loadProductsForSelection();
-  await loadSuppliersForSelection();
-  addModal.classList.remove("hidden");
-});
+if (addBtn) {
+  addBtn.addEventListener("click", async () => {
+    // Load products and suppliers list for selection
+    await loadProductsForSelection();
+    await loadSuppliersForSelection();
+    addModal.classList.remove("hidden");
+  });
+}
 addCloseBtn.addEventListener("click", () => addModal.classList.add("hidden"));
 window.addEventListener("click", e => {
   if (e.target === addModal) addModal.classList.add("hidden");
