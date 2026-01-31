@@ -55,12 +55,12 @@ document.addEventListener("DOMContentLoaded", () => {
       users.forEach(user => {
         const row = document.createElement("tr");
         row.innerHTML = `
-          <td>${user.name}</td>
-          <td>${user.position || ""}</td>
-          <td>${user.role}</td>
-          <td>${user.email || ""}</td>
-          <td>${user.status || "active"}</td>
-          <td class="actions">
+          <td data-label="Name">${user.name}</td>
+          <td data-label="Position">${user.position || ""}</td>
+          <td data-label="Role">${user.role}</td>
+          <td data-label="Email">${user.email || ""}</td>
+          <td data-label="Status">${user.status || "active"}</td>
+          <td data-label="Actions" class="actions">
             <button class="edit-btn" data-id="${user._id}" title="Edit"><i class="bi bi-pencil-fill"></i></button>
             <button class="delete-btn" data-id="${user._id}" title="Delete"><i class="bi bi-trash-fill"></i></button>
           </td>

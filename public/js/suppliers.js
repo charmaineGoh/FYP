@@ -65,12 +65,12 @@ async function loadSuppliers(category = "all") {
     filtered.forEach(supplier => {
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td>${supplier.supplierName}</td>
-        <td>${supplier.supplierContactName}</td>
-        <td>${supplier.supplierAddress}, ${supplier.supplierCity}, ${supplier.supplierCountry}</td>
-        <td>${supplier.supplierPhone}</td>
-        <td>${supplier.supplierEmail}</td>
-        <td class="actions">
+        <td data-label="Supplier Name">${supplier.supplierName}</td>
+        <td data-label="Contact Name">${supplier.supplierContactName}</td>
+        <td data-label="Address">${supplier.supplierAddress}, ${supplier.supplierCity}, ${supplier.supplierCountry}</td>
+        <td data-label="Phone">${supplier.supplierPhone}</td>
+        <td data-label="Email">${supplier.supplierEmail}</td>
+        <td data-label="Actions" class="actions">
           <button class="edit-btn" data-id="${supplier._id}" title="Edit"><i class="bi bi-pencil-fill"></i></button>
           <button class="delete-btn" data-id="${supplier._id}" title="Delete"><i class="bi bi-trash-fill"></i></button>
         </td>

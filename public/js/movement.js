@@ -174,13 +174,13 @@ function displayMovements(movementList) {
 
     const row = document.createElement('tr');
     row.innerHTML = `
-      <td>${movement.stockId}</td>
-      <td>${movement.movementType}</td>
-      <td>${movement.from}</td>
-      <td>${movement.to}</td>
-      <td>${movement.quantity}</td>
-      <td>${dateUpdated}</td>
-      <td>
+      <td data-label="Stock ID">${movement.stockId}</td>
+      <td data-label="Movement Type">${movement.movementType}</td>
+      <td data-label="From">${movement.from}</td>
+      <td data-label="To">${movement.to}</td>
+      <td data-label="Quantity">${movement.quantity}</td>
+      <td data-label="Date Updated">${dateUpdated}</td>
+      <td data-label="Actions">
         <button class="edit-btn" onclick="editMovement('${movement._id}')"><i class="bi bi-pencil-fill"></i></button>
       </td>
     `;

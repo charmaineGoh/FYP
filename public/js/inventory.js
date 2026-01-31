@@ -142,11 +142,11 @@ function createInventoryRow(stock) {
   const supplierName = stock.supplierId?.supplierName || "—";
 
   row.innerHTML = `
-    <td>${stock.stockId}</td>
-    <td><span class="quantity-value">${stock.quantity}</span></td>
-    <td>${stock.warehouseLocation}</td>
-    <td>${supplierName}</td>
-    <td>
+    <td data-label="Stock ID">${stock.stockId}</td>
+    <td data-label="Quantity"><span class="quantity-value">${stock.quantity}</span></td>
+    <td data-label="Warehouse">${stock.warehouseLocation}</td>
+    <td data-label="Supplier">${supplierName}</td>
+    <td data-label="Actions">
       <button class="edit-btn" title="Edit"><i class="bi bi-pencil-fill"></i></button>
       <button class="delete-btn" title="Delete"><i class="bi bi-trash-fill"></i></button>
       ${!stock.productId ? `<button class="add-to-products-btn" title="Add to Products"><i class="bi bi-plus-circle"></i></button>` : ''}
