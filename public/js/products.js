@@ -384,13 +384,15 @@ document.addEventListener("click", async (e) => {
 const filterSelect = document.getElementById("filter-category");
 initializeProfile();
 
-// Debounce filter changes to prevent excessive loads
+
 let filterTimeout;
-filterSelect.addEventListener("change", () => {
-  clearTimeout(filterTimeout);
-  filterTimeout = setTimeout(() => {
-    const selectedCategory = filterSelect.value;
-    loadProduct(selectedCategory, 1); // Reset to first page
-  }, 300); // Wait 300ms after user stops interacting
-});
+if (filterSelect) {
+  filterSelect.addEventListener("change", () => {
+    clearTimeout(filterTimeout);
+    filterTimeout = setTimeout(() => {
+      const selectedCategory = filterSelect.value;
+      loadProduct(selectedCategory, 1); 
+    }, 300); 
+  });
+}
 
