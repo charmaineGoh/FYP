@@ -187,7 +187,9 @@ const addModal = document.getElementById("addProductModal");
 const addBtn = document.getElementById("addProductBtn");
 const addCloseBtn = addModal.querySelector(".close");
 
-addBtn.addEventListener("click", () => addModal.classList.remove("hidden"));
+if (addBtn) {
+  addBtn.addEventListener("click", () => addModal.classList.remove("hidden"));
+}
 addCloseBtn.addEventListener("click", () => addModal.classList.add("hidden"));
 window.addEventListener("click", e => {
   if (e.target === addModal) addModal.classList.add("hidden");
