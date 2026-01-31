@@ -148,11 +148,11 @@
         </a>
     </nav>
 
-    <!-- Libraries for PDF generation -->
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
-    <!-- SheetJS library for Excel generation -->
+   
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     
     <!-- Auth Script -->
@@ -179,7 +179,7 @@
         const sidebar = document.querySelector(".sidebar");
         const hamburgerBtn = document.getElementById("hamburger-btn");
         
-        // Add event listener for hamburger button (works for both click and touch)
+        // event listener for hamburger button 
         if (hamburgerBtn) {
             hamburgerBtn.addEventListener('click', toggleSidebar);
             hamburgerBtn.addEventListener('touchend', function(e) {
@@ -189,7 +189,7 @@
             console.log("Hamburger button event listeners attached");
         }
         
-        // On mobile (width < 768px), start with sidebar collapsed
+        // On mobile (width < 768px)
         if (window.innerWidth <= 768) {
             sidebar.classList.add("collapsed");
             console.log("Mobile detected - sidebar initialized as collapsed");
