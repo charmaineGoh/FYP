@@ -111,7 +111,7 @@ async function loadSuppliers(category = "all") {
   }
 }
 
-// Initial load
+
 loadSuppliers();
 
 //  Add Supplier Modal 
