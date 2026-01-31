@@ -931,12 +931,16 @@ body {
     body {
         font-size: 14px;
         height: auto;
+        display: block;
+        min-height: 100vh;
     }
 
     .app-container {
         flex-direction: column;
         height: auto;
         min-height: 100vh;
+        max-width: 100vw;
+        overflow-x: auto;
     }
 
     .sidebar {
@@ -1034,7 +1038,9 @@ body {
 
     .main-content {
         padding: 15px;
-        overflow-x: hidden;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
     }
 
     .main-header {
@@ -1081,6 +1087,8 @@ body {
     .user-table {
         margin-top: 10px;
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
     }
 
     .user-table table {
