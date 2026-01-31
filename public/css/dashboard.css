@@ -27,7 +27,7 @@ body {
     font-family: var(--font-body);
     background-color: var(--color-bg);
     color: var(--color-text);
- 
+    overflow-x: hidden;
 }
 
 /*  Layout Structure  */
@@ -35,6 +35,7 @@ body {
     display: flex;
     width: 100%;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 .sidebar {
@@ -191,6 +192,7 @@ body {
     flex-grow: 1;
     padding: 40px;
     overflow-y: auto;
+    min-width: 0;
 }
 
 /*  Header & Filters  */
@@ -399,7 +401,7 @@ button:hover {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 15px;
+    table-layout: auto;
 }
 
 thead th {
@@ -408,16 +410,67 @@ thead th {
     color: var(--color-primary);
     padding: 12px 10px;
     border-bottom: 2px solid var(--color-bg);
+    word-wrap: break-word;
 }
 
 tbody td {
     padding: 12px 10px;
     font-size: 0.9rem;
     border-bottom: 1px solid var(--color-bg);
+    word-wrap: break-word;
 }
 
 tbody tr:hover {
     background-color: #fcfcfd;
+}
+
+/* Mobile Bottom Navigation */
+.mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-white);
+    border-top: 2px solid var(--color-border);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 8px 0;
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+.mobile-bottom-nav a {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--color-text-light);
+    padding: 10px 5px;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+}
+
+.mobile-bottom-nav a.active {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.mobile-bottom-nav a:hover {
+    color: var(--color-primary);
+}
+
+.mobile-bottom-nav .nav-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+@media (min-width: 769px) {
+    .mobile-bottom-nav {
+        display: none;
+    }
 }
 
 /*  Mobile / Tablet Responsiveness  */
@@ -443,215 +496,100 @@ tbody tr:hover {
 }
 
 /* Tablet - 768px and below */
+/* Mobile - 768px and below */
 @media (max-width: 768px) {
-    .app-container {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        width: 100%;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid var(--color-border);
-        flex-direction: row;
-        align-items: center;
-        padding: 10px 0;
-    }
-
-    .sidebar.collapsed {
-        width: 100%;
-        height: auto;
-    }
-
-    .sidebar-header {
-        padding: 15px 20px;
-        border-bottom: none;
-        flex-grow: 1;
-        border-right: 1px solid var(--color-border);
-    }
-
-    .sidebar-header h1 {
-        font-size: 1.3rem;
-        margin: 0;
-    }
-
-    .sidebar-nav {
-        display: none;
-        flex-direction: row;
-        padding: 0;
-        margin: 0;
-        gap: 0;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        right: 0;
-        background: var(--color-white);
-        flex-grow: 0;
-        border-bottom: 1px solid var(--color-border);
-        flex-wrap: wrap;
-        width: 100%;
-    }
-
-    .sidebar-nav.show {
-        display: flex;
-    }
-
-    .sidebar-nav li {
-        margin: 0;
-    }
-
-    .sidebar-nav li a {
-        padding: 12px 15px;
-        white-space: nowrap;
-        border-right: none;
-        border-bottom: 2px solid transparent;
-        font-size: 0.9rem;
-    }
-
-    .sidebar-nav li.active a,
-    .sidebar-nav li a:hover {
-        background-color: transparent;
-        color: var(--color-text);
-        border-right: none;
-        border-bottom: 2px solid var(--color-secondary);
-    }
-
-    .dropdown-menu {
-        display: none;
-        position: static;
-        max-height: none;
-        background: #f8f9fc;
-    }
-
-    .dropdown-toggle:hover .dropdown-menu {
-        display: none;
-    }
-
-    .dropdown-toggle.show .dropdown-menu {
-        display: block;
-    }
-
-    .dropdown-menu li a {
-        padding: 10px 15px;
-        font-size: 0.85rem;
-    }
-
-    .sidebar-footer {
-        display: none;
-    }
-
-    .hamburger-btn {
-        display: block;
-        margin-left: auto;
-        margin-right: 10px;
-        font-size: 24px;
-    }
-
-    .main-content {
-        padding: 20px;
-        flex-grow: 1;
-    }
-
-    .main-header {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-
-    .header-left {
-        flex-grow: 0;
-    }
-
-    .main-header h2 {
-        font-size: 1.3rem;
-        margin: 0;
-    }
-
-    .profile-section {
-        justify-content: flex-end;
-    }
-
-    .filter-section {
-        flex-wrap: wrap;
-    }
-
-    .summary-cards {
-        grid-template-columns: 1fr;
-        gap: 15px;
-        margin-bottom: 25px;
-    }
-
-    .card {
-        padding: 20px;
-    }
-
-    .card h3 {
-        font-size: 0.85rem;
-    }
-
-    .card .card-value {
-        font-size: 1.8rem;
-    }
-
-    .chart-container, .activity-table-container {
-        padding: 20px;
-    }
-
-    table {
-        font-size: 0.85rem;
-    }
-
-    thead th {
-        padding: 10px 8px;
-        font-size: 0.75rem;
-    }
-
-    tbody td {
-        padding: 10px 8px;
-        font-size: 0.8rem;
-    }
-
-    .profile-avatar {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-    }
-
-    .profile-section-sidebar {
-        position: static;
-    }
-
-    .profile-dropdown-sidebar {
-        position: static;
-        display: none;
-        border: none;
-        box-shadow: none;
-        background: transparent;
-        min-width: auto;
-    }
-
-    .profile-dropdown-sidebar.show {
-        display: block;
-    }
-}
-
-/* Mobile - 480px and below */
-@media (max-width: 480px) {
     body {
         font-size: 14px;
+        padding-bottom: 70px; /* Space for bottom nav */
     }
 
     .app-container {
         flex-direction: column;
         height: auto;
         min-height: 100vh;
+        padding-bottom: 70px; /* Space for bottom nav */
+    }
+
+    /* Hide desktop sidebar completely on mobile */
+    .sidebar {
+        display: none !important;
+    }
+
+    .sidebar.collapsed {
+        display: none !important;
+    }
+
+    /* Hide hamburger button */
+    .hamburger-btn {
+        display: none !important;
+    }
+
+    /* Bottom Navigation Bar */
+    .mobile-bottom-nav {
+        display: flex !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--color-white);
+        border-top: 2px solid var(--color-border);
+        justify-content: space-around;
+        align-items: center;
+        padding: 8px 0;
+        z-index: 1000;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    }
+
+    .mobile-bottom-nav a {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: var(--color-text-light);
+        padding: 10px 5px;
+        font-size: 0.75rem;
+        transition: all 0.2s;
+    }
+
+    .mobile-bottom-nav a.active {
+        color: var(--color-primary);
+        font-weight: 600;
+    }
+
+    .mobile-bottom-nav a:hover {
+        color: var(--color-primary);
+    }
+
+    .mobile-bottom-nav .nav-label {
+        font-size: 0.75rem;
+        font-weight: 500;
     }
 
     .sidebar {
         width: 100%;
         flex-direction: column;
         padding: 0;
+        height: auto;
+        display: flex;
+        max-height: 100vh;
+        overflow-y: auto;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1000;
+    }
+
+    .sidebar.collapsed {
+        display: none !important;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+    }
+
+    .sidebar:not(.collapsed) {
+        display: flex !important;
+        width: 100%;
         height: auto;
     }
 
@@ -674,17 +612,20 @@ tbody tr:hover {
     }
 
     .sidebar-nav {
-        display: none;
+        display: flex !important;
         position: static;
         flex-direction: column;
         width: 100%;
         top: auto;
         background: var(--color-white);
         border-bottom: 1px solid var(--color-border);
+        padding: 0;
+        margin: 0;
+        list-style: none;
     }
 
     .sidebar-nav.show {
-        display: flex;
+        display: flex !important;
     }
 
     .sidebar-nav li a {
@@ -725,10 +666,13 @@ tbody tr:hover {
 
     .hamburger-btn {
         display: block;
-        position: absolute;
-        right: 10px;
+        position: fixed;
+        right: 15px;
         top: 15px;
-        z-index: 100;
+        z-index: 9999;
+        font-size: 24px;
+        padding: 8px 12px;
+        pointer-events: auto;
     }
 
     .main-content {

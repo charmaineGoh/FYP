@@ -23,6 +23,10 @@ mongoose.connect(process.env.MONGO_URI)
   .catch((err) => console.error('Error:', err));
 
 // Mount routes
+app.get('/api/test', (req, res) => {
+  res.send('Test route works!');
+});
+
 app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;

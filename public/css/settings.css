@@ -23,10 +23,9 @@ body {
     font-family: var(--font-body);
     background-color: var(--color-bg);
     color: var(--color-text);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    display: block;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
 /*  Login Page Styles  */
@@ -34,8 +33,9 @@ body {
     display: grid;
     grid-template-columns: 1fr 2fr; 
     width: 100%;
-    height: 100vh;
-    overflow: hidden; /* Prevents scrollbars */
+    min-height: 100vh;
+    height: auto;
+    overflow: auto;
 }
 
 .welcome-panel {
@@ -149,8 +149,11 @@ body {
 .app-container {
     display: flex;
     width: 100%;
-    height: 100vh;
+    height: auto;
+    min-height: 100vh;
     background-color: var(--color-bg);
+    align-items: stretch;
+    overflow: visible;
 }
 
 .sidebar {
@@ -305,8 +308,9 @@ body {
 .main-content {
     flex-grow: 1;
     padding: 30px;
-    overflow-y: auto;
+    overflow-y: visible;
     transition: all 0.3s ease;
+    min-width: 0;
 }
 
 .main-content.expanded {
@@ -604,6 +608,55 @@ input:checked + .slider:before {
 #notification-form button[type="submit"]:hover {
     background-color: #b7a7da; 
 }
+
+/* Mobile Bottom Navigation */
+.mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-white);
+    border-top: 2px solid var(--color-border);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 8px 0;
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+.mobile-bottom-nav a {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--color-text-light);
+    padding: 10px 5px;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+}
+
+.mobile-bottom-nav a.active {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.mobile-bottom-nav a:hover {
+    color: var(--color-primary);
+}
+
+.mobile-bottom-nav .nav-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+@media (min-width: 769px) {
+    .mobile-bottom-nav {
+        display: none;
+    }
+}
 /* Responsive Design */
 /* Tablet - 768px and below */
 @media (max-width: 768px) {
@@ -615,9 +668,9 @@ input:checked + .slider:before {
 
     body {
         height: auto;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        display: block;
+        justify-content: flex-start;
+        align-items: stretch;
     }
 
     .welcome-panel {
@@ -696,6 +749,7 @@ input:checked + .slider:before {
     body {
         font-size: 14px;
         height: auto;
+        display: block;
     }
 
     .page-container {
@@ -804,6 +858,61 @@ input:checked + .slider:before {
     .requirement {
         padding: 5px 0;
     }
+
+    /* Hide sidebar on mobile */
+    .sidebar {
+        display: none !important;
+    }
+
+    /* Main content full width */
+    main {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding-bottom: 80px !important;
+    }
+
+    /* Bottom Navigation Bar */
+    .mobile-bottom-nav {
+        display: flex !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--color-white);
+        border-top: 2px solid var(--color-border);
+        justify-content: space-around;
+        align-items: center;
+        padding: 8px 0;
+        z-index: 1000;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    }
+
+    .mobile-bottom-nav a {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: var(--color-text-light);
+        padding: 10px 5px;
+        font-size: 0.75rem;
+        transition: all 0.2s;
+    }
+
+    .mobile-bottom-nav a.active {
+        color: var(--color-primary);
+        font-weight: 600;
+    }
+
+    .mobile-bottom-nav a:hover {
+        color: var(--color-primary);
+    }
+
+    .mobile-bottom-nav .nav-label {
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
 }
 
 /* Add Team Member Button */
@@ -822,4 +931,52 @@ input:checked + .slider:before {
 
 #add-team-member:hover {
     background-color: #a77eff;
+}
+
+/* Standard Mobile Navigation Behavior (match dashboard) */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+        padding-bottom: 70px; /* Space for bottom nav */
+        display: block;
+        justify-content: flex-start;
+        align-items: stretch;
+        overflow-y: auto;
+    }
+
+    .app-container {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        padding-bottom: 70px; /* Space for bottom nav */
+        overflow: visible;
+        align-items: stretch;
+    }
+
+    .sidebar,
+    .sidebar.collapsed {
+        display: none !important;
+    }
+
+    .hamburger-btn {
+        display: none !important;
+    }
+
+    main,
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding-bottom: 80px !important;
+        overflow-y: visible !important;
+        min-height: auto !important;
+    }
+
+    .mobile-bottom-nav {
+        display: flex !important;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 9999 !important;
+    }
 }

@@ -50,7 +50,7 @@
 
         <!-- Main Content -->
         <main class="main-content" id="main-content">
-            <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+            <button class="hamburger-btn" id="hamburger-btn">☰</button>
             
             <header class="main-header">
                 <div class="header-left">
@@ -126,6 +126,28 @@
         </main>
     </div>
 
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <a href="dashboard.html" class="active">
+            <span class="nav-label">Dashboard</span>
+        </a>
+        <a href="products.html">
+            <span class="nav-label">Products</span>
+        </a>
+        <a href="inventory.html">
+            <span class="nav-label">Inventory</span>
+        </a>
+        <a href="suppliers.html">
+            <span class="nav-label">Suppliers</span>
+        </a>
+        <a href="usermanagement.html">
+            <span class="nav-label">Users</span>
+        </a>
+        <a href="settings.html">
+            <span class="nav-label">Settings</span>
+        </a>
+    </nav>
+
     <!-- Libraries for PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -140,10 +162,53 @@
     <script src="../js/dashboard.js"></script>
 
     <script>
-    function toggleSidebar() {
-        document.querySelector(".sidebar").classList.toggle("collapsed");
-        document.querySelector(".main-content").classList.toggle("expanded");
+    function toggleSidebar(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        const sidebar = document.querySelector(".sidebar");
+        const mainContent = document.querySelector(".main-content");
+        sidebar.classList.toggle("collapsed");
+        mainContent.classList.toggle("expanded");
+        console.log("Sidebar toggled - collapsed:", sidebar.classList.contains("collapsed"));
     }
+
+    // Initialize sidebar state on page load
+    function initializeSidebar() {
+        const sidebar = document.querySelector(".sidebar");
+        const hamburgerBtn = document.getElementById("hamburger-btn");
+        
+        // Add event listener for hamburger button (works for both click and touch)
+        if (hamburgerBtn) {
+            hamburgerBtn.addEventListener('click', toggleSidebar);
+            hamburgerBtn.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                toggleSidebar(e);
+            });
+            console.log("Hamburger button event listeners attached");
+        }
+        
+        // On mobile (width < 768px), start with sidebar collapsed
+        if (window.innerWidth <= 768) {
+            sidebar.classList.add("collapsed");
+            console.log("Mobile detected - sidebar initialized as collapsed");
+        } else {
+            sidebar.classList.remove("collapsed");
+            console.log("Desktop detected - sidebar initialized as visible");
+        }
+    }
+
+    // Run on page load
+    document.addEventListener('DOMContentLoaded', initializeSidebar);
+    
+    // Run on window resize
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            const sidebar = document.querySelector(".sidebar");
+            sidebar.classList.remove("collapsed");
+        }
+    });
     </script>
 </body>
 </html>
