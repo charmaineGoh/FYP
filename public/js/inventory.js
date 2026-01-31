@@ -524,7 +524,12 @@ function showAddProductFromInventoryModal(stock) {
         const updateStockRes = await fetch(`/stocks/${stock.stockId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ quantity: stock.quantity })
+          body: JSON.stringify({ 
+            productId: product._id,
+            quantity: stock.quantity,
+            warehouseLocation: stock.warehouseLocation,
+            supplierId: stock.supplierId?._id
+          })
         });
 
         if (updateStockRes.ok) {
@@ -532,7 +537,7 @@ function showAddProductFromInventoryModal(stock) {
           modal.remove();
           loadInventory();
         } else {
-          alert("✅ Product added!");
+          alert("✅ Product added but could not link to inventory!");
           modal.remove();
           loadInventory();
         }
