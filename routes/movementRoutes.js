@@ -44,13 +44,13 @@ router.post('/', async (req, res) => {
   try {
     const { stockId, movementType, from, to, quantity, category } = req.body;
 
-    // Try to find existing stock; if missing, auto-create so it appears in Stock Levels
+    
     let stock = await Stock.findOne({ stockId: stockId });
     let stockAutoCreated = false;
     if (!stock) {
       try {
         const warehouseLocation = movementType === 'Inbound' ? to : from;
-        const initialQty = movementType === 'Inbound' ? quantity : 0; // Outbound starts at 0
+        const initialQty = movementType === 'Inbound' ? quantity : 0;
         stock = new Stock({
           stockId,
           quantity: initialQty,
@@ -88,7 +88,7 @@ router.post('/', async (req, res) => {
         await supplier.save();
       }
       
-      // Link supplier to stock
+      
       stock.supplierId = supplier._id;
       await stock.save();
     }
@@ -98,7 +98,7 @@ router.post('/', async (req, res) => {
     await movement.save();
 
     if (stock) {
-      // Only enforce availability checks and update quantities if stock existed prior
+      
       if (movementType === 'Outbound' && !stockAutoCreated) {
         if (stock.quantity < quantity) {
           return res.status(400).json({
@@ -163,7 +163,7 @@ router.put('/:movementId', async (req, res) => {
         originalStock.quantity += movement.quantity;
       }
       
-      // Reverse original movement effect on linked product
+     
       if (originalStock.productId) {
         const origProduct = await Product.findById(originalStock.productId);
         if (origProduct) {
@@ -180,7 +180,6 @@ router.put('/:movementId', async (req, res) => {
       if (stockIdChanged) {
         originalStock.stockId = stockId;
         
-        // Update linked product's productName if exists
         if (originalStock.productId) {
           const linkedProduct = await Product.findById(originalStock.productId);
           if (linkedProduct && linkedProduct.productName === oldStockId) {
@@ -231,11 +230,11 @@ router.put('/:movementId', async (req, res) => {
         targetStock.category = category;
       }
       
-      // Find or create supplier based on "from" field and link to stock
+   
       if (from) {
         let supplier = await Supplier.findOne({ supplierName: from });
         
-        // If supplier doesn't exist, create a basic one
+       
         if (!supplier) {
           supplier = new Supplier({
             supplierName: from,
@@ -249,7 +248,6 @@ router.put('/:movementId', async (req, res) => {
           await supplier.save();
         }
         
-        // Link supplier to stock
         targetStock.supplierId = supplier._id;
       }
       

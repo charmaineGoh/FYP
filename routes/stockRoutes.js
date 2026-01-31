@@ -9,7 +9,7 @@ router.get('/stats', async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
 
-    // Build filter object based on 'lastUpdated' from  schema
+    
     let query = {};
     if (startDate && endDate) {
       query.lastUpdated = {
@@ -20,13 +20,12 @@ router.get('/stats', async (req, res) => {
 
     const stocks = await Stock.find(query).sort({ lastUpdated: -1 });
 
-    // 1. Calculate Total Stock Level (Sum of all quantities)
     const totalStock = stocks.reduce((sum, item) => sum + item.quantity, 0);
 
-    // 2. Count Unique Warehouse Locations
+  
     const uniqueLocations = [...new Set(stocks.map(item => item.warehouseLocation))].length;
 
-    // 3. Prepare Chart Data (Labels: Stock IDs, Values: Quantities)
+    
     const chartData = stocks.map(item => ({
       label: item.stockId,
       value: item.quantity
@@ -59,7 +58,7 @@ router.post("/", async (req, res) => {
         return res.status(404).json({ error: "Product not found" });
       }
 
-      // Auto-generate stockId from productId 
+      
       if (!finalStockId) {
         const count = await Stock.countDocuments({ productId });
         finalStockId = `STK-${productId.toString().slice(-8)}-${count + 1}`;
