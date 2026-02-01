@@ -1,6 +1,6 @@
 let movements = [];
 
-// Profile dropdown functionality
+
 function initializeProfile() {
   const user = checkAuth();
   if (!user) return;
@@ -10,18 +10,18 @@ function initializeProfile() {
   const profileName = document.getElementById('profile-name');
   const profileInitial = document.getElementById('profile-initial');
 
-  // Set profile name and initial
+
   profileName.textContent = user.name || user.email || 'User';
   const initial = (user.name || user.email).charAt(0).toUpperCase();
   profileInitial.textContent = initial;
 
-  // Toggle dropdown on avatar click
+
   profileAvatar.addEventListener('click', (e) => {
     e.stopPropagation();
     profileDropdown.classList.toggle('show');
   });
 
-  // Close dropdown when clicking outside
+
   document.addEventListener('click', () => {
     profileDropdown.classList.remove('show');
   });
@@ -49,14 +49,14 @@ function setupEventListeners() {
     return;
   }
 
-  // Modal close buttons
+  
   document.querySelectorAll('.close').forEach(closeBtn => {
     closeBtn.addEventListener('click', function() {
       this.closest('.modal').classList.add('hidden');
     });
   });
 
-  // Click outside modal to close
+ 
   document.querySelectorAll('.modal').forEach(modal => {
     modal.addEventListener('click', function(e) {
       if (e.target === this) {
@@ -85,10 +85,10 @@ function setupEventListeners() {
     }
   });
 
-  // Add form submission
+  
   addForm.addEventListener('submit', handleAddMovement);
 
-  // Edit form submission
+
   editForm.addEventListener('submit', handleEditMovement);
 
   // Delete button in edit modal
