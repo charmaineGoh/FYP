@@ -96,12 +96,12 @@ router.get('/', async (req, res) => {
     sort[sortBy] = sortOrder === 'asc' ? 1 : -1;
     
     let stocksQuery = Stock.find(query)
-      .populate('productId', 'productName category price') // Only select needed fields
-      .populate('supplierId', 'supplierName supplierEmail') // Only select needed fields
+      .populate('productId', 'productName category price') 
+      .populate('supplierId', 'supplierName supplierEmail') 
       .sort(sort)
-      .lean(); // Use lean() for faster queries when we don't need Mongoose documents
+      .lean(); 
     
-    // Apply pagination if specified
+  
     if (limit) {
       stocksQuery = stocksQuery.limit(parseInt(limit));
     }
@@ -110,7 +110,7 @@ router.get('/', async (req, res) => {
     }
     
     // Add cache headers for better performance
-    res.set('Cache-Control', 'public, max-age=30'); // Cache for 30 seconds
+    res.set('Cache-Control', 'public, max-age=30'); 
     
     const stocks = await stocksQuery;
     res.json(stocks);
