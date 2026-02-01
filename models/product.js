@@ -9,7 +9,7 @@ const productSchema = new mongoose.Schema({
     category: { type: String, required: true }
 }, { collection: "products" });
 
-// Add indexes for better query performance
+
 productSchema.index({ category: 1 });
 productSchema.index({ productName: 1 });
 productSchema.index({ quantity: 1 });
