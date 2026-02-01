@@ -11,7 +11,7 @@ const stockSchema = new mongoose.Schema({
   lastUpdated: { type: Date, default: Date.now }
 }, { collection: 'stocks' });
 
-// Add indexes for better query performance
+
 stockSchema.index({ stockId: 1 });
 stockSchema.index({ productId: 1 });
 stockSchema.index({ supplierId: 1 });
