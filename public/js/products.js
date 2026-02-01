@@ -73,10 +73,10 @@ async function loadProduct(category = "all", page = 1) {
     }
 
     const products = contentType.includes('application/json') ? await res.json() : [];
-    cachedProducts = products; // Cache for filtering
+    cachedProducts = products; 
     console.log(`[products] fetch ok, received ${products.length} items`);
 
-    // Filter by category if provided
+
     let filtered = category === "all"
       ? products
       : products.filter(p => p.category?.toLowerCase() === category.toLowerCase());
@@ -87,7 +87,7 @@ async function loadProduct(category = "all", page = 1) {
       return;
     }
 
-    // Implement pagination
+   
     totalPages = Math.ceil(filtered.length / PRODUCTS_PER_PAGE);
     const startIdx = (page - 1) * PRODUCTS_PER_PAGE;
     const endIdx = startIdx + PRODUCTS_PER_PAGE;
@@ -103,7 +103,7 @@ async function loadProduct(category = "all", page = 1) {
     // Lazy load images for visible products
     loadProductImages(paginatedProducts);
 
-    // Add pagination controls
+   
     if (totalPages > 1) {
       addPaginationControls(filtered.length, page);
     }
@@ -117,7 +117,7 @@ async function loadProduct(category = "all", page = 1) {
   }
 }
 
-// Add pagination controls
+
 function addPaginationControls(total, currentPage) {
   const paginationContainer = document.getElementById('pagination');
   
@@ -157,14 +157,13 @@ function addPaginationControls(total, currentPage) {
 // Initial load
 loadProduct();
 
-// Load product images lazily after initial render - optimized with parallel loading
 async function loadProductImages(products) {
-  // Batch load images in parallel for much faster performance
+  
   const imagePromises = products
     .filter(product => product._id)
     .map(async (product) => {
       try {
-        // Fetch individual product with image
+        
         const res = await fetch(`/products/${product._id}`);
         if (res.ok) {
           const fullProduct = await res.json();
@@ -277,7 +276,7 @@ document.getElementById("addProductForm").addEventListener("submit", async e => 
       
       // Immediately add new product to cache and refresh without full reload
       cachedProducts.push(newProduct);
-      loadProduct(currentFilter, 1); // Reset to first page
+      loadProduct(currentFilter, 1); 
     } else {
       const contentType = res.headers.get('content-type') || '';
       let err;
