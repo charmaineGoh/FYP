@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
       status: document.getElementById("editUserStatus").value
     };
     
-    // Only include password if it was changed
+ 
     const password = document.getElementById("editUserPassword").value;
     if (password.trim() !== "") {
       user.password = password;
