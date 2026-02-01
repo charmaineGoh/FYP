@@ -41,7 +41,7 @@ let sortState = {
   direction: 'asc' 
 };
 
-let currentStocks = []; // Store current stocks for sorting
+let currentStocks = []; 
 
 // Load Inventory with automatic sync from products
 async function loadInventory(silentRefresh = false) {
@@ -135,7 +135,7 @@ function sortInventory(column, direction) {
   renderInventoryTable(sortedStocks);
 }
 
-// Create Inventory Rowwww
+// Create Inventory Row
 function createInventoryRow(stock) {
   const row = document.createElement("tr");
   const isLowStock = stock.quantity < 10;
@@ -202,14 +202,17 @@ function createInventoryRow(stock) {
     }
   });
 
-  // Add to Products functionality
+  // Add to Products functionality (UPDATED)
   const addToProductsBtn = row.querySelector(".add-to-products-btn");
   if (addToProductsBtn) {
-    addToProductsBtn.addEventListener("click", async (e) => {
+    addToProductsBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      
-      
-      showAddProductFromInventoryModal(stock);
+
+      // prevent double clicks
+      addToProductsBtn.disabled = true;
+      addToProductsBtn.style.opacity = "0.6";
+
+      showAddProductFromInventoryModal(stock, row, addToProductsBtn);
     });
   }
 
@@ -223,7 +226,6 @@ const addBtn = document.getElementById("addInventoryBtn");
 
 if (addBtn) {
   addBtn.addEventListener("click", () => {
-    
     window.location.href = "/html/movement.html";
   });
 }
@@ -320,7 +322,6 @@ document.getElementById("addInventoryForm").addEventListener("submit", async e =
       }
       const errorMessage = err.error || err.message || "Unknown error";
       
-      // Check for duplicate key error
       if (errorMessage.includes('E11000') || errorMessage.includes('duplicate key')) {
         alert("❌ Stock ID already exists! Please use a different Stock ID.");
       } else {
@@ -362,6 +363,7 @@ async function loadProductsForEditSelection() {
     console.error("Error loading products:", err);
   }
 }
+
 // Handle edit form submission 
 document.getElementById("editForm").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -415,7 +417,7 @@ searchBtn.addEventListener("click", () => {
   const term = searchInput.value.trim().toLowerCase();
 
   document.querySelectorAll("#inventoryTableBody tbody tr").forEach(row => {
-    const stockIdCell = row.querySelector("td:first-child"); // first column = Stock ID
+    const stockIdCell = row.querySelector("td:first-child");
     if (stockIdCell) {
       const stockId = stockIdCell.innerText.toLowerCase();
       row.style.display = stockId.includes(term) ? "" : "none";
@@ -423,12 +425,11 @@ searchBtn.addEventListener("click", () => {
   });
 });
 
-// Add Product from Inventory 
-function showAddProductFromInventoryModal(stock) {
+// Add Product from Inventory (UPDATED SIGNATURE)
+function showAddProductFromInventoryModal(stock, rowEl, addBtnEl) {
   const modal = document.createElement('div');
   modal.className = 'modal';
   
-  // Determine which category to pre-select
   const categoryToSelect = stock.category || (stock.productId?.category) || 'Shirts';
   
   modal.innerHTML = `
@@ -469,6 +470,11 @@ function showAddProductFromInventoryModal(stock) {
   modal.addEventListener('click', (e) => {
     if (e.target === modal) {
       modal.remove();
+      // if user cancelled, re-enable button
+      if (addBtnEl) {
+        addBtnEl.disabled = false;
+        addBtnEl.style.opacity = "1";
+      }
     }
   });
 
@@ -477,10 +483,8 @@ function showAddProductFromInventoryModal(stock) {
 
     const imageFile = document.getElementById("productImage").files[0];
     
-    
     let imageUrl = null;
     if (imageFile) {
-      
       if (imageFile.size > 2097152) {
         alert("❌ Image is too large. Please use an image smaller than 2MB.");
         return;
@@ -506,10 +510,6 @@ function showAddProductFromInventoryModal(stock) {
     };
 
     console.log("Submitting product:", newProduct);
-    
-    // Show success message immediately and close modal
-    alert("✅ Product is being added...");
-    modal.remove();
 
     try {
       const res = await fetch("/products", {
@@ -520,31 +520,7 @@ function showAddProductFromInventoryModal(stock) {
 
       console.log("Response status:", res.status);
 
-      if (res.ok) {
-        const product = await res.json();
-        console.log("Product created:", product);
-        
-        // Update stock in background
-        fetch(`/stocks/${stock.stockId}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            productId: product._id,
-            quantity: stock.quantity,
-            warehouseLocation: stock.warehouseLocation,
-            supplierId: stock.supplierId?._id
-          })
-        }).then(updateStockRes => {
-          if (updateStockRes.ok) {
-            console.log("Stock linked successfully");
-          }
-          // Refresh inventory to show updated data
-          loadInventory();
-        }).catch(err => {
-          console.error("Error linking stock:", err);
-          loadInventory();
-        });
-      } else {
+      if (!res.ok) {
         const contentType = res.headers.get('content-type') || '';
         let err;
         if (contentType.includes('application/json')) {
@@ -553,15 +529,64 @@ function showAddProductFromInventoryModal(stock) {
           const text = await res.text();
           err = { error: text || res.statusText };
         }
-        console.error("Backend error:", err);
         alert("❌ Failed to add product: " + (err.error || "Unknown error"));
+
+        // re-enable button on failure
+        if (addBtnEl) {
+          addBtnEl.disabled = false;
+          addBtnEl.style.opacity = "1";
+        }
+        return;
       }
+
+      const product = await res.json();
+      console.log("Product created:", product);
+
+      // Link stock to product (awaited)
+      const linkRes = await fetch(`/stocks/${stock.stockId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          productId: product._id,
+          quantity: stock.quantity,
+          warehouseLocation: stock.warehouseLocation,
+          supplierId: stock.supplierId?._id
+        })
+      });
+
+      if (!linkRes.ok) {
+        const errText = await linkRes.text();
+        alert("❌ Product created, but failed to link stock: " + errText);
+
+        // re-enable button if link fails
+        if (addBtnEl) {
+          addBtnEl.disabled = false;
+          addBtnEl.style.opacity = "1";
+        }
+        return;
+      }
+
+      // ✅ SUCCESS: remove the + button immediately
+      if (addBtnEl) addBtnEl.remove();
+      if (rowEl) rowEl.dataset.productId = product._id;
+
+      alert("✅ Added to Products!");
+      modal.remove();
+      loadInventory();
+
     } catch (err) {
       console.error("Error adding product from inventory:", err);
       alert("❌ Error adding product: " + err.message);
+
+      // re-enable button on error
+      if (addBtnEl) {
+        addBtnEl.disabled = false;
+        addBtnEl.style.opacity = "1";
+      }
     }
   });
 }
+
 // Low Stock Alert 
 function updateLowStockAlert(stocks) {
   const lowStockAlertsEnabled = localStorage.getItem("lowStockAlerts") === "true";
@@ -585,16 +610,14 @@ function updateLowStockAlert(stocks) {
 
 // Update sort column indicators in header
 function updateSortIndicators(column, direction) {
-  // Clear all indicators
   document.querySelectorAll("#inventoryTableBody th").forEach(th => {
     th.classList.remove('sort-asc', 'sort-desc');
     const arrow = th.querySelector('.sort-arrow');
     if (arrow) arrow.remove();
   });
 
-  // Add indicator to current sort column
   if (column === 'quantity') {
-    const quantityHeader = document.querySelectorAll("#inventoryTableBody th")[1]; // Quantity is 2nd column
+    const quantityHeader = document.querySelectorAll("#inventoryTableBody th")[1];
     quantityHeader.classList.add(direction === 'asc' ? 'sort-asc' : 'sort-desc');
     const arrow = document.createElement('span');
     arrow.className = 'sort-arrow';
@@ -605,11 +628,10 @@ function updateSortIndicators(column, direction) {
 
 // Initialize header click handlers for sorting
 function initializeSortHandlers() {
-  const quantityHeader = document.querySelectorAll("#inventoryTableBody th")[1]; // Quantity column
+  const quantityHeader = document.querySelectorAll("#inventoryTableBody th")[1];
   
   quantityHeader.style.cursor = 'pointer';
   quantityHeader.addEventListener('click', () => {
-    // Toggle between ascending and descending
     if (sortState.direction === 'asc') {
       sortState.direction = 'desc';
     } else {
@@ -635,8 +657,8 @@ searchInput.addEventListener("input", () => {
 loadInventory();
 setTimeout(() => {
   initializeSortHandlers();
-  updateSortIndicators('quantity', 'asc'); // Show ascending indicator on load
-}, 100); // Delay to ensure table is rendered
+  updateSortIndicators('quantity', 'asc');
+}, 100);
 initializeProfile();
 loadSuppliersForSelection();
 
