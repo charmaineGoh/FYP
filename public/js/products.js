@@ -157,32 +157,37 @@ function addPaginationControls(total, currentPage) {
 // Initial load
 loadProduct();
 
-// Load product images lazily after initial render
+// Load product images lazily after initial render - optimized with parallel loading
 async function loadProductImages(products) {
-  for (const product of products) {
-    if (!product._id) continue;
-    
-    try {
-      // Fetch individual product with image
-      const res = await fetch(`/products/${product._id}`);
-      if (res.ok) {
-        const fullProduct = await res.json();
-        // Update the cached product with image
-        const cachedProduct = cachedProducts.find(p => p._id === product._id);
-        if (cachedProduct) {
-          cachedProduct.image = fullProduct.image;
+  // Batch load images in parallel for much faster performance
+  const imagePromises = products
+    .filter(product => product._id)
+    .map(async (product) => {
+      try {
+        // Fetch individual product with image
+        const res = await fetch(`/products/${product._id}`);
+        if (res.ok) {
+          const fullProduct = await res.json();
+          // Update the cached product with image
+          const cachedProduct = cachedProducts.find(p => p._id === product._id);
+          if (cachedProduct) {
+            cachedProduct.image = fullProduct.image;
+          }
+          // Update the image in the DOM
+          const imgElement = document.querySelector(`img[data-product-id="${product._id}"]`);
+          if (imgElement && fullProduct.image) {
+            imgElement.src = fullProduct.image;
+            imgElement.classList.remove('loading');
+          }
         }
-        // Update the image in the DOM
-        const imgElement = document.querySelector(`img[data-product-id="${product._id}"]`);
-        if (imgElement && fullProduct.image) {
-          imgElement.src = fullProduct.image;
-          imgElement.classList.remove('loading');
-        }
+      } catch (err) {
+        console.error(`Failed to load image for product ${product._id}:`, err);
       }
-    } catch (err) {
-      console.error(`Failed to load image for product ${product._id}:`, err);
-    }
-  }
+    });
+  
+  // Wait for all images to load in parallel
+  await Promise.all(imagePromises);
+  console.log(`Loaded ${imagePromises.length} product images in parallel`);
 }
 
 function createProductCard(product) {

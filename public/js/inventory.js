@@ -506,6 +506,10 @@ function showAddProductFromInventoryModal(stock) {
     };
 
     console.log("Submitting product:", newProduct);
+    
+    // Show success message immediately and close modal
+    alert("✅ Product is being added...");
+    modal.remove();
 
     try {
       const res = await fetch("/products", {
@@ -520,8 +524,8 @@ function showAddProductFromInventoryModal(stock) {
         const product = await res.json();
         console.log("Product created:", product);
         
-        
-        const updateStockRes = await fetch(`/stocks/${stock.stockId}`, {
+        // Update stock in background
+        fetch(`/stocks/${stock.stockId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
@@ -530,17 +534,16 @@ function showAddProductFromInventoryModal(stock) {
             warehouseLocation: stock.warehouseLocation,
             supplierId: stock.supplierId?._id
           })
+        }).then(updateStockRes => {
+          if (updateStockRes.ok) {
+            console.log("Stock linked successfully");
+          }
+          // Refresh inventory to show updated data
+          loadInventory();
+        }).catch(err => {
+          console.error("Error linking stock:", err);
+          loadInventory();
         });
-
-        if (updateStockRes.ok) {
-          alert("✅ Product added and linked to inventory!");
-          modal.remove();
-          loadInventory();
-        } else {
-          alert("✅ Product added but could not link to inventory!");
-          modal.remove();
-          loadInventory();
-        }
       } else {
         const contentType = res.headers.get('content-type') || '';
         let err;

@@ -44,7 +44,18 @@ router.post("/", async (req, res) => {
     const product = new Product(req.body);
     await product.save();
     console.log("Product saved successfully:", product._id);
-    res.status(201).json(product);
+    
+    // Return minimal data without the large image to speed up response
+    const productResponse = {
+      _id: product._id,
+      productName: product.productName,
+      category: product.category,
+      price: product.price,
+      quantity: product.quantity,
+      description: product.description
+    };
+    
+    res.status(201).json(productResponse);
   } catch (err) {
     console.error("Error saving product:", err);
     res.status(400).json({ error: err.message });
