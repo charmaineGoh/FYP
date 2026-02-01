@@ -8,7 +8,36 @@ const Supplier = require('../models/supplier');
 // Get all movements
 router.get('/', async (req, res) => {
   try {
-    const movements = await Movement.find().sort({ dateUpdated: -1 });
+    const { limit, skip, startDate, endDate, movementType } = req.query;
+    
+    let query = {};
+    
+    // Filter by date range if provided
+    if (startDate && endDate) {
+      query.dateUpdated = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate)
+      };
+    }
+    
+    // Filter by movement type if provided
+    if (movementType) {
+      query.movementType = movementType;
+    }
+    
+    let movementsQuery = Movement.find(query)
+      .sort({ dateUpdated: -1 })
+      .lean(); // Use lean() for faster queries
+    
+    // Apply pagination if specified
+    if (limit) {
+      movementsQuery = movementsQuery.limit(parseInt(limit));
+    }
+    if (skip) {
+      movementsQuery = movementsQuery.skip(parseInt(skip));
+    }
+    
+    const movements = await movementsQuery;
     res.json(movements);
   } catch (error) {
     res.status(500).json({ error: error.message });

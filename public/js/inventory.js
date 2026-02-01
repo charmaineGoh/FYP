@@ -79,12 +79,12 @@ function startAutoRefresh() {
     clearInterval(autoRefreshInterval);
   }
   
-  // Refresh every 5 seconds to keep inventory synced with product changes
+  // Refresh every 30 seconds instead of 5 seconds to reduce server load
   autoRefreshInterval = setInterval(() => {
     loadInventory(true); 
-  }, 5000);
+  }, 30000);
   
-  console.log("[inventory.js] Auto-refresh started (5s intervals)");
+  console.log("[inventory.js] Auto-refresh started (30s intervals)");
 }
 
 function stopAutoRefresh() {

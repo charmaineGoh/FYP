@@ -54,8 +54,9 @@ async function loadProduct(category = "all", page = 1) {
     currentFilter = category;
     currentPage = page;
     
-    console.log("[products] fetching /products …");
-    const res = await fetch("/products");
+    console.log("[products] fetching /products without images for faster load...");
+    // Fetch without images for faster loading
+    const res = await fetch("/products?includeImages=false");
     const contentType = res.headers.get('content-type') || '';
 
     if (!res.ok) {
@@ -98,6 +99,9 @@ async function loadProduct(category = "all", page = 1) {
       const card = createProductCard(product);
       productList.appendChild(card);
     });
+    
+    // Lazy load images for visible products
+    loadProductImages(paginatedProducts);
 
     // Add pagination controls
     if (totalPages > 1) {
@@ -153,12 +157,43 @@ function addPaginationControls(total, currentPage) {
 // Initial load
 loadProduct();
 
+// Load product images lazily after initial render
+async function loadProductImages(products) {
+  for (const product of products) {
+    if (!product._id) continue;
+    
+    try {
+      // Fetch individual product with image
+      const res = await fetch(`/products/${product._id}`);
+      if (res.ok) {
+        const fullProduct = await res.json();
+        // Update the cached product with image
+        const cachedProduct = cachedProducts.find(p => p._id === product._id);
+        if (cachedProduct) {
+          cachedProduct.image = fullProduct.image;
+        }
+        // Update the image in the DOM
+        const imgElement = document.querySelector(`img[data-product-id="${product._id}"]`);
+        if (imgElement && fullProduct.image) {
+          imgElement.src = fullProduct.image;
+          imgElement.classList.remove('loading');
+        }
+      }
+    } catch (err) {
+      console.error(`Failed to load image for product ${product._id}:`, err);
+    }
+  }
+}
+
 function createProductCard(product) {
   const card = document.createElement("div");
   card.classList.add("product-card");
 
+  // Use placeholder image initially if no image data
+  const imageSrc = product.image || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect fill="%23f0f0f0" width="200" height="200"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="18"%3ELoading...%3C/text%3E%3C/svg%3E';
+  
   card.innerHTML = `
-    <img src="${product.image}" alt="${product.productName}">
+    <img src="${imageSrc}" alt="${product.productName}" data-product-id="${product._id}" class="${product.image ? '' : 'loading'}" style="background: #f0f0f0;">
     <div class="product-info">
       <h3>${product.productName}</h3>
       <p>Price: ${product.price}</p>

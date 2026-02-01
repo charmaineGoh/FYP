@@ -53,7 +53,38 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const products = await Product.find();
+    const { limit, skip, category, sortBy = 'productName', sortOrder = 'asc', includeImages = 'false' } = req.query;
+    
+    let query = {};
+    if (category) {
+      query.category = category;
+    }
+    
+    // Build sort object
+    const sort = {};
+    sort[sortBy] = sortOrder === 'asc' ? 1 : -1;
+    
+    let productsQuery = Product.find(query)
+      .sort(sort)
+      .lean(); // Use lean() for faster queries
+    
+    // Exclude images by default for faster loading (can be included with ?includeImages=true)
+    if (includeImages !== 'true') {
+      productsQuery = productsQuery.select('-image'); // Exclude large image field
+    }
+    
+    // Apply pagination if specified
+    if (limit) {
+      productsQuery = productsQuery.limit(parseInt(limit));
+    }
+    if (skip) {
+      productsQuery = productsQuery.skip(parseInt(skip));
+    }
+    
+    // Add cache headers for better performance
+    res.set('Cache-Control', 'public, max-age=60'); // Cache for 1 minute
+    
+    const products = await productsQuery;
     res.json(products);
   } catch (err) {
     console.error("Error fetching inventory:", err.message);
@@ -64,10 +95,12 @@ router.get("/", async (req, res) => {
 router.get("/:productId", async (req, res) => {
   try {
     const { productId } = req.params;
-    const product = await Product.findById(productId);
+    const product = await Product.findById(productId).lean();
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
     }
+    // Add cache headers
+    res.set('Cache-Control', 'public, max-age=300'); // Cache for 5 minutes
     res.json(product);
   } catch (err) {
     console.error("Error fetching product:", err.message);

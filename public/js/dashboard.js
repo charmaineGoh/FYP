@@ -193,17 +193,17 @@ function renderCategoryChart(canvasId, categoryName, stocks, chartType) {
 
 async function populateDashboard() {
   try {
-    // Fetch stocks data
-    const stocksRes = await fetch("/stocks");
-    const stocks = await stocksRes.json();
-
-    // Fetch movements data
-    const movementsRes = await fetch("/movements");
-    const movements = await movementsRes.json();
-
     // Get date filter values if they exist
     const startDateInput = document.getElementById("start-date");
     const endDateInput = document.getElementById("end-date");
+    
+    // Fetch data in parallel for better performance
+    const fetchPromises = [
+      fetch("/stocks").then(res => res.json()),
+      fetch("/movements").then(res => res.json())
+    ];
+    
+    const [stocks, movements] = await Promise.all(fetchPromises);
     
     let filteredMovements = movements;
     let chartStocks = stocks;

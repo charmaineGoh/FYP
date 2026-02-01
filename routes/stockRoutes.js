@@ -84,7 +84,35 @@ router.post("/", async (req, res) => {
 // Get all inventory
 router.get('/', async (req, res) => {
   try {
-    const stocks = await Stock.find().populate('productId').populate('supplierId'); 
+    const { limit, skip, category, sortBy = 'lastUpdated', sortOrder = 'desc' } = req.query;
+    
+    let query = {};
+    if (category) {
+      query.category = category;
+    }
+    
+    // Build sort object
+    const sort = {};
+    sort[sortBy] = sortOrder === 'asc' ? 1 : -1;
+    
+    let stocksQuery = Stock.find(query)
+      .populate('productId', 'productName category price') // Only select needed fields
+      .populate('supplierId', 'supplierName supplierEmail') // Only select needed fields
+      .sort(sort)
+      .lean(); // Use lean() for faster queries when we don't need Mongoose documents
+    
+    // Apply pagination if specified
+    if (limit) {
+      stocksQuery = stocksQuery.limit(parseInt(limit));
+    }
+    if (skip) {
+      stocksQuery = stocksQuery.skip(parseInt(skip));
+    }
+    
+    // Add cache headers for better performance
+    res.set('Cache-Control', 'public, max-age=30'); // Cache for 30 seconds
+    
+    const stocks = await stocksQuery;
     res.json(stocks);
   } catch (err) {
     console.error("Error fetching inventory:", err.message);

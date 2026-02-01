@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const compression = require('compression');
 require('dotenv').config(); 
 
 const stockRoutes = require('./routes/stockRoutes');
@@ -12,15 +13,51 @@ const User = require('./models/user');
 
 
 const app = express();
+// Middleware: enable compression for faster response times
+app.use(compression());
 // Middleware: enable CORS and set larger body limits for JSON/urlencoded 
 app.use(require('cors')());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
+// MongoDB connection with optimized settings and better timeout handling
+mongoose.connect(process.env.MONGO_URI, {
+  maxPoolSize: 5, // Reduced from 10 to 5 connections
+  minPoolSize: 1,  // Reduced from 2 to 1
+  serverSelectionTimeoutMS: 30000, // Increased to 30 seconds
+  socketTimeoutMS: 60000, // Increased to 60 seconds
+  connectTimeoutMS: 30000, // Connection timeout
+  retryWrites: true,
+  retryReads: true,
+})
+  .then(() => console.log('Connected to MongoDB with connection pooling'))
+  .catch((err) => {
+    console.error('MongoDB Connection Error:', err.message);
+    console.error('Please check:');
+    console.error('1. MongoDB server is running');
+    console.error('2. Network connectivity to 159.143.58.68:27017');
+    console.error('3. Firewall/IP whitelist settings');
+  });
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch((err) => console.error('Error:', err));
+// Add connection event listeners for better debugging
+mongoose.connection.on('connected', () => {
+  console.log('Mongoose connected to MongoDB');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('Mongoose connection error:', err.message);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('Mongoose disconnected from MongoDB');
+});
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  await mongoose.connection.close();
+  console.log('MongoDB connection closed due to app termination');
+  process.exit(0);
+});
 
 // Mount routes
 app.get('/api/test', (req, res) => {

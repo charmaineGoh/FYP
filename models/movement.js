@@ -10,4 +10,10 @@ const movementSchema = new mongoose.Schema({
   dateUpdated: { type: Date, default: Date.now }
 }, { collection: 'movements' });
 
+// Add indexes for better query performance
+movementSchema.index({ stockId: 1 });
+movementSchema.index({ dateUpdated: -1 });
+movementSchema.index({ movementType: 1 });
+movementSchema.index({ category: 1 });
+
 module.exports = mongoose.model('Movement', movementSchema);
