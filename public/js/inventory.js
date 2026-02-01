@@ -13,7 +13,7 @@ function initializeProfile() {
   const profileName = document.getElementById('profile-name');
   const profileInitial = document.getElementById('profile-initial');
 
-  // Set profile name and initial
+ 
   profileName.textContent = user.name || user.email || 'User';
   const initial = (user.name || user.email).charAt(0).toUpperCase();
   profileInitial.textContent = initial;
@@ -71,7 +71,7 @@ async function loadInventory(silentRefresh = false) {
   }
 }
 
-// Auto-refresh inventory every 30 seconds to sync with product changes
+
 let autoRefreshInterval = null;
 
 function startAutoRefresh() {
@@ -128,14 +128,14 @@ function sortInventory(column, direction) {
     });
   }
   
-  // Update header indicators
+
   updateSortIndicators(column, direction);
   
-  // Render sorted table
+  
   renderInventoryTable(sortedStocks);
 }
 
-// Create Inventory Row
+
 function createInventoryRow(stock) {
   const row = document.createElement("tr");
   const isLowStock = stock.quantity < 10;
@@ -202,7 +202,7 @@ function createInventoryRow(stock) {
     }
   });
 
-  // Add to Products functionality (UPDATED)
+  // Add to Products 
   const addToProductsBtn = row.querySelector(".add-to-products-btn");
   if (addToProductsBtn) {
     addToProductsBtn.addEventListener("click", (e) => {
@@ -470,7 +470,7 @@ function showAddProductFromInventoryModal(stock, rowEl, addBtnEl) {
   modal.addEventListener('click', (e) => {
     if (e.target === modal) {
       modal.remove();
-      // if user cancelled, re-enable button
+   
       if (addBtnEl) {
         addBtnEl.disabled = false;
         addBtnEl.style.opacity = "1";
@@ -566,7 +566,7 @@ function showAddProductFromInventoryModal(stock, rowEl, addBtnEl) {
         return;
       }
 
-      // ✅ SUCCESS: remove the + button immediately
+      // SUCCESS: remove the + button immediately
       if (addBtnEl) addBtnEl.remove();
       if (rowEl) rowEl.dataset.productId = product._id;
 
@@ -578,7 +578,7 @@ function showAddProductFromInventoryModal(stock, rowEl, addBtnEl) {
       console.error("Error adding product from inventory:", err);
       alert("❌ Error adding product: " + err.message);
 
-      // re-enable button on error
+     
       if (addBtnEl) {
         addBtnEl.disabled = false;
         addBtnEl.style.opacity = "1";
