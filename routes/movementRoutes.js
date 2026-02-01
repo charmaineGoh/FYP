@@ -27,9 +27,9 @@ router.get('/', async (req, res) => {
     
     let movementsQuery = Movement.find(query)
       .sort({ dateUpdated: -1 })
-      .lean(); // Use lean() for faster queries
+      .lean(); =
     
-    // Apply pagination if specified
+  =
     if (limit) {
       movementsQuery = movementsQuery.limit(parseInt(limit));
     }
@@ -93,13 +93,13 @@ router.post('/', async (req, res) => {
       }
     }
 
-    // If stock exists and category provided, update category 
+   =
     if (stock && category) {
       stock.category = category;
       await stock.save();
     }
 
-    // Find or create supplier based on "from" field
+=
     if (stock && from) {
       let supplier = await Supplier.findOne({ supplierName: from });
       
@@ -228,7 +228,7 @@ router.put('/:movementId', async (req, res) => {
       await originalStock.save();
     }
 
-    // Apply new movement to target stock if it exists
+    // Apply new movement to target stock 
     const targetStock = await Stock.findOne({ stockId: stockId });
     if (targetStock) {
       if (movementType === 'Inbound') {
